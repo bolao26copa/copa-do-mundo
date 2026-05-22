@@ -555,19 +555,24 @@ footer strong { color: rgba(255,255,255,0.7); }
           </a>
         </div>
 
-        <!-- Conectar planilha -->
-        <div class="card" style="padding:20px; background:#FAFAF7;">
-          <div style="font-size:13px; font-weight:600; color:var(--azul); margin-bottom:8px;">
-            📊 Conectar ao Google Sheets
+        <!-- Planilha incorporada -->
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:14px 16px 10px; border-bottom:1px solid var(--cinza-borda); display:flex; align-items:center; justify-content:space-between;">
+            <div style="font-size:13px; font-weight:600; color:var(--azul);">
+              📊 Classificação ao vivo
+            </div>
+            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2l3iBmOzWA0N_7feIpkxM_IcECPc4uJKzCDTmRJ8X6KGcvpZZtroRk9g66ZQbL5kJJXgXr1EC2mWt/pubhtml?gid=1820913296&single=true" target="_blank" style="font-size:11px; color:var(--azul); text-decoration:none; opacity:0.7;">
+              Abrir planilha ↗
+            </a>
           </div>
-          <p style="font-size:12px; color:var(--cinza-texto); line-height:1.5; margin-bottom:12px;">
-            Para exibir classificação e palpites ao vivo, incorpore a planilha do Sheets nesta página usando um iframe.
-          </p>
-          <div class="embed-code">
-&lt;iframe src="URL_DA_PLANILHA_PUBLICADA"
-  width="100%" height="400" frameborder="0"&gt;
-&lt;/iframe&gt;
-          </div>
+          <iframe
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2l3iBmOzWA0N_7feIpkxM_IcECPc4uJKzCDTmRJ8X6KGcvpZZtroRk9g66ZQbL5kJJXgXr1EC2mWt/pubhtml?gid=1820913296&single=true"
+            width="100%"
+            height="340"
+            frameborder="0"
+            scrolling="no"
+            style="display:block; border:none;"
+          ></iframe>
         </div>
 
       </div>
@@ -1126,6 +1131,9 @@ function csvUrl(sheetName) {
   return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
 }
 
+// URL da planilha publicada (para o iframe de classificação ao vivo)
+const SHEETS_PUBLISHED_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2l3iBmOzWA0N_7feIpkxM_IcECPc4uJKzCDTmRJ8X6KGcvpZZtroRk9g66ZQbL5kJJXgXr1EC2mWt/pubhtml?gid=1820913296&single=true";
+
 async function fetchCSV(sheetName) {
   try {
     const res = await fetch(csvUrl(sheetName));
@@ -1225,7 +1233,9 @@ async function carregarClassificacao() {
   const rows = await fetchCSV('Classificação');
   if (!rows) {
     document.getElementById('classif-loading').innerHTML =
-      '<td colspan="6" style="text-align:center;padding:24px;color:var(--cinza-texto);font-size:13px;">Classificação não disponível</td>';
+      '<td colspan="6" style="text-align:center;padding:24px;font-size:13px;">' +
+      '<a href="' + SHEETS_PUBLISHED_URL + '" target="_blank" style="color:var(--azul);font-weight:500;">Ver classificação na planilha ↗</a>' +
+      '</td>';
     return;
   }
 
