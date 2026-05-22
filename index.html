@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Bolão Copa do Mundo 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -53,7 +53,12 @@ header {
   font-size: 11px; font-weight: 600; padding: 2px 7px;
   border-radius: 4px; letter-spacing: 0.5px;
 }
-nav { display: flex; gap: 4px; }
+nav {
+  display: flex; gap: 4px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; flex-shrink: 1;
+}
+nav::-webkit-scrollbar { display: none; }
 nav a {
   color: rgba(255,255,255,0.7); text-decoration: none;
   font-size: 13px; font-weight: 500; padding: 6px 14px;
@@ -187,7 +192,7 @@ nav a.active { color: var(--amarelo); }
 
 .jogos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 12px;
 }
 .jogo-card {
@@ -255,7 +260,7 @@ nav a.active { color: var(--amarelo); }
 
 /* ── APOSTAS ── */
 .apostas-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
   gap: 16px;
 }
 .aposta-card {
@@ -351,13 +356,87 @@ footer {
 footer strong { color: rgba(255,255,255,0.7); }
 
 /* ── RESPONSIVO ── */
-@media (max-width: 640px) {
-  .hero h1 { font-size: 38px; }
-  .header-inner { padding: 0 16px; }
-  nav a { padding: 6px 10px; font-size: 12px; }
-  .logo { font-size: 20px; }
+
+/* Tablet (até 900px) */
+@media (max-width: 900px) {
+  .container { padding: 28px 20px; }
+  .jogos-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .apostas-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+}
+
+/* Mobile (até 680px) */
+@media (max-width: 680px) {
+  /* Header */
+  .header-inner { padding: 0 14px; height: 52px; }
+  .logo { font-size: 18px; gap: 7px; }
   .logo-badge { display: none; }
+  nav a { padding: 5px 8px; font-size: 11px; }
+
+  /* Hero */
+  .hero { padding: 32px 16px 40px; }
+  .hero h1 { font-size: 36px; }
+  .hero p { font-size: 13px; margin-bottom: 20px; }
+  .hero-stats { gap: 16px; }
+  .hero-stat .num { font-size: 28px; }
+  .hero-stat .label { font-size: 10px; }
   .hero-divider { display: none; }
+
+  /* Container */
+  .container { padding: 20px 14px; }
+  .section-title { font-size: 24px; }
+
+  /* Início: grid lateral vira coluna única */
+  #page-inicio .container > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Jogos grid: 1 coluna */
+  .jogos-grid { grid-template-columns: 1fr; gap: 10px; }
+
+  /* Filtros: scroll horizontal */
+  .filtros {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filtros::-webkit-scrollbar { display: none; }
+  .filtro-btn { flex-shrink: 0; }
+
+  /* Jogo card: placar menor */
+  .jogo-time-gols { font-size: 26px; }
+  .jogo-card { padding: 12px 14px; }
+
+  /* Apostas grid: 1 coluna */
+  .apostas-grid { grid-template-columns: 1fr; }
+
+  /* Tabela de classificação: font menor */
+  .rank-table td, .rank-table th { padding: 9px 10px; font-size: 12px; }
+  .rank-table thead th:nth-child(5),
+  .rank-table thead th:nth-child(6),
+  .rank-table tbody td:nth-child(5),
+  .rank-table tbody td:nth-child(6) { display: none; }
+
+  /* Regulamento */
+  .pontuacao-table td, .pontuacao-table th { padding: 8px 10px; font-size: 12px; }
+  .pontuacao-table thead th:nth-child(4),
+  .pontuacao-table tbody td:nth-child(4) { display: none; }
+
+  /* Form incorporado: altura menor no mobile */
+  #page-apostas iframe { min-height: 600px !important; height: 600px !important; }
+
+  /* Phase label */
+  .phase-label { font-size: 15px; padding: 14px 0 8px; }
+}
+
+/* Mobile pequeno (até 380px) */
+@media (max-width: 380px) {
+  nav a span { display: none; }
+  nav a { font-size: 10px; padding: 5px 7px; }
+  .hero h1 { font-size: 30px; }
+  .rank-table thead th:nth-child(4),
+  .rank-table tbody td:nth-child(4) { display: none; }
 }
 </style>
 </head>
@@ -414,7 +493,7 @@ footer strong { color: rgba(255,255,255,0.7); }
 <!-- PÁGINA: INÍCIO -->
 <div class="page active" id="page-inicio">
   <div class="container">
-    <div style="display:grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
+    <div style="display:grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; width:100%;">
 
       <!-- Classificação -->
       <div>
@@ -525,13 +604,34 @@ footer strong { color: rgba(255,255,255,0.7); }
 
     <div class="apostas-grid">
 
-      <div class="aposta-card">
-        <div class="aposta-icon" style="background:var(--verde-claro)">🏆</div>
-        <div class="aposta-status status-aberto">● Aberto</div>
-        <h3>Form 1 — Grupos + Bônus</h3>
-        <p>72 jogos da fase de grupos + apostas bônus: campeão, vice, artilheiro e 32 classificados.</p>
-        <p style="font-size:12px; color:#C0392B; font-weight:500; margin-bottom:12px;">⏰ Prazo: 11/jun até 15h59</p>
-        <a href="https://forms.gle/FZeBS663dKrHctA67" target="_blank" class="aposta-btn">Preencher formulário →</a>
+      <div class="aposta-card" style="grid-column: 1 / -1; border-top: 3px solid var(--verde);">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+          <div>
+            <div class="aposta-status status-aberto" style="margin-bottom:6px">● Aberto agora</div>
+            <h3 style="font-size:18px; margin-bottom:4px">Form 1 — Grupos + Bônus</h3>
+            <p style="font-size:13px; color:var(--cinza-texto); margin:0">72 jogos da fase de grupos + apostas bônus: campeão, vice, artilheiro e 32 classificados.</p>
+          </div>
+          <div style="text-align:right; flex-shrink:0">
+            <p style="font-size:12px; color:#C0392B; font-weight:600; margin-bottom:4px;">⏰ Prazo: 11/jun até 15h59</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWuSZjuU6nweWl3FZUX4XRmXs105YtaHjQ0HV-E-ttfqTR4w/viewform" target="_blank" class="aposta-btn" style="display:inline-block; width:auto; padding:8px 20px;">
+              Abrir em tela cheia ↗
+            </a>
+          </div>
+        </div>
+        <div style="border-radius:10px; overflow:hidden; border:1px solid var(--cinza-borda);">
+          <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLSeWuSZjuU6nweWl3FZUX4XRmXs105YtaHjQ0HV-E-ttfqTR4w/viewform?embedded=true"
+            width="100%"
+            height="800"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            style="display:block; min-height:800px;"
+          >Carregando…</iframe>
+        </div>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-top:10px; text-align:center;">
+          Role dentro do formulário para ver todos os 72 jogos · Use sempre o <strong>mesmo nome</strong> em todos os formulários
+        </p>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
