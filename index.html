@@ -453,6 +453,7 @@ footer strong { color: rgba(255,255,255,0.7); }
       <a onclick="showPage('jogos')">Jogos</a>
       <a onclick="showPage('apostas')">Apostar</a>
       <a onclick="showPage('palpites')">Palpites</a>
+      <a onclick="showPage('bonus')">Bônus</a>
       <a onclick="showPage('regulamento')">Regulamento</a>
     </nav>
   </div>
@@ -512,9 +513,9 @@ footer strong { color: rgba(255,255,255,0.7); }
               </tr>
             </thead>
             <tbody id="tabela-classificacao">
-              <tr>
+              <tr id="classif-loading">
                 <td colspan="6" style="text-align:center; padding:32px; color:var(--cinza-texto); font-size:14px;">
-                  ⏳ Aguardando início da Copa — 11 de junho de 2026
+                  ⏳ Carregando classificação…
                 </td>
               </tr>
             </tbody>
@@ -698,34 +699,24 @@ footer strong { color: rgba(255,255,255,0.7); }
 <div class="page" id="page-palpites">
   <div class="container">
     <div class="section-title">Palpites</div>
-    <p class="section-sub">Visíveis apenas após o início de cada jogo</p>
-
-    <div class="embed-frame">
-      <div class="embed-placeholder">
-        <div class="icon">🔒</div>
-        <h3>Palpites protegidos</h3>
-        <p>Os palpites de cada jogo são revelados automaticamente quando o jogo começa. Incorpore a planilha do Google Sheets aqui para exibição ao vivo.</p>
-        <div class="embed-code" style="margin-top:16px">
-&lt;!-- Substitua pela URL da planilha publicada --&gt;<br>
-&lt;iframe
-  src="https://docs.google.com/spreadsheets/d/SEU_ID/pubhtml?gid=ID_ABA_PALPITES&amp;single=true"
-  width="100%" height="600" frameborder="0"&gt;
-&lt;/iframe&gt;
-        </div>
+    <p class="section-sub">Revelados automaticamente após o início de cada jogo</p>
+    <div id="palpites-container" class="card" style="padding:24px; min-height:200px;">
+      <div style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">
+        ⏳ Carregando palpites…
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="card" style="padding:20px; margin-top:20px; background:#FAFAF7;">
-      <div style="font-size:13px; font-weight:600; color:var(--azul); margin-bottom:10px;">
-        Como publicar a planilha no Google Sheets
+<!-- PÁGINA: BÔNUS -->
+<div class="page" id="page-bonus">
+  <div class="container">
+    <div class="section-title">Apostas Bônus</div>
+    <p class="section-sub">Campeão, vice, 3º lugar, artilheiro e classificados por fase</p>
+    <div id="bonus-container" class="card" style="padding:24px; min-height:200px;">
+      <div style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">
+        ⏳ Carregando apostas bônus…
       </div>
-      <ol style="font-size:13px; color:var(--cinza-texto); line-height:1.8; padding-left:20px;">
-        <li>Abra a planilha no Google Sheets</li>
-        <li>Clique em <strong>Arquivo → Compartilhar → Publicar na Web</strong></li>
-        <li>Em "Link", selecione a aba <strong>Palpites</strong> e o formato <strong>Página da Web</strong></li>
-        <li>Clique em <strong>Publicar</strong> e copie o link gerado</li>
-        <li>Cole o link no código iframe acima, substituindo a URL de exemplo</li>
-      </ol>
     </div>
   </div>
 </div>
@@ -1104,7 +1095,7 @@ function filtrarFase(fase, btn) {
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('stat-participantes').textContent = '—';
+  document.getElementById('stat-participantes').textContent = '…';
   document.getElementById('stat-jogos-feitos').textContent =
     JOGOS.filter(j => j.g1 !== null).length;
 
@@ -1124,6 +1115,299 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>`;
   }
 });
+
+
+// ================================================================
+// INTEGRAÇÃO GOOGLE SHEETS
+// ================================================================
+const SHEET_ID = "1jy1qk-un5oU3C-TTMDKA-m0uC6Qlw3nV8-utHwxJcqA";
+
+function csvUrl(sheetName) {
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+}
+
+async function fetchCSV(sheetName) {
+  try {
+    const res = await fetch(csvUrl(sheetName));
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    return parseCSV(text);
+  } catch(e) {
+    console.warn('Erro ao buscar ' + sheetName + ':', e);
+    return null;
+  }
+}
+
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.split('\n');
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') { inQ = !inQ; }
+      else if (c === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += c; }
+    }
+    cols.push(cur.trim());
+    rows.push(cols);
+  }
+  return rows;
+}
+
+// ── Carrega placares dos jogos na aba Jogos (cols F e H = gols)
+async function carregarJogos() {
+  const rows = await fetchCSV('Jogos');
+  if (!rows) return;
+
+  // Aba Jogos: linha 4 em diante (índice 3+)
+  // Col A=num, B=data, C=hora, E=time1, F=gols1, G='x', H=gols2, I=time2, K=fase
+  let jogosFeitos = 0;
+  for (let i = 3; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row || !row[0]) continue;
+    const numJogo = parseInt(row[0]);
+    if (isNaN(numJogo)) continue;
+    const g1 = row[5] !== undefined && row[5] !== '' ? parseInt(row[5]) : null;
+    const g2 = row[7] !== undefined && row[7] !== '' ? parseInt(row[7]) : null;
+    if (g1 !== null && !isNaN(g1) && g2 !== null && !isNaN(g2)) {
+      // Atualiza o array JOGOS em memória
+      const jogo = JOGOS.find(j => j.n === numJogo);
+      if (jogo) { jogo.g1 = g1; jogo.g2 = g2; jogosFeitos++; }
+    }
+  }
+
+  // Atualiza contador no hero
+  document.getElementById('stat-jogos-feitos').textContent = jogosFeitos;
+
+  // Re-renderiza jogos se a página estiver ativa
+  const paginaJogos = document.getElementById('page-jogos');
+  if (paginaJogos && paginaJogos.classList.contains('active')) {
+    const btnAtivo = document.querySelector('.filtro-btn.ativo');
+    const fase = btnAtivo ? btnAtivo.textContent.trim() : 'todos';
+    const faseMap = {
+      'Todos': 'todos', '1ª Rodada': '1ª rodada', '2ª Rodada': '2ª rodada',
+      '3ª Rodada': '3ª rodada', '16 Avos': '16 avos', 'Oitavas': 'Oitavas',
+      'Quartas': 'Quartas', 'Semis': 'Semifinal', 'Final': 'Final'
+    };
+    renderJogos(faseMap[fase] || 'todos');
+  }
+
+  // Atualiza próximos jogos
+  renderProximosJogos();
+}
+
+function renderProximosJogos() {
+  const proximos = JOGOS.filter(j => j.g1 === null).slice(0, 3);
+  const el = document.getElementById('proximos-jogos');
+  if (!el) return;
+  if (!proximos.length) {
+    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">🏆 Copa encerrada!</div>';
+    return;
+  }
+  el.innerHTML = proximos.map(j => `
+    <div style="padding:10px 0; border-bottom:1px solid var(--cinza-borda); display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-size:13px; font-weight:500;">${flag(j.t1)} ${j.t1} × ${flag(j.t2)} ${j.t2}</div>
+        <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">${j.d} · ${j.h} · Jogo ${j.n}</div>
+      </div>
+      <span class="phase-tag ${FASE_TAG[j.f]}" style="font-size:10px">${j.f}</span>
+    </div>
+  `).join('') + `<div style="font-size:12px;color:var(--cinza-texto);padding-top:10px;text-align:center">
+    <a href="#" onclick="showPage('jogos');return false;" style="color:var(--azul);text-decoration:none;font-weight:500">Ver todos os jogos →</a>
+  </div>`;
+}
+
+// ── Carrega classificação
+async function carregarClassificacao() {
+  const rows = await fetchCSV('Classificação');
+  if (!rows) {
+    document.getElementById('classif-loading').innerHTML =
+      '<td colspan="6" style="text-align:center;padding:24px;color:var(--cinza-texto);font-size:13px;">Classificação não disponível</td>';
+    return;
+  }
+
+  // Aba Classificação: descobre estrutura lendo as primeiras linhas
+  // Procura linhas com nome do participante e pontos
+  // Estrutura típica: col A=pos, B=nome, C=pts, D=jogos apostados, E=acertos placar, F=acertos resultado
+  const tbody = document.getElementById('tabela-classificacao');
+  let linhasValidas = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row || row.length < 3) continue;
+    // Verifica se tem número na col A (posição) e texto na col B (nome)
+    const pos = parseInt(row[0]);
+    const nome = row[1] ? row[1].replace(/^"|"$/g, '').trim() : '';
+    const pts = row[2] ? row[2].replace(/^"|"$/g, '').trim() : '';
+    if (!isNaN(pos) && pos > 0 && nome && nome.length > 1) {
+      linhasValidas.push({ pos, nome, pts, jogos: row[3]||'', placar: row[4]||'', resultado: row[5]||'' });
+    }
+  }
+
+  // Atualiza contador de participantes
+  if (linhasValidas.length > 0) {
+    document.getElementById('stat-participantes').textContent = linhasValidas.length;
+  }
+
+  if (linhasValidas.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">⏳ Aguardando início da Copa — 11 de junho de 2026</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = linhasValidas.map(p => {
+    const posClass = p.pos === 1 ? 'pos-1' : p.pos === 2 ? 'pos-2' : p.pos === 3 ? 'pos-3' : 'pos-other';
+    const ptsNum = parseFloat(p.pts.replace(',', '.')) || 0;
+    const jogoNum = parseInt(p.jogos) || 0;
+    const aprv = jogoNum > 0 ? Math.round((ptsNum / (jogoNum * 50)) * 100) + '%' : '—';
+    return `<tr>
+      <td><span class="pos-badge ${posClass}">${p.pos}</span></td>
+      <td class="participant-name">${p.nome}</td>
+      <td class="pts${p.pos <= 3 ? ' pts-destaque' : ''}">${p.pts || '0'}</td>
+      <td>${p.jogos || '0'}</td>
+      <td>${p.placar || '0'}</td>
+      <td class="aproveitamento">${p.resultado || '0'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Carrega palpites liberados (apenas jogos já iniciados)
+async function carregarPalpites() {
+  const rows = await fetchCSV('Palpites');
+  if (!rows || rows.length < 3) return;
+
+  const agora = new Date();
+  const container = document.getElementById('palpites-container');
+  if (!container) return;
+
+  // Linha 1 = cabeçalhos de seção, linha 2 = nomes dos participantes, linha 3 = rótulos
+  // Linhas 4+ = jogos
+  const nomes = rows[1] ? rows[1].slice(2).filter((n,i) => i%3===0 && n && n.trim()) : [];
+
+  let htmlPalpites = '';
+  let algumLiberado = false;
+
+  for (let i = 3; i < Math.min(rows.length, 107); i++) {
+    const row = rows[i];
+    if (!row || !row[0]) continue;
+    const numJogo = parseInt(row[0]);
+    if (isNaN(numJogo)) continue;
+
+    const jogo = JOGOS.find(j => j.n === numJogo);
+    if (!jogo) continue;
+
+    // Verifica se o jogo já começou
+    const dtJogo = parsearDataJogoJS(jogo.d, jogo.h);
+    if (!dtJogo || agora < dtJogo) continue;
+
+    algumLiberado = true;
+    const temRes = jogo.g1 !== null && jogo.g2 !== null;
+
+    htmlPalpites += `
+    <div style="margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:600;color:var(--azul);margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+        ${flag(jogo.t1)} ${jogo.t1}
+        ${temRes ? `<span style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--texto)">${jogo.g1} × ${jogo.g2}</span>` : '<span style="font-size:11px;color:var(--cinza-texto)">Em andamento</span>'}
+        ${flag(jogo.t2)} ${jogo.t2}
+        <span style="font-size:11px;color:var(--cinza-texto);margin-left:4px">${jogo.d} ${jogo.h}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${nomes.map((nome, idx) => {
+          const colBase = 2 + idx * 3;
+          const g1p = row[colBase] !== undefined ? row[colBase].trim() : '';
+          const g2p = row[colBase+1] !== undefined ? row[colBase+1].trim() : '';
+          if (!g1p && !g2p) return '';
+          const acertou = temRes && parseInt(g1p) === jogo.g1 && parseInt(g2p) === jogo.g2;
+          const acertouRes = temRes && !acertou && (
+            (parseInt(g1p) > parseInt(g2p)) === (jogo.g1 > jogo.g2) &&
+            (parseInt(g1p) === parseInt(g2p)) === (jogo.g1 === jogo.g2)
+          );
+          const cor = acertou ? 'background:var(--verde-claro);border-color:var(--verde);' :
+                      acertouRes ? 'background:#FFF8E1;border-color:var(--amarelo-escuro);' : '';
+          return `<div style="font-size:12px;padding:4px 10px;border:1px solid var(--cinza-borda);border-radius:6px;${cor}">
+            <span style="font-weight:500">${nome.replace(/^"|"$/g,'')}</span>
+            <span style="color:var(--cinza-texto);margin-left:4px">${g1p}×${g2p}</span>
+            ${acertou ? '🎯' : acertouRes ? '✅' : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (!algumLiberado) {
+    container.innerHTML = '<div style="text-align:center;padding:48px 24px;color:var(--cinza-texto)"><div style="font-size:48px;margin-bottom:12px">🔒</div><h3 style="font-size:16px;margin-bottom:8px">Palpites ainda não liberados</h3><p style="font-size:13px">Os palpites de cada jogo aparecem aqui após o início da partida.</p></div>';
+  } else {
+    container.innerHTML = htmlPalpites;
+  }
+}
+
+function parsearDataJogoJS(dataTxt, horaTxt) {
+  const meses = {'jan':0,'fev':1,'mar':2,'abr':3,'mai':4,'jun':5,'jul':6,'ago':7,'set':8,'out':9,'nov':10,'dez':11};
+  const p = dataTxt.toLowerCase().split('/');
+  if (p.length !== 2) return null;
+  const dia = parseInt(p[0]);
+  const mes = meses[p[1].trim()];
+  if (isNaN(dia) || mes === undefined) return null;
+  const hm = horaTxt.toLowerCase().match(/(\d+)h(\d+)?/);
+  if (!hm) return null;
+  return new Date(2026, mes, dia, parseInt(hm[1]), hm[2] ? parseInt(hm[2]) : 0, 0);
+}
+
+// ── Carrega outras pontuações (bônus)
+async function carregarBonus() {
+  const rows = await fetchCSV('Outras pontuações');
+  if (!rows) return;
+  const container = document.getElementById('bonus-container');
+  if (!container) return;
+
+  // Tenta mostrar os dados em formato de tabela simples
+  const cabecalhos = rows[0] || [];
+  const dados = rows.slice(1).filter(r => r && r[0] && r[0].trim());
+
+  if (!dados.length) {
+    container.innerHTML = '<p style="color:var(--cinza-texto);font-size:13px;text-align:center;padding:24px">Sem dados ainda.</p>';
+    return;
+  }
+
+  container.innerHTML = `
+    <div style="overflow-x:auto">
+      <table class="rank-table" style="min-width:500px">
+        <thead><tr>${cabecalhos.slice(0,8).map(h =>
+          `<th>${h.replace(/^"|"$/g,'').trim()}</th>`).join('')}</tr></thead>
+        <tbody>${dados.map(row =>
+          `<tr>${row.slice(0,8).map(c =>
+            `<td>${c.replace(/^"|"$/g,'').trim()}</td>`).join('')}</tr>`
+        ).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+// ── Inicialização: carrega tudo ao abrir a página
+async function inicializarDados() {
+  await Promise.all([
+    carregarJogos(),
+    carregarClassificacao(),
+  ]);
+  // Palpites e bônus só carregam quando a página for acessada
+}
+
+// Carrega palpites/bônus quando as páginas forem abertas
+const _showPageOriginal = showPage;
+window.showPage = function(id) {
+  _showPageOriginal(id);
+  if (id === 'palpites') carregarPalpites();
+  if (id === 'bonus') carregarBonus();
+  if (id === 'jogos') carregarJogos();
+};
+
+// Inicia ao carregar
+window.addEventListener('load', inicializarDados);
+
+// Atualiza a cada 5 minutos automaticamente
+setInterval(inicializarDados, 5 * 60 * 1000);
+
 </script>
 </body>
 </html>
