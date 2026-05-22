@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão Copa do Mundo 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #00A651;
+  --verde-escuro: #007A3D;
+  --verde-claro: #E8F7EF;
+  --amarelo: #FFD700;
+  --amarelo-escuro: #C9A800;
+  --azul: #003087;
+  --azul-claro: #E8EEFF;
+  --cinza-bg: #F4F3EF;
+  --cinza-card: #FFFFFF;
+  --cinza-borda: #E2E0D8;
+  --cinza-texto: #6B6860;
+  --texto: #1A1916;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cinza-bg);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--azul);
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 3px solid var(--amarelo);
+}
+.header-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 60px;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; color: #fff; letter-spacing: 2px;
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-badge {
+  background: var(--amarelo); color: var(--azul);
+  font-size: 11px; font-weight: 600; padding: 2px 7px;
+  border-radius: 4px; letter-spacing: 0.5px;
+}
+nav { display: flex; gap: 4px; }
+nav a {
+  color: rgba(255,255,255,0.7); text-decoration: none;
+  font-size: 13px; font-weight: 500; padding: 6px 14px;
+  border-radius: 6px; transition: all 0.15s; cursor: pointer;
+}
+nav a:hover, nav a.active {
+  color: #fff; background: rgba(255,255,255,0.12);
+}
+nav a.active { color: var(--amarelo); }
+
+/* ── HERO ── */
+.hero {
+  background: var(--azul);
+  padding: 48px 24px 56px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '2026';
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 280px; color: rgba(255,255,255,0.03);
+  position: absolute; top: -40px; left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none; letter-spacing: 8px;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px; color: #fff; letter-spacing: 3px;
+  line-height: 1; margin-bottom: 8px;
+}
+.hero h1 span { color: var(--amarelo); }
+.hero p {
+  color: rgba(255,255,255,0.6); font-size: 15px;
+  margin-bottom: 28px;
+}
+.hero-stats {
+  display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+}
+.hero-stat { text-align: center; }
+.hero-stat .num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px; color: var(--amarelo); line-height: 1;
+}
+.hero-stat .label {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
+}
+.hero-divider {
+  width: 1px; height: 50px; background: rgba(255,255,255,0.15);
+  align-self: center;
+}
+
+/* ── SEÇÕES ── */
+.page { display: none; }
+.page.active { display: block; }
+.container { max-width: 1100px; margin: 0 auto; padding: 36px 24px; }
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px; letter-spacing: 2px; color: var(--azul);
+  margin-bottom: 4px;
+}
+.section-sub {
+  font-size: 13px; color: var(--cinza-texto); margin-bottom: 24px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--cinza-card);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+/* ── CLASSIFICAÇÃO ── */
+.rank-table { width: 100%; border-collapse: collapse; }
+.rank-table thead th {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--cinza-texto);
+  padding: 10px 16px; text-align: left;
+  border-bottom: 1px solid var(--cinza-borda);
+  background: #FAFAF7;
+}
+.rank-table thead th:not(:first-child):not(:nth-child(2)) { text-align: center; }
+.rank-table tbody tr {
+  border-bottom: 1px solid var(--cinza-borda);
+  transition: background 0.1s;
+}
+.rank-table tbody tr:last-child { border-bottom: none; }
+.rank-table tbody tr:hover { background: #FAFAF7; }
+.rank-table td { padding: 12px 16px; font-size: 14px; }
+.rank-table td:not(:first-child):not(:nth-child(2)) { text-align: center; }
+.pos-badge {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 13px;
+}
+.pos-1 { background: var(--amarelo); color: var(--azul); }
+.pos-2 { background: #C0C0C0; color: #333; }
+.pos-3 { background: #CD7F32; color: #fff; }
+.pos-other { background: #F0EDE6; color: var(--cinza-texto); }
+.pts { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 15px; }
+.pts-destaque { color: var(--verde-escuro); font-weight: 600; }
+.participant-name { font-weight: 500; }
+.aproveitamento {
+  font-size: 11px; color: var(--cinza-texto);
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── JOGOS ── */
+.phase-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px; letter-spacing: 1.5px; color: var(--azul);
+  padding: 20px 0 10px;
+  display: flex; align-items: center; gap: 12px;
+}
+.phase-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--cinza-borda);
+}
+.phase-tag {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.8px; padding: 3px 8px; border-radius: 4px;
+}
+.tag-grupos { background: var(--verde-claro); color: var(--verde-escuro); }
+.tag-16avos { background: #FFF3CD; color: #856404; }
+.tag-oitavas { background: #E8EEFF; color: var(--azul); }
+.tag-quartas { background: #F3E8FF; color: #6B21A8; }
+.tag-semis { background: #FDE8F0; color: #9D174D; }
+.tag-final { background: var(--azul); color: var(--amarelo); }
+
+.jogos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+.jogo-card {
+  background: var(--cinza-card);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: box-shadow 0.15s;
+}
+.jogo-card:hover { box-shadow: var(--shadow); }
+.jogo-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.jogo-num { font-size: 11px; color: var(--cinza-texto); font-weight: 500; }
+.jogo-data { font-size: 11px; color: var(--cinza-texto); }
+.jogo-grupo {
+  font-size: 10px; font-weight: 600; color: var(--verde-escuro);
+  background: var(--verde-claro); padding: 2px 6px; border-radius: 3px;
+  text-transform: uppercase;
+}
+.jogo-placar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.jogo-time {
+  flex: 1; text-align: center;
+}
+.jogo-time-nome {
+  font-size: 13px; font-weight: 500; line-height: 1.3;
+}
+.jogo-time-gols {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px; color: var(--azul); line-height: 1;
+  margin-top: 2px;
+}
+.jogo-time-gols.pendente { color: #CCC; font-size: 22px; }
+.jogo-vs {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; color: var(--cinza-texto); flex-shrink: 0;
+}
+.jogo-resultado {
+  text-align: center; margin-top: 8px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.resultado-vitoria-1 { color: var(--verde-escuro); }
+.resultado-empate { color: var(--amarelo-escuro); }
+.resultado-vitoria-2 { color: #C0392B; }
+
+/* ── FILTROS ── */
+.filtros {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.filtro-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 500; padding: 6px 14px;
+  border-radius: 20px; border: 1px solid var(--cinza-borda);
+  background: var(--cinza-card); color: var(--cinza-texto);
+  cursor: pointer; transition: all 0.15s;
+}
+.filtro-btn:hover { border-color: var(--azul); color: var(--azul); }
+.filtro-btn.ativo {
+  background: var(--azul); color: #fff; border-color: var(--azul);
+}
+
+/* ── APOSTAS ── */
+.apostas-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.aposta-card {
+  border: 1px solid var(--cinza-borda); border-radius: 12px;
+  padding: 20px; background: var(--cinza-card);
+}
+.aposta-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 14px;
+}
+.aposta-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.aposta-card p { font-size: 13px; color: var(--cinza-texto); line-height: 1.5; margin-bottom: 16px; }
+.aposta-btn {
+  display: block; width: 100%; padding: 10px;
+  background: var(--azul); color: #fff;
+  border: none; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; text-align: center;
+  text-decoration: none; transition: background 0.15s;
+}
+.aposta-btn:hover { background: #002370; }
+.aposta-btn.secondary {
+  background: var(--cinza-card); color: var(--azul);
+  border: 1px solid var(--azul);
+}
+.aposta-btn.secondary:hover { background: var(--azul-claro); }
+.aposta-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; margin-bottom: 12px;
+  padding: 3px 8px; border-radius: 4px;
+}
+.status-aberto { background: var(--verde-claro); color: var(--verde-escuro); }
+.status-fechado { background: #F0EDE6; color: var(--cinza-texto); }
+.status-em-breve { background: #FFF3CD; color: #856404; }
+
+/* ── REGULAMENTO ── */
+.reg-section { margin-bottom: 28px; }
+.reg-section h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 1.5px; color: var(--azul);
+  margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--amarelo);
+  display: inline-block;
+}
+.reg-section p, .reg-section li {
+  font-size: 14px; line-height: 1.7; color: #333;
+  margin-bottom: 6px;
+}
+.reg-section ul { padding-left: 20px; }
+.pontuacao-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.pontuacao-table th {
+  background: var(--azul); color: #fff;
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  padding: 10px 14px; text-align: left; letter-spacing: 0.5px;
+}
+.pontuacao-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--cinza-borda); }
+.pontuacao-table tr:last-child td { border-bottom: none; }
+.pontuacao-table tr:nth-child(even) td { background: #FAFAF7; }
+.pts-pill {
+  display: inline-block; background: var(--azul); color: var(--amarelo);
+  font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+  padding: 2px 10px; border-radius: 5px;
+}
+
+/* ── EMBED IFRAME ── */
+.embed-frame {
+  width: 100%; border-radius: 12px; border: 1px solid var(--cinza-borda);
+  background: var(--cinza-card); overflow: hidden;
+}
+.embed-placeholder {
+  padding: 48px 24px; text-align: center;
+}
+.embed-placeholder .icon { font-size: 48px; margin-bottom: 12px; }
+.embed-placeholder h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.embed-placeholder p { font-size: 14px; color: var(--cinza-texto); max-width: 400px; margin: 0 auto 20px; }
+.embed-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; background: #F4F3EF;
+  border: 1px solid var(--cinza-borda); border-radius: 8px;
+  padding: 12px 16px; text-align: left; color: var(--cinza-texto);
+  word-break: break-all;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--azul); color: rgba(255,255,255,0.4);
+  text-align: center; padding: 20px;
+  font-size: 12px; margin-top: 48px;
+  border-top: 2px solid var(--amarelo);
+}
+footer strong { color: rgba(255,255,255,0.7); }
+
+/* ── RESPONSIVO ── */
+@media (max-width: 640px) {
+  .hero h1 { font-size: 38px; }
+  .header-inner { padding: 0 16px; }
+  nav a { padding: 6px 10px; font-size: 12px; }
+  .logo { font-size: 20px; }
+  .logo-badge { display: none; }
+  .hero-divider { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      ⚽ BOLÃO
+      <span class="logo-badge">COPA 2026</span>
+    </div>
+    <nav>
+      <a class="active" onclick="showPage('inicio')">Início</a>
+      <a onclick="showPage('jogos')">Jogos</a>
+      <a onclick="showPage('apostas')">Apostar</a>
+      <a onclick="showPage('palpites')">Palpites</a>
+      <a onclick="showPage('regulamento')">Regulamento</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>BOLÃO<br><span>COPA 2026</span></h1>
+  <p>Canadá · Estados Unidos · México &nbsp;·&nbsp; 11 jun – 19 jul 2026</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="num">48</div>
+      <div class="label">Seleções</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="num">104</div>
+      <div class="label">Jogos</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="num">6</div>
+      <div class="label">Fases</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="num" id="stat-participantes">—</div>
+      <div class="label">Participantes</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="num" id="stat-jogos-feitos">0</div>
+      <div class="label">Jogos feitos</div>
+    </div>
+  </div>
+</div>
+
+<!-- PÁGINA: INÍCIO -->
+<div class="page active" id="page-inicio">
+  <div class="container">
+    <div style="display:grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
+
+      <!-- Classificação -->
+      <div>
+        <div class="section-title">Classificação</div>
+        <p class="section-sub">Atualizada após cada rodada de jogos</p>
+        <div class="card">
+          <table class="rank-table">
+            <thead>
+              <tr>
+                <th style="width:44px">#</th>
+                <th>Participante</th>
+                <th>Pts</th>
+                <th>Jogos</th>
+                <th>Placar</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-classificacao">
+              <tr>
+                <td colspan="6" style="text-align:center; padding:32px; color:var(--cinza-texto); font-size:14px;">
+                  ⏳ Aguardando início da Copa — 11 de junho de 2026
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-top:10px;">
+          💡 Para ver a classificação completa e em tempo real, conecte a planilha do Google Sheets (veja instruções abaixo).
+        </p>
+      </div>
+
+      <!-- Lateral -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <!-- Próximos jogos -->
+        <div class="card" style="padding:20px;">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:14px;">
+            Próximos jogos
+          </div>
+          <div id="proximos-jogos">
+            <div style="text-align:center; padding:16px; color:var(--cinza-texto); font-size:13px;">
+              Início: 11 de junho de 2026
+            </div>
+          </div>
+        </div>
+
+        <!-- Apostar agora -->
+        <div class="card" style="padding:20px; border-top: 3px solid var(--amarelo);">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:8px;">
+            Faça sua aposta
+          </div>
+          <p style="font-size:13px; color:var(--cinza-texto); margin-bottom:16px; line-height:1.5;">
+            Formulário 1 aberto — Fase de Grupos + Apostas Bônus. Prazo: <strong>11/jun até 15h59</strong>
+          </p>
+          <div class="aposta-status status-aberto">● Aberto</div>
+          <a href="#" onclick="showPage('apostas'); return false;" class="aposta-btn" style="margin-top:8px">
+            Acessar formulário →
+          </a>
+        </div>
+
+        <!-- Conectar planilha -->
+        <div class="card" style="padding:20px; background:#FAFAF7;">
+          <div style="font-size:13px; font-weight:600; color:var(--azul); margin-bottom:8px;">
+            📊 Conectar ao Google Sheets
+          </div>
+          <p style="font-size:12px; color:var(--cinza-texto); line-height:1.5; margin-bottom:12px;">
+            Para exibir classificação e palpites ao vivo, incorpore a planilha do Sheets nesta página usando um iframe.
+          </p>
+          <div class="embed-code">
+&lt;iframe src="URL_DA_PLANILHA_PUBLICADA"
+  width="100%" height="400" frameborder="0"&gt;
+&lt;/iframe&gt;
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PÁGINA: JOGOS -->
+<div class="page" id="page-jogos">
+  <div class="container">
+    <div class="section-title">Jogos e Resultados</div>
+    <p class="section-sub">104 jogos · 11/jun a 19/jul · Horários em BRT</p>
+
+    <div class="filtros" id="filtros-fase">
+      <button class="filtro-btn ativo" onclick="filtrarFase('todos', this)">Todos</button>
+      <button class="filtro-btn" onclick="filtrarFase('1ª rodada', this)">1ª Rodada</button>
+      <button class="filtro-btn" onclick="filtrarFase('2ª rodada', this)">2ª Rodada</button>
+      <button class="filtro-btn" onclick="filtrarFase('3ª rodada', this)">3ª Rodada</button>
+      <button class="filtro-btn" onclick="filtrarFase('16 avos', this)">16 Avos</button>
+      <button class="filtro-btn" onclick="filtrarFase('Oitavas', this)">Oitavas</button>
+      <button class="filtro-btn" onclick="filtrarFase('Quartas', this)">Quartas</button>
+      <button class="filtro-btn" onclick="filtrarFase('Semifinal', this)">Semis</button>
+      <button class="filtro-btn" onclick="filtrarFase('Final', this)">Final</button>
+    </div>
+
+    <div class="jogos-grid" id="jogos-grid"></div>
+  </div>
+</div>
+
+<!-- PÁGINA: APOSTAS -->
+<div class="page" id="page-apostas">
+  <div class="container">
+    <div class="section-title">Faça sua Aposta</div>
+    <p class="section-sub">Formulários liberados progressivamente conforme a Copa avança</p>
+
+    <div class="apostas-grid">
+
+      <div class="aposta-card">
+        <div class="aposta-icon" style="background:var(--verde-claro)">🏆</div>
+        <div class="aposta-status status-aberto">● Aberto</div>
+        <h3>Form 1 — Grupos + Bônus</h3>
+        <p>72 jogos da fase de grupos + apostas bônus: campeão, vice, artilheiro e 32 classificados.</p>
+        <p style="font-size:12px; color:#C0392B; font-weight:500; margin-bottom:12px;">⏰ Prazo: 11/jun até 15h59</p>
+        <a href="COLE_AQUI_O_LINK_DO_FORM_1" target="_blank" class="aposta-btn">Preencher formulário →</a>
+      </div>
+
+      <div class="aposta-card" style="opacity:0.6">
+        <div class="aposta-icon" style="background:#F0EDE6">🔒</div>
+        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+        <h3>Form 2 — 16 Avos</h3>
+        <p>16 jogos dos 16 avos de final + quais 16 seleções avançam para as oitavas.</p>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 28/jun</p>
+        <button class="aposta-btn secondary" disabled>Disponível em 28/jun</button>
+      </div>
+
+      <div class="aposta-card" style="opacity:0.6">
+        <div class="aposta-icon" style="background:#E8EEFF">🔒</div>
+        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+        <h3>Form 3 — Oitavas</h3>
+        <p>8 jogos das oitavas de final + quais 8 avançam para as quartas.</p>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 04/jul</p>
+        <button class="aposta-btn secondary" disabled>Disponível em 04/jul</button>
+      </div>
+
+      <div class="aposta-card" style="opacity:0.6">
+        <div class="aposta-icon" style="background:#F3E8FF">🔒</div>
+        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+        <h3>Form 4 — Quartas</h3>
+        <p>4 jogos das quartas de final + quais 4 avançam para as semis.</p>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 09/jul</p>
+        <button class="aposta-btn secondary" disabled>Disponível em 09/jul</button>
+      </div>
+
+      <div class="aposta-card" style="opacity:0.6">
+        <div class="aposta-icon" style="background:#FDE8F0">🔒</div>
+        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+        <h3>Form 5 — Semifinais</h3>
+        <p>Palpites dos 2 jogos das semifinais.</p>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 14/jul</p>
+        <button class="aposta-btn secondary" disabled>Disponível em 14/jul</button>
+      </div>
+
+      <div class="aposta-card" style="opacity:0.6">
+        <div class="aposta-icon" style="background:var(--azul-claro)">🥇</div>
+        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+        <h3>Form 6 — Final</h3>
+        <p>Palpites do jogo do 3º lugar e da grande final.</p>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 18/jul</p>
+        <button class="aposta-btn secondary" disabled>Disponível em 18/jul</button>
+      </div>
+
+    </div>
+
+    <div class="card" style="padding:24px; margin-top:28px; border-left: 4px solid var(--amarelo);">
+      <div style="font-size:14px; font-weight:600; margin-bottom:8px;">ℹ️ Como funciona</div>
+      <ul style="font-size:13px; color:var(--cinza-texto); line-height:1.8; padding-left:20px;">
+        <li>Use o <strong>mesmo nome</strong> em todos os formulários — é assim que o sistema te reconhece</li>
+        <li>Palpites usam grade de múltipla escolha — selecione os gols de cada time (0 a 15)</li>
+        <li>Deixar uma linha em branco na grade = sem aposta para aquele jogo</li>
+        <li>Palpites só ficam visíveis para todos <strong>após o início de cada jogo</strong></li>
+        <li>Você pode refazer um formulário para corrigir palpites, desde que dentro do prazo</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PÁGINA: PALPITES -->
+<div class="page" id="page-palpites">
+  <div class="container">
+    <div class="section-title">Palpites</div>
+    <p class="section-sub">Visíveis apenas após o início de cada jogo</p>
+
+    <div class="embed-frame">
+      <div class="embed-placeholder">
+        <div class="icon">🔒</div>
+        <h3>Palpites protegidos</h3>
+        <p>Os palpites de cada jogo são revelados automaticamente quando o jogo começa. Incorpore a planilha do Google Sheets aqui para exibição ao vivo.</p>
+        <div class="embed-code" style="margin-top:16px">
+&lt;!-- Substitua pela URL da planilha publicada --&gt;<br>
+&lt;iframe
+  src="https://docs.google.com/spreadsheets/d/SEU_ID/pubhtml?gid=ID_ABA_PALPITES&amp;single=true"
+  width="100%" height="600" frameborder="0"&gt;
+&lt;/iframe&gt;
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px; margin-top:20px; background:#FAFAF7;">
+      <div style="font-size:13px; font-weight:600; color:var(--azul); margin-bottom:10px;">
+        Como publicar a planilha no Google Sheets
+      </div>
+      <ol style="font-size:13px; color:var(--cinza-texto); line-height:1.8; padding-left:20px;">
+        <li>Abra a planilha no Google Sheets</li>
+        <li>Clique em <strong>Arquivo → Compartilhar → Publicar na Web</strong></li>
+        <li>Em "Link", selecione a aba <strong>Palpites</strong> e o formato <strong>Página da Web</strong></li>
+        <li>Clique em <strong>Publicar</strong> e copie o link gerado</li>
+        <li>Cole o link no código iframe acima, substituindo a URL de exemplo</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PÁGINA: REGULAMENTO -->
+<div class="page" id="page-regulamento">
+  <div class="container" style="max-width:780px">
+    <div class="section-title">Regulamento</div>
+    <p class="section-sub">Copa do Mundo 2026 · Canadá, EUA e México</p>
+
+    <div class="reg-section">
+      <h3>Participação</h3>
+      <ul>
+        <li>O bolão é aberto a todos os convidados. Participe usando sempre <strong>o mesmo nome</strong> em todos os formulários.</li>
+        <li>Os formulários são liberados progressivamente a cada fase da competição.</li>
+        <li>Palpites só podem ser feitos dentro do prazo de cada formulário.</li>
+        <li>É possível refazer o formulário para corrigir palpites, desde que dentro do prazo.</li>
+      </ul>
+    </div>
+
+    <div class="reg-section">
+      <h3>🧮 Pontuação dos Placares</h3>
+      <table class="pontuacao-table">
+        <thead>
+          <tr><th>#</th><th>Situação</th><th>Pontos</th><th>Exemplo</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:700;color:var(--verde-escuro)">1</td>
+            <td><strong>Placar exato</strong> 🎯</td>
+            <td><span class="pts-pill">50</span></td>
+            <td>Apostou 2×1, deu 2×1</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700">2</td>
+            <td>Acertou o vencedor <strong>e</strong> o número de gols de um dos times</td>
+            <td><span class="pts-pill">30</span></td>
+            <td>Apostou 2×1, deu 2×0 (acertou vencedor + gols do time 1)</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700">3</td>
+            <td>Acertou que é empate (sem acertar o placar exato)</td>
+            <td><span class="pts-pill">25</span></td>
+            <td>Apostou 1×1, deu 0×0</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700">4</td>
+            <td>Acertou o vencedor, sem gols, mas acertou a <strong>diferença</strong> de gols</td>
+            <td><span class="pts-pill">25</span></td>
+            <td>Apostou 2×1 (diff +1), deu 3×2 (diff +1)</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700">5</td>
+            <td>Acertou apenas o vencedor</td>
+            <td><span class="pts-pill">20</span></td>
+            <td>Apostou 2×1, deu 4×0</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700">6</td>
+            <td>Acertou o placar de apenas um dos times (mas errou resultado)</td>
+            <td><span class="pts-pill">10</span></td>
+            <td>Apostou 1×2, deu 1×3 (acertou gols do time 1, errou resultado)</td>
+          </tr>
+          <tr style="background:#FFF5F5">
+            <td style="font-weight:700;color:#C0392B">7</td>
+            <td>Placar invertido 🤡 (apostou o resultado exatamente ao contrário)</td>
+            <td><span class="pts-pill" style="background:#C0392B">-5</span></td>
+            <td>Apostou 2×1, deu 1×2</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:var(--cinza-texto)">8</td>
+            <td>Errou ou deixou em branco</td>
+            <td><span class="pts-pill" style="background:var(--cinza-texto)">0</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:14px; padding:12px 16px; background:#FFF8E1; border-left:3px solid var(--amarelo-escuro); border-radius:6px; font-size:13px; line-height:1.6;">
+        <strong>‼️ Prorrogação:</strong> é considerada para o resultado do jogo.<br>
+        <strong>Pênaltis:</strong> não são considerados — o resultado para efeito de pontuação é o placar após a prorrogação.
+      </div>
+      <p style="margin-top:10px; font-size:13px; color:var(--cinza-texto);">Não há multiplicador de fase — todas as fases valem os mesmos pontos.</p>
+    </div>
+
+    <div class="reg-section">
+      <h3>🎯 Apostas Bônus</h3>
+      <table class="pontuacao-table">
+        <thead>
+          <tr><th>Aposta</th><th>Pontos</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🥇 Acertar o <strong>Campeão</strong></td>
+            <td><span class="pts-pill">200</span></td>
+          </tr>
+          <tr>
+            <td>🥈 Acertar o <strong>Vice-campeão</strong></td>
+            <td><span class="pts-pill">100</span></td>
+          </tr>
+          <tr>
+            <td>🥉 Acertar o <strong>3º lugar</strong></td>
+            <td><span class="pts-pill">50</span></td>
+          </tr>
+          <tr>
+            <td>⚽ Acertar o <strong>Artilheiro</strong></td>
+            <td><span class="pts-pill">100</span></td>
+          </tr>
+          <tr>
+            <td>Acertar cada seleção classificada para os <strong>16 Avos</strong> (32 vagas)</td>
+            <td><span class="pts-pill">50</span> por acerto</td>
+          </tr>
+          <tr>
+            <td>Acertar cada seleção classificada para as <strong>Oitavas</strong> (16 vagas)</td>
+            <td><span class="pts-pill">50</span> por acerto</td>
+          </tr>
+          <tr>
+            <td>Acertar cada seleção classificada para as <strong>Quartas</strong> (8 vagas)</td>
+            <td><span class="pts-pill">50</span> por acerto</td>
+          </tr>
+          <tr>
+            <td>Acertar cada seleção classificada para as <strong>Semis</strong> (4 vagas)</td>
+            <td><span class="pts-pill">50</span> por acerto</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="reg-section">
+      <h3>Visibilidade dos Palpites</h3>
+      <ul>
+        <li>Os palpites de cada jogo ficam ocultos até o horário oficial do início da partida.</li>
+        <li>Após o início do jogo, os palpites de todos os participantes ficam visíveis na aba Palpites e no site.</li>
+        <li>Isso evita que alguém copie as apostas de outros antes do jogo.</li>
+      </ul>
+    </div>
+
+    <div class="reg-section">
+      <h3>Desempate</h3>
+      <ul>
+        <li>1º critério: maior número de placares exatos (50 pts)</li>
+        <li>2º critério: maior pontuação total acumulada</li>
+        <li>3º critério: maior pontuação nos bônus</li>
+        <li>4º critério: acerto do campeão</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Bolão Copa do Mundo 2026</strong> · Canadá, Estados Unidos e México · 11 jun – 19 jul 2026<br>
+  <span style="margin-top:4px; display:block">48 seleções · 104 jogos · 12 grupos</span>
+</footer>
+
+<script>
+const FLAGS = {
+  "México":"https://flagcdn.com/w40/mx.png","África do Sul":"https://flagcdn.com/w40/za.png",
+  "Coreia do Sul":"https://flagcdn.com/w40/kr.png","Tchéquia":"https://flagcdn.com/w40/cz.png",
+  "Canadá":"https://flagcdn.com/w40/ca.png","Bósnia-Herz.":"https://flagcdn.com/w40/ba.png",
+  "Catar":"https://flagcdn.com/w40/qa.png","Suíça":"https://flagcdn.com/w40/ch.png",
+  "Brasil":"https://flagcdn.com/w40/br.png","Marrocos":"https://flagcdn.com/w40/ma.png",
+  "Haiti":"https://flagcdn.com/w40/ht.png","Escócia":"https://flagcdn.com/w40/gb-sct.png",
+  "Estados Unidos":"https://flagcdn.com/w40/us.png","Paraguai":"https://flagcdn.com/w40/py.png",
+  "Austrália":"https://flagcdn.com/w40/au.png","Turquia":"https://flagcdn.com/w40/tr.png",
+  "Alemanha":"https://flagcdn.com/w40/de.png","Curaçao":"https://flagcdn.com/w40/cw.png",
+  "Costa do Marfim":"https://flagcdn.com/w40/ci.png","Equador":"https://flagcdn.com/w40/ec.png",
+  "Holanda":"https://flagcdn.com/w40/nl.png","Japão":"https://flagcdn.com/w40/jp.png",
+  "Suécia":"https://flagcdn.com/w40/se.png","Tunísia":"https://flagcdn.com/w40/tn.png",
+  "Bélgica":"https://flagcdn.com/w40/be.png","Egito":"https://flagcdn.com/w40/eg.png",
+  "Irã":"https://flagcdn.com/w40/ir.png","Nova Zelândia":"https://flagcdn.com/w40/nz.png",
+  "Espanha":"https://flagcdn.com/w40/es.png","Cabo Verde":"https://flagcdn.com/w40/cv.png",
+  "Arábia Saudita":"https://flagcdn.com/w40/sa.png","Uruguai":"https://flagcdn.com/w40/uy.png",
+  "França":"https://flagcdn.com/w40/fr.png","Senegal":"https://flagcdn.com/w40/sn.png",
+  "Iraque":"https://flagcdn.com/w40/iq.png","Noruega":"https://flagcdn.com/w40/no.png",
+  "Argentina":"https://flagcdn.com/w40/ar.png","Argélia":"https://flagcdn.com/w40/dz.png",
+  "Áustria":"https://flagcdn.com/w40/at.png","Jordânia":"https://flagcdn.com/w40/jo.png",
+  "Portugal":"https://flagcdn.com/w40/pt.png","RD Congo":"https://flagcdn.com/w40/cd.png",
+  "Uzbequistão":"https://flagcdn.com/w40/uz.png","Colômbia":"https://flagcdn.com/w40/co.png",
+  "Inglaterra":"https://flagcdn.com/w40/gb-eng.png","Croácia":"https://flagcdn.com/w40/hr.png",
+  "Gana":"https://flagcdn.com/w40/gh.png","Panamá":"https://flagcdn.com/w40/pa.png",
+  "Bósnia-Herzegovina":"https://flagcdn.com/w40/ba.png",
+};
+function flag(n){if(!FLAGS[n])return '';return '<img src="'+FLAGS[n]+'" style="width:22px;height:15px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-bottom:2px;" alt="'+n+'" loading="lazy">';}
+
+const JOGOS = [
+  {n:1,  d:"11/jun", h:"16h",   f:"1ª rodada", g:"A", t1:"México",          t2:"África do Sul",   g1:null, g2:null},
+  {n:2,  d:"11/jun", h:"23h",   f:"1ª rodada", g:"A", t1:"Coreia do Sul",   t2:"Tchéquia",         g1:null, g2:null},
+  {n:3,  d:"12/jun", h:"16h",   f:"1ª rodada", g:"B", t1:"Canadá",          t2:"Bósnia-Herz.",     g1:null, g2:null},
+  {n:4,  d:"12/jun", h:"22h",   f:"1ª rodada", g:"D", t1:"Estados Unidos",  t2:"Paraguai",         g1:null, g2:null},
+  {n:5,  d:"13/jun", h:"22h",   f:"1ª rodada", g:"C", t1:"Haiti",           t2:"Escócia",          g1:null, g2:null},
+  {n:6,  d:"13/jun", h:"01h",   f:"1ª rodada", g:"D", t1:"Austrália",       t2:"Turquia",          g1:null, g2:null},
+  {n:7,  d:"13/jun", h:"19h",   f:"1ª rodada", g:"C", t1:"Brasil",          t2:"Marrocos",         g1:null, g2:null},
+  {n:8,  d:"13/jun", h:"16h",   f:"1ª rodada", g:"B", t1:"Catar",           t2:"Suíça",            g1:null, g2:null},
+  {n:9,  d:"14/jun", h:"20h",   f:"1ª rodada", g:"E", t1:"Costa do Marfim", t2:"Equador",          g1:null, g2:null},
+  {n:10, d:"14/jun", h:"14h",   f:"1ª rodada", g:"E", t1:"Alemanha",        t2:"Curaçao",          g1:null, g2:null},
+  {n:11, d:"14/jun", h:"17h",   f:"1ª rodada", g:"F", t1:"Holanda",         t2:"Japão",            g1:null, g2:null},
+  {n:12, d:"14/jun", h:"23h",   f:"1ª rodada", g:"F", t1:"Suécia",          t2:"Tunísia",          g1:null, g2:null},
+  {n:13, d:"15/jun", h:"19h",   f:"1ª rodada", g:"H", t1:"Arábia Saudita",  t2:"Uruguai",          g1:null, g2:null},
+  {n:14, d:"15/jun", h:"13h",   f:"1ª rodada", g:"H", t1:"Espanha",         t2:"Cabo Verde",       g1:null, g2:null},
+  {n:15, d:"15/jun", h:"22h",   f:"1ª rodada", g:"G", t1:"Irã",             t2:"Nova Zelândia",    g1:null, g2:null},
+  {n:16, d:"15/jun", h:"16h",   f:"1ª rodada", g:"G", t1:"Bélgica",         t2:"Egito",            g1:null, g2:null},
+  {n:17, d:"16/jun", h:"16h",   f:"1ª rodada", g:"I", t1:"França",          t2:"Senegal",          g1:null, g2:null},
+  {n:18, d:"16/jun", h:"19h",   f:"1ª rodada", g:"I", t1:"Iraque",          t2:"Noruega",          g1:null, g2:null},
+  {n:19, d:"16/jun", h:"22h",   f:"1ª rodada", g:"J", t1:"Argentina",       t2:"Argélia",          g1:null, g2:null},
+  {n:20, d:"16/jun", h:"01h",   f:"1ª rodada", g:"J", t1:"Áustria",         t2:"Jordânia",         g1:null, g2:null},
+  {n:21, d:"17/jun", h:"21h",   f:"1ª rodada", g:"L", t1:"Gana",            t2:"Panamá",           g1:null, g2:null},
+  {n:22, d:"17/jun", h:"17h",   f:"1ª rodada", g:"L", t1:"Inglaterra",      t2:"Croácia",          g1:null, g2:null},
+  {n:23, d:"17/jun", h:"14h",   f:"1ª rodada", g:"K", t1:"Portugal",        t2:"RD Congo",         g1:null, g2:null},
+  {n:24, d:"17/jun", h:"23h",   f:"1ª rodada", g:"K", t1:"Uzbequistão",     t2:"Colômbia",         g1:null, g2:null},
+  {n:25, d:"18/jun", h:"13h",   f:"2ª rodada", g:"A", t1:"Tchéquia",        t2:"África do Sul",    g1:null, g2:null},
+  {n:26, d:"18/jun", h:"16h",   f:"2ª rodada", g:"B", t1:"Suíça",           t2:"Bósnia-Herz.",     g1:null, g2:null},
+  {n:27, d:"18/jun", h:"19h",   f:"2ª rodada", g:"B", t1:"Canadá",          t2:"Catar",            g1:null, g2:null},
+  {n:28, d:"18/jun", h:"22h",   f:"2ª rodada", g:"A", t1:"México",          t2:"Coreia do Sul",    g1:null, g2:null},
+  {n:29, d:"19/jun", h:"22h",   f:"2ª rodada", g:"C", t1:"Brasil",          t2:"Haiti",            g1:null, g2:null},
+  {n:30, d:"19/jun", h:"19h",   f:"2ª rodada", g:"C", t1:"Escócia",         t2:"Marrocos",         g1:null, g2:null},
+  {n:31, d:"19/jun", h:"01h",   f:"2ª rodada", g:"D", t1:"Turquia",         t2:"Paraguai",         g1:null, g2:null},
+  {n:32, d:"19/jun", h:"16h",   f:"2ª rodada", g:"D", t1:"Estados Unidos",  t2:"Austrália",        g1:null, g2:null},
+  {n:33, d:"20/jun", h:"17h",   f:"2ª rodada", g:"E", t1:"Alemanha",        t2:"Costa do Marfim",  g1:null, g2:null},
+  {n:34, d:"20/jun", h:"21h",   f:"2ª rodada", g:"E", t1:"Equador",         t2:"Curaçao",          g1:null, g2:null},
+  {n:35, d:"20/jun", h:"17h",   f:"2ª rodada", g:"F", t1:"Holanda",         t2:"Suécia",           g1:null, g2:null},
+  {n:36, d:"20/jun", h:"01h",   f:"2ª rodada", g:"F", t1:"Tunísia",         t2:"Japão",            g1:null, g2:null},
+  {n:37, d:"21/jun", h:"19h",   f:"2ª rodada", g:"H", t1:"Uruguai",         t2:"Cabo Verde",       g1:null, g2:null},
+  {n:38, d:"21/jun", h:"13h",   f:"2ª rodada", g:"H", t1:"Espanha",         t2:"Arábia Saudita",   g1:null, g2:null},
+  {n:39, d:"21/jun", h:"16h",   f:"2ª rodada", g:"G", t1:"Bélgica",         t2:"Irã",              g1:null, g2:null},
+  {n:40, d:"21/jun", h:"22h",   f:"2ª rodada", g:"G", t1:"Nova Zelândia",   t2:"Egito",            g1:null, g2:null},
+  {n:41, d:"22/jun", h:"21h",   f:"2ª rodada", g:"I", t1:"Noruega",         t2:"Senegal",          g1:null, g2:null},
+  {n:42, d:"22/jun", h:"18h",   f:"2ª rodada", g:"I", t1:"França",          t2:"Iraque",           g1:null, g2:null},
+  {n:43, d:"22/jun", h:"14h",   f:"2ª rodada", g:"J", t1:"Argentina",       t2:"Áustria",          g1:null, g2:null},
+  {n:44, d:"22/jun", h:"00h",   f:"2ª rodada", g:"J", t1:"Jordânia",        t2:"Argélia",          g1:null, g2:null},
+  {n:45, d:"23/jun", h:"17h",   f:"2ª rodada", g:"L", t1:"Inglaterra",      t2:"Gana",             g1:null, g2:null},
+  {n:46, d:"23/jun", h:"20h",   f:"2ª rodada", g:"L", t1:"Panamá",          t2:"Croácia",          g1:null, g2:null},
+  {n:47, d:"23/jun", h:"14h",   f:"2ª rodada", g:"K", t1:"Portugal",        t2:"Uzbequistão",      g1:null, g2:null},
+  {n:48, d:"23/jun", h:"23h",   f:"2ª rodada", g:"K", t1:"Colômbia",        t2:"RD Congo",         g1:null, g2:null},
+  {n:49, d:"24/jun", h:"19h",   f:"3ª rodada", g:"C", t1:"Escócia",         t2:"Brasil",           g1:null, g2:null},
+  {n:50, d:"24/jun", h:"19h",   f:"3ª rodada", g:"C", t1:"Marrocos",        t2:"Haiti",            g1:null, g2:null},
+  {n:51, d:"24/jun", h:"16h",   f:"3ª rodada", g:"B", t1:"Suíça",           t2:"Canadá",           g1:null, g2:null},
+  {n:52, d:"24/jun", h:"16h",   f:"3ª rodada", g:"B", t1:"Bósnia-Herz.",    t2:"Catar",            g1:null, g2:null},
+  {n:53, d:"24/jun", h:"22h",   f:"3ª rodada", g:"A", t1:"Tchéquia",        t2:"México",           g1:null, g2:null},
+  {n:54, d:"24/jun", h:"22h",   f:"3ª rodada", g:"A", t1:"África do Sul",   t2:"Coreia do Sul",    g1:null, g2:null},
+  {n:55, d:"25/jun", h:"17h",   f:"3ª rodada", g:"E", t1:"Curaçao",         t2:"Costa do Marfim",  g1:null, g2:null},
+  {n:56, d:"25/jun", h:"17h",   f:"3ª rodada", g:"E", t1:"Equador",         t2:"Alemanha",         g1:null, g2:null},
+  {n:57, d:"25/jun", h:"20h",   f:"3ª rodada", g:"F", t1:"Japão",           t2:"Suécia",           g1:null, g2:null},
+  {n:58, d:"25/jun", h:"20h",   f:"3ª rodada", g:"F", t1:"Tunísia",         t2:"Holanda",          g1:null, g2:null},
+  {n:59, d:"25/jun", h:"23h",   f:"3ª rodada", g:"D", t1:"Turquia",         t2:"Estados Unidos",   g1:null, g2:null},
+  {n:60, d:"25/jun", h:"23h",   f:"3ª rodada", g:"D", t1:"Paraguai",        t2:"Austrália",        g1:null, g2:null},
+  {n:61, d:"26/jun", h:"16h",   f:"3ª rodada", g:"I", t1:"Noruega",         t2:"França",           g1:null, g2:null},
+  {n:62, d:"26/jun", h:"16h",   f:"3ª rodada", g:"I", t1:"Senegal",         t2:"Iraque",           g1:null, g2:null},
+  {n:63, d:"26/jun", h:"00h",   f:"3ª rodada", g:"G", t1:"Egito",           t2:"Irã",              g1:null, g2:null},
+  {n:64, d:"26/jun", h:"00h",   f:"3ª rodada", g:"G", t1:"Nova Zelândia",   t2:"Bélgica",          g1:null, g2:null},
+  {n:65, d:"26/jun", h:"21h",   f:"3ª rodada", g:"H", t1:"Cabo Verde",      t2:"Arábia Saudita",   g1:null, g2:null},
+  {n:66, d:"26/jun", h:"21h",   f:"3ª rodada", g:"H", t1:"Uruguai",         t2:"Espanha",          g1:null, g2:null},
+  {n:67, d:"27/jun", h:"18h",   f:"3ª rodada", g:"L", t1:"Panamá",          t2:"Inglaterra",       g1:null, g2:null},
+  {n:68, d:"27/jun", h:"18h",   f:"3ª rodada", g:"L", t1:"Croácia",         t2:"Gana",             g1:null, g2:null},
+  {n:69, d:"27/jun", h:"23h",   f:"3ª rodada", g:"J", t1:"Argélia",         t2:"Áustria",          g1:null, g2:null},
+  {n:70, d:"27/jun", h:"23h",   f:"3ª rodada", g:"J", t1:"Jordânia",        t2:"Argentina",        g1:null, g2:null},
+  {n:71, d:"27/jun", h:"20h30", f:"3ª rodada", g:"K", t1:"Colômbia",        t2:"Portugal",         g1:null, g2:null},
+  {n:72, d:"27/jun", h:"20h30", f:"3ª rodada", g:"K", t1:"RD Congo",        t2:"Uzbequistão",      g1:null, g2:null},
+  {n:73, d:"28/jun", h:"16h",   f:"16 avos",   g:"",  t1:"2º Grupo A",      t2:"2º Grupo B",       g1:null, g2:null},
+  {n:74, d:"29/jun", h:"17h30", f:"16 avos",   g:"",  t1:"1º Grupo E",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:75, d:"29/jun", h:"22h",   f:"16 avos",   g:"",  t1:"1º Grupo F",      t2:"2º Grupo C",       g1:null, g2:null},
+  {n:76, d:"29/jun", h:"14h",   f:"16 avos",   g:"",  t1:"1º Grupo C",      t2:"2º Grupo F",       g1:null, g2:null},
+  {n:77, d:"30/jun", h:"18h",   f:"16 avos",   g:"",  t1:"1º Grupo I",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:78, d:"30/jun", h:"14h",   f:"16 avos",   g:"",  t1:"2º Grupo E",      t2:"2º Grupo I",       g1:null, g2:null},
+  {n:79, d:"30/jun", h:"22h",   f:"16 avos",   g:"",  t1:"1º Grupo A",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:80, d:"01/jul", h:"13h",   f:"16 avos",   g:"",  t1:"1º Grupo L",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:81, d:"01/jul", h:"21h",   f:"16 avos",   g:"",  t1:"1º Grupo D",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:82, d:"01/jul", h:"17h",   f:"16 avos",   g:"",  t1:"1º Grupo G",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:83, d:"02/jul", h:"20h",   f:"16 avos",   g:"",  t1:"2º Grupo K",      t2:"2º Grupo L",       g1:null, g2:null},
+  {n:84, d:"02/jul", h:"16h",   f:"16 avos",   g:"",  t1:"1º Grupo H",      t2:"2º Grupo J",       g1:null, g2:null},
+  {n:85, d:"02/jul", h:"00h",   f:"16 avos",   g:"",  t1:"1º Grupo B",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:86, d:"03/jul", h:"17h",   f:"16 avos",   g:"",  t1:"1º Grupo J",      t2:"2º Grupo H",       g1:null, g2:null},
+  {n:87, d:"03/jul", h:"22h30", f:"16 avos",   g:"",  t1:"1º Grupo K",      t2:"Melhor 3º",        g1:null, g2:null},
+  {n:88, d:"03/jul", h:"15h",   f:"16 avos",   g:"",  t1:"2º Grupo D",      t2:"2º Grupo G",       g1:null, g2:null},
+  {n:89, d:"04/jul", h:"18h",   f:"Oitavas",   g:"",  t1:"Venc. J74",       t2:"Venc. J77",        g1:null, g2:null},
+  {n:90, d:"04/jul", h:"14h",   f:"Oitavas",   g:"",  t1:"Venc. J73",       t2:"Venc. J75",        g1:null, g2:null},
+  {n:91, d:"05/jul", h:"17h",   f:"Oitavas",   g:"",  t1:"Venc. J76",       t2:"Venc. J78",        g1:null, g2:null},
+  {n:92, d:"05/jul", h:"21h",   f:"Oitavas",   g:"",  t1:"Venc. J79",       t2:"Venc. J80",        g1:null, g2:null},
+  {n:93, d:"06/jul", h:"15h",   f:"Oitavas",   g:"",  t1:"Venc. J83",       t2:"Venc. J84",        g1:null, g2:null},
+  {n:94, d:"06/jul", h:"20h",   f:"Oitavas",   g:"",  t1:"Venc. J81",       t2:"Venc. J82",        g1:null, g2:null},
+  {n:95, d:"07/jul", h:"13h",   f:"Oitavas",   g:"",  t1:"Venc. J86",       t2:"Venc. J88",        g1:null, g2:null},
+  {n:96, d:"07/jul", h:"17h",   f:"Oitavas",   g:"",  t1:"Venc. J85",       t2:"Venc. J87",        g1:null, g2:null},
+  {n:97, d:"09/jul", h:"17h",   f:"Quartas",   g:"",  t1:"Venc. J89",       t2:"Venc. J90",        g1:null, g2:null},
+  {n:98, d:"10/jul", h:"16h",   f:"Quartas",   g:"",  t1:"Venc. J93",       t2:"Venc. J94",        g1:null, g2:null},
+  {n:99, d:"11/jul", h:"18h",   f:"Quartas",   g:"",  t1:"Venc. J91",       t2:"Venc. J92",        g1:null, g2:null},
+  {n:100,d:"11/jul", h:"21h",   f:"Quartas",   g:"",  t1:"Venc. J95",       t2:"Venc. J96",        g1:null, g2:null},
+  {n:101,d:"14/jul", h:"16h",   f:"Semifinal", g:"",  t1:"Venc. J97",       t2:"Venc. J98",        g1:null, g2:null},
+  {n:102,d:"15/jul", h:"16h",   f:"Semifinal", g:"",  t1:"Venc. J99",       t2:"Venc. J100",       g1:null, g2:null},
+  {n:103,d:"18/jul", h:"18h",   f:"3º Lugar",  g:"",  t1:"Perd. SF 101",    t2:"Perd. SF 102",     g1:null, g2:null},
+  {n:104,d:"19/jul", h:"16h",   f:"Final",     g:"",  t1:"Vencedor SF 101", t2:"Vencedor SF 102",  g1:null, g2:null},
+];
+
+const FASE_TAG = {
+  "1ª rodada": "tag-grupos",
+  "2ª rodada": "tag-grupos",
+  "3ª rodada": "tag-grupos",
+  "16 avos":   "tag-16avos",
+  "Oitavas":   "tag-oitavas",
+  "Quartas":   "tag-quartas",
+  "Semifinal": "tag-semis",
+  "3º Lugar":  "tag-semis",
+  "Final":     "tag-final",
+};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'jogos') renderJogos('todos');
+}
+
+function renderJogos(filtro) {
+  const grid = document.getElementById('jogos-grid');
+  const lista = filtro === 'todos' ? JOGOS : JOGOS.filter(j => j.f === filtro);
+
+  let lastFase = '';
+  let html = '';
+
+  if (filtro === 'todos') {
+    const fases = [...new Set(JOGOS.map(j => j.f))];
+    fases.forEach(fase => {
+      const jogos = JOGOS.filter(j => j.f === fase);
+      html += `<div style="grid-column:1/-1">
+        <div class="phase-label">
+          ${fase} <span class="phase-tag ${FASE_TAG[fase]}">${jogos.length} jogo${jogos.length > 1 ? 's' : ''}</span>
+        </div>
+      </div>`;
+      jogos.forEach(j => { html += renderJogoCard(j); });
+    });
+  } else {
+    lista.forEach(j => { html += renderJogoCard(j); });
+  }
+
+  grid.innerHTML = html;
+}
+
+function renderJogoCard(j) {
+  const temResultado = j.g1 !== null && j.g2 !== null;
+  let resultado = '';
+  if (temResultado) {
+    if (j.g1 > j.g2) resultado = `<div class="jogo-resultado resultado-vitoria-1">▶ ${j.t1.split(' ')[0]}</div>`;
+    else if (j.g1 < j.g2) resultado = `<div class="jogo-resultado resultado-vitoria-2">▶ ${j.t2.split(' ')[0]}</div>`;
+    else resultado = `<div class="jogo-resultado resultado-empate">Empate</div>`;
+  }
+  const brasil = (j.t1 === 'Brasil' || j.t2 === 'Brasil');
+  const borda = brasil ? 'border-left: 3px solid var(--verde);' : '';
+  const f1 = flag(j.t1); const f2 = flag(j.t2);
+  return `
+  <div class="jogo-card" style="${borda}">
+    <div class="jogo-meta">
+      <span class="jogo-num">Jogo ${j.n}${j.g ? ' · Gr. ' + j.g : ''}</span>
+      <span class="jogo-data">${j.d} · ${j.h}</span>
+    </div>
+    <div class="jogo-placar">
+      <div class="jogo-time">
+        ${f1 ? `<div style="margin-bottom:4px">${f1}</div>` : ''}
+        <div class="jogo-time-nome">${j.t1}</div>
+        <div class="jogo-time-gols ${temResultado ? '' : 'pendente'}">${temResultado ? j.g1 : '—'}</div>
+      </div>
+      <div class="jogo-vs">×</div>
+      <div class="jogo-time">
+        ${f2 ? `<div style="margin-bottom:4px">${f2}</div>` : ''}
+        <div class="jogo-time-nome">${j.t2}</div>
+        <div class="jogo-time-gols ${temResultado ? '' : 'pendente'}">${temResultado ? j.g2 : '—'}</div>
+      </div>
+    </div>
+    ${resultado}
+  </div>`;
+}
+
+function filtrarFase(fase, btn) {
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  renderJogos(fase);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('stat-participantes').textContent = '—';
+  document.getElementById('stat-jogos-feitos').textContent =
+    JOGOS.filter(j => j.g1 !== null).length;
+
+  const proximos = JOGOS.filter(j => j.g1 === null).slice(0, 3);
+  const el = document.getElementById('proximos-jogos');
+  if (proximos.length) {
+    el.innerHTML = proximos.map(j => `
+      <div style="padding:10px 0; border-bottom:1px solid var(--cinza-borda); display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:13px; font-weight:500;">${flag(j.t1)} ${j.t1} × ${flag(j.t2)} ${j.t2}</div>
+          <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">${j.d} · ${j.h} · Jogo ${j.n}</div>
+        </div>
+        <span class="phase-tag ${FASE_TAG[j.f]}" style="font-size:10px">${j.f}</span>
+      </div>
+    `).join('') + `<div style="font-size:12px; color:var(--cinza-texto); padding-top:10px; text-align:center">
+      <a href="#" onclick="showPage('jogos'); return false;" style="color:var(--azul); text-decoration:none; font-weight:500">Ver todos os jogos →</a>
+    </div>`;
+  }
+});
+</script>
+</body>
+</html>
