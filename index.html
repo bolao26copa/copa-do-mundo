@@ -355,6 +355,22 @@ footer {
 }
 footer strong { color: rgba(255,255,255,0.7); }
 
+.cd-bloco { text-align:center; }
+.cd-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px; color: var(--amarelo); line-height: 1;
+  min-width: 60px;
+}
+.cd-label {
+  font-size: 10px; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
+}
+.cd-sep {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px; color: rgba(255,255,255,0.2);
+  align-self: center; padding-bottom: 14px;
+}
+
 /* ── RESPONSIVO ── */
 
 /* Tablet (até 900px) */
@@ -555,24 +571,52 @@ footer strong { color: rgba(255,255,255,0.7); }
           </a>
         </div>
 
-        <!-- Planilha incorporada -->
-        <div class="card" style="padding:0; overflow:hidden;">
-          <div style="padding:14px 16px 10px; border-bottom:1px solid var(--cinza-borda); display:flex; align-items:center; justify-content:space-between;">
-            <div style="font-size:13px; font-weight:600; color:var(--azul);">
-              📊 Classificação ao vivo
-            </div>
-            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2l3iBmOzWA0N_7feIpkxM_IcECPc4uJKzCDTmRJ8X6KGcvpZZtroRk9g66ZQbL5kJJXgXr1EC2mWt/pubhtml?gid=1820913296&single=true" target="_blank" style="font-size:11px; color:var(--azul); text-decoration:none; opacity:0.7;">
-              Abrir planilha ↗
-            </a>
+        <!-- Relógio regressivo -->
+        <div class="card" style="padding:20px; background:var(--azul); border:none; text-align:center;">
+          <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.5); margin-bottom:10px;">
+            Copa do Mundo começa em
           </div>
-          <iframe
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2l3iBmOzWA0N_7feIpkxM_IcECPc4uJKzCDTmRJ8X6KGcvpZZtroRk9g66ZQbL5kJJXgXr1EC2mWt/pubhtml?gid=1820913296&single=true"
-            width="100%"
-            height="340"
-            frameborder="0"
-            scrolling="no"
-            style="display:block; border:none;"
-          ></iframe>
+          <div id="countdown" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+            <div class="cd-bloco">
+              <div class="cd-num" id="cd-dias">00</div>
+              <div class="cd-label">dias</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-bloco">
+              <div class="cd-num" id="cd-horas">00</div>
+              <div class="cd-label">horas</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-bloco">
+              <div class="cd-num" id="cd-min">00</div>
+              <div class="cd-label">min</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-bloco">
+              <div class="cd-num" id="cd-seg">00</div>
+              <div class="cd-label">seg</div>
+            </div>
+          </div>
+          <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.4);">
+            México 🆚 África do Sul · 11/jun · 16h (BRT)
+          </div>
+        </div>
+
+        <!-- WhatsApp figurinhas -->
+        <div class="card" style="padding:18px; border-left:3px solid #25D366;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:42px; height:42px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:22px;">
+              💬
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:13px; font-weight:600; margin-bottom:3px;">Grupo de Figurinhas Copa 2026</div>
+              <div style="font-size:12px; color:var(--cinza-texto); line-height:1.4;">Troca de figurinhas do álbum da Copa — entre no grupo do WhatsApp!</div>
+            </div>
+          </div>
+          <a href="https://chat.whatsapp.com/F5OQPk19TVj4FN9kgoiZ4S" target="_blank"
+             style="display:block; margin-top:14px; padding:10px; background:#25D366; color:#fff; border-radius:8px; text-align:center; text-decoration:none; font-size:13px; font-weight:600;">
+            Entrar no grupo →
+          </a>
         </div>
 
       </div>
@@ -1414,6 +1458,37 @@ window.showPage = function(id) {
 
 // Inicia ao carregar
 window.addEventListener('load', inicializarDados);
+
+// ── Relógio regressivo ──────────────────────────────────────────
+(function() {
+  // Primeiro jogo: 11 de junho de 2026 às 16h BRT (19h UTC)
+  const alvo = new Date('2026-06-11T19:00:00Z');
+
+  function atualizar() {
+    const agora = new Date();
+    const diff  = alvo - agora;
+
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML =
+        '<div style="font-family:Bebas Neue,sans-serif;font-size:32px;color:var(--amarelo);letter-spacing:2px;">🏆 A COPA COMEÇOU! 🏆</div>';
+      return;
+    }
+
+    const dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const min   = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seg   = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const pad = n => String(n).padStart(2, '0');
+    document.getElementById('cd-dias').textContent  = pad(dias);
+    document.getElementById('cd-horas').textContent = pad(horas);
+    document.getElementById('cd-min').textContent   = pad(min);
+    document.getElementById('cd-seg').textContent   = pad(seg);
+  }
+
+  atualizar();
+  setInterval(atualizar, 1000);
+})();
 
 // Atualiza a cada 5 minutos automaticamente
 setInterval(inicializarDados, 5 * 60 * 1000);
