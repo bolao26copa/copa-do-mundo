@@ -1315,22 +1315,23 @@ async function carregarClassificacao() {
     const col5 = row[5] ? row[5].replace(/^"|"$/g, '').trim() : '';
     const col6 = row[6] ? row[6].replace(/^"|"$/g, '').trim() : '';
 
-    // Detecta linha de participante:
-    // col0 tem "1º","2º","3º","4º"... ou número puro
-    // col1 tem nome do participante (texto não numérico)
+    // Estrutura real do CSV:
+    // col0="1º" | col1="" (vazio) | col2=nome | col3=pts | col4=cravadas | col5=palpites corretos | col6=pts fase grupos | col7=pts mata-mata
     const posMatch = col0.match(/^(\d+)/);
     const pos = posMatch ? parseInt(posMatch[1]) : NaN;
-    const nomeValido = col1.length > 1 && isNaN(parseFloat(col1));
+    const nome = col2 ? col2.replace(/^"|"$/g, '').trim() : '';
+    const nomeValido = nome.length > 1 && isNaN(parseFloat(nome));
 
     if (!isNaN(pos) && pos > 0 && pos <= 200 && nomeValido) {
+      const col7 = row[7] ? row[7].replace(/^"|"$/g, '').trim() : '0';
       linhasValidas.push({
         pos,
-        nome:      col1,
-        pts:       col2 || '0',
-        cravadas:  col3 || '0',
-        palpites:  col4 || '0',
-        ptsFase:   col5 || '0',
-        ptsMata:   col6 || '0',
+        nome,
+        pts:       col3 || '0',
+        cravadas:  col4 || '0',
+        palpites:  col5 || '0',
+        ptsFase:   col6 || '0',
+        ptsMata:   col7 || '0',
       });
     }
   }
