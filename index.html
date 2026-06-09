@@ -811,7 +811,25 @@ footer strong { color: rgba(255,255,255,0.7); }
       </table>
     </div>
 
-    <p style="font-size:11px; color:var(--cinza-texto); margin-top:10px; text-align:center;">
+    <!-- PIX -->
+    <div class="card" style="padding:20px; margin-top:16px; border-left:4px solid var(--verde); display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div style="font-size:32px; flex-shrink:0;">💸</div>
+      <div style="flex:1;">
+        <div style="font-size:13px; font-weight:700; color:var(--azul); margin-bottom:6px;">Chave PIX para pagamento</div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div style="font-family:'DM Mono',monospace; font-size:15px; font-weight:600; background:#F4F3EF; padding:8px 14px; border-radius:8px; border:1px solid var(--cinza-borda); letter-spacing:1px;">
+            14767179742
+          </div>
+          <button onclick="navigator.clipboard.writeText('14767179742').then(function(){ this.textContent='✅ Copiado!'; var b=this; setTimeout(function(){ b.textContent='📋 Copiar'; },2000); }.bind(this))"
+            style="padding:8px 16px; background:var(--verde); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+            📋 Copiar
+          </button>
+        </div>
+        <div style="font-size:11px; color:var(--cinza-texto); margin-top:6px;">CPF · Ítalo Silva</div>
+      </div>
+    </div>
+
+    <p style="font-size:11px; color:var(--cinza-texto); margin-top:12px; text-align:center;">
       ⚠️ Pago Parcialmente = foi feito um depósito insuficiente
     </p>
   </div>
