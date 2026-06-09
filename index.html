@@ -1343,7 +1343,7 @@ async function carregarTesouraria() {
   if (!tbody) return;
 
   try {
-    var url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent( + TREASURY_URL + );
+    var url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://docs.google.com/spreadsheets/d/e/2PACX-1vSIHlLH-8uHlSIn7xzwAxs5_NZGm4XeJJuLGu-p9TBgmg1r--qkmRZ_PmS99mStVXq2Iy3whi9T3H24/pub?output=csv');
     var res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     var text = await res.text();
