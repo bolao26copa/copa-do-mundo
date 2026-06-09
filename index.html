@@ -1167,50 +1167,25 @@ document.addEventListener('DOMContentLoaded', () => {
 // ================================================================
 // INTEGRAÇÃO GOOGLE SHEETS
 // ================================================================
-const SHEET_ID = "1jy1qk-un5oU3C-TTMDKA-m0uC6Qlw3nV8-utHwxJcqA";
-
-function csvUrl(sheetName) {
-  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-}
-
-// URL da planilha publicada (para o iframe de classificação ao vivo)
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7By3Fv897SE1Zq52RfKl3IShJ4Z0YEeJD0mBxJnq4vo7PyRVQAtoUdSmit8O2BWfMzg/exec";
 const SHEETS_PUBLISHED_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2l3iBmOzWA0N_7feIpkxM_IcECPc4uJKzCDTmRJ8X6KGcvpZZtroRk9g66ZQbL5kJJXgXr1EC2mWt/pubhtml?gid=1820913296&single=true";
 
-async function fetchCSV(sheetName) {
+async function fetchAPI(tipo) {
   try {
-    const res = await fetch(csvUrl(sheetName));
+    const res = await fetch(APPS_SCRIPT_URL + '?tipo=' + tipo);
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    return parseCSV(text);
+    return await res.json();
   } catch(e) {
-    console.warn('Erro ao buscar ' + sheetName + ':', e);
+    console.warn('Erro ao buscar ' + tipo + ':', e);
     return null;
   }
 }
 
-function parseCSV(text) {
-  const rows = [];
-  const lines = text.split('\n');
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    const cols = [];
-    let cur = '', inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (c === '"') { inQ = !inQ; }
-      else if (c === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else { cur += c; }
-    }
-    cols.push(cur.trim());
-    rows.push(cols);
-  }
-  return rows;
-}
-
 // ── Carrega placares dos jogos na aba Jogos
 async function carregarJogos() {
-  const rows = await fetchCSV('Jogos');
-  if (!rows) return;
+  const dados = await fetchAPI('jogos');
+  if (!dados || !dados.jogos) return;
+  const jogosList = dados.jogos;
 
   // A aba Jogos tem cabeçalhos nas primeiras linhas
   // Vamos encontrar a linha com "PESO" ou "Rodada" para descobrir o cabeçalho
@@ -1218,26 +1193,11 @@ async function carregarJogos() {
   // Estratégia: linha com número de jogo na col A e dados de placar em F e H
 
   let jogosFeitos = 0;
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    if (!row || !row[0]) continue;
-    const numJogo = parseInt(row[0]);
-    if (isNaN(numJogo) || numJogo < 1 || numJogo > 104) continue;
-
-    // Tenta várias posições para os gols (cols F=5 e H=7, ou ajusta conforme estrutura)
-    // Col A=num, B=data, C=hora, D=bandeira1, E=time1, F=gols1, G='x', H=gols2, I=time2
-    let g1 = null, g2 = null;
-
-    // Tenta col 5 (F) e col 7 (H)
-    const v5 = row[5] !== undefined ? row[5].toString().trim() : '';
-    const v7 = row[7] !== undefined ? row[7].toString().trim() : '';
-    if (v5 !== '' && v7 !== '' && !isNaN(parseInt(v5)) && !isNaN(parseInt(v7))) {
-      g1 = parseInt(v5); g2 = parseInt(v7);
-    }
-
-    if (g1 !== null && g2 !== null) {
-      const jogo = JOGOS.find(j => j.n === numJogo);
-      if (jogo) { jogo.g1 = g1; jogo.g2 = g2; jogosFeitos++; }
+  for (let i = 0; i < jogosList.length; i++) {
+    const j = jogosList[i];
+    if (j.g1 !== null && j.g2 !== null) {
+      const jogo = JOGOS.find(x => x.n === j.n);
+      if (jogo) { jogo.g1 = j.g1; jogo.g2 = j.g2; jogosFeitos++; }
     }
   }
 
@@ -1285,7 +1245,6 @@ function renderProximosJogos() {
 // ── Carrega classificação
 async function carregarClassificacao() {
   const rows = await fetchCSV('Classificação');
-  if (!rows) {
     document.getElementById('classif-loading').innerHTML =
       '<td colspan="6" style="text-align:center;padding:24px;font-size:13px;">' +
       '<a href="' + SHEETS_PUBLISHED_URL + '" target="_blank" style="color:var(--azul);font-weight:500;">Ver classificação na planilha ↗</a>' +
@@ -1294,69 +1253,25 @@ async function carregarClassificacao() {
   }
 
   const tbody = document.getElementById('tabela-classificacao');
-  let linhasValidas = [];
+  const linhasValidas = dados.participantes;
 
-  // Estrutura real da planilha:
-  // Linha 11 (índice 10) = cabeçalhos: Posição, Participante, Pontos, Cravadas, Palpites Corretos, Pontos Fase Grupos, Pontos Mata-mata
-  // Linhas 12+ = dados dos participantes
-  // O CSV do gviz entrega todas as linhas inclusive as vazias do topo
-  // Estratégia: varrer todas as linhas procurando padrão (col0=número ordinal, col1=nome não vazio)
-
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    if (!row || row.length < 3) continue;
-
-    // Limpa aspas e espaços
-    const col0 = row[0] ? row[0].replace(/^"|"$/g, '').trim() : '';
-    const col1 = row[1] ? row[1].replace(/^"|"$/g, '').trim() : '';
-    const col2 = row[2] ? row[2].replace(/^"|"$/g, '').trim() : '';
-    const col3 = row[3] ? row[3].replace(/^"|"$/g, '').trim() : '';
-    const col4 = row[4] ? row[4].replace(/^"|"$/g, '').trim() : '';
-    const col5 = row[5] ? row[5].replace(/^"|"$/g, '').trim() : '';
-    const col6 = row[6] ? row[6].replace(/^"|"$/g, '').trim() : '';
-
-    // Estrutura real do CSV:
-    // col0="1º" | col1="" (vazio) | col2=nome | col3=pts | col4=cravadas | col5=palpites corretos | col6=pts fase grupos | col7=pts mata-mata
-    const posMatch = col0.match(/^(\d+)/);
-    const pos = posMatch ? parseInt(posMatch[1]) : NaN;
-    const nome = col2 ? col2.replace(/^"|"$/g, '').trim() : '';
-    const nomeValido = nome.length > 1 && isNaN(parseFloat(nome));
-
-    if (!isNaN(pos) && pos > 0 && pos <= 200 && nomeValido) {
-      const col7 = row[7] ? row[7].replace(/^"|"$/g, '').trim() : '0';
-      linhasValidas.push({
-        pos,
-        nome,
-        pts:       col3 || '0',
-        cravadas:  col4 || '0',
-        palpites:  col5 || '0',
-        ptsFase:   col6 || '0',
-        ptsMata:   col7 || '0',
-      });
-    }
-  }
-
-  // Atualiza contador de participantes no hero
-  if (linhasValidas.length > 0) {
-    document.getElementById('stat-participantes').textContent = linhasValidas.length;
-  }
+  document.getElementById('stat-participantes').textContent = dados.total;
 
   if (linhasValidas.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">⏳ Aguardando início da Copa — 11 de junho de 2026</td></tr>';
     return;
   }
 
-  tbody.innerHTML = linhasValidas.map(p => {
+  tbody.innerHTML = linhasValidas.map(function(p) {
     const posClass = p.pos === 1 ? 'pos-1' : p.pos === 2 ? 'pos-2' : p.pos === 3 ? 'pos-3' : 'pos-other';
-    const posLabel = p.pos + 'º';
-    return `<tr>
-      <td><span class="pos-badge ${posClass}">${posLabel}</span></td>
-      <td class="participant-name">${p.nome}</td>
-      <td class="pts${p.pos <= 3 ? ' pts-destaque' : ''}">${p.pts}</td>
-      <td>${p.cravadas}</td>
-      <td>${p.palpites}</td>
-      <td class="aproveitamento">${p.ptsFase}</td>
-    </tr>`;
+    return '<tr>' +
+      '<td><span class="pos-badge ' + posClass + '">' + p.pos + 'º</span></td>' +
+      '<td class="participant-name">' + p.nome + '</td>' +
+      '<td class="pts' + (p.pos <= 3 ? ' pts-destaque' : '') + '">' + p.pts + '</td>' +
+      '<td>' + p.cravadas + '</td>' +
+      '<td>' + p.palpites + '</td>' +
+      '<td class="aproveitamento">' + p.ptsFase + '</td>' +
+      '</tr>';
   }).join('');
 }
 
