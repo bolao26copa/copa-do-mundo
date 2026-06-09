@@ -1116,10 +1116,16 @@ const FASE_TAG = {
 };
 
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
+  // Mark active nav item
+  var navLinks = document.querySelectorAll('nav a');
+  navLinks.forEach(function(a) {
+    if (a.getAttribute('onclick') && a.getAttribute('onclick').indexOf("'" + id + "'") >= 0) {
+      a.classList.add('active');
+    }
+  });
   window.scrollTo(0, 0);
   if (id === 'jogos') renderJogos('todos');
 }
@@ -1334,73 +1340,49 @@ function parsearDataJogoJS(dataTxt, horaTxt) {
   return new Date(2026, mes, dia, parseInt(hm[1]), hm[2] ? parseInt(hm[2]) : 0, 0);
 }
 
-// ── Carrega tesouraria
+// ── Carrega tesouraria via Apps Script API
 async function carregarTesouraria() {
-  var tbody    = document.getElementById('tesouraria-tbody');
-  var tPagos   = document.getElementById('t-pagos');
+  var tbody     = document.getElementById('tesouraria-tbody');
+  var tPagos    = document.getElementById('t-pagos');
   var tParciais = document.getElementById('t-parciais');
-  var tPend    = document.getElementById('t-pendentes');
+  var tPend     = document.getElementById('t-pendentes');
   if (!tbody) return;
 
-  try {
-    var url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://docs.google.com/spreadsheets/d/e/2PACX-1vSIHlLH-8uHlSIn7xzwAxs5_NZGm4XeJJuLGu-p9TBgmg1r--qkmRZ_PmS99mStVXq2Iy3whi9T3H24/pub?output=csv');
-    var res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    var text = await res.text();
-
-    // Parse CSV simples
-    var linhas = text.split('\n').filter(function(l) { return l.trim(); });
-
-    var pagos = 0, parciais = 0, pendentes = 0;
-    var rows = [];
-
-    for (var i = 1; i < linhas.length; i++) {
-      var cols = linhas[i].split(',').map(function(c) { return c.replace(/^"|"$/g,'').trim(); });
-      var nome   = cols[0] || '';
-      var status = cols[1] || '';
-      if (!nome || nome === 'Apostador // Nome') continue;
-
-      var statusLower = status.toLowerCase();
-      var isPago     = statusLower === 'pago';
-      var isParcial  = statusLower.indexOf('parcial') >= 0;
-      var isPendente = !isPago && !isParcial;
-
-      if (isPago)     pagos++;
-      else if (isParcial) parciais++;
-      else            pendentes++;
-
-      rows.push({ nome: nome, status: status, isPago: isPago, isParcial: isParcial, isPendente: isPendente });
-    }
-
-    tPagos.textContent    = pagos;
-    tParciais.textContent = parciais;
-    tPend.textContent     = pendentes;
-
-    if (rows.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--cinza-texto)">Sem dados</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = rows.map(function(p, idx) {
-      var badgeBg    = p.isPago ? '#d9ead3' : p.isParcial ? '#FFF3CD' : '#fce8e6';
-      var badgeColor = p.isPago ? '#276749' : p.isParcial ? '#856404' : '#C0392B';
-      var badgeText  = p.isPago ? '✅ Pago' : p.isParcial ? '⚠️ Pago Parcialmente' : '❌ Pendente';
-
-      return '<tr>' +
-        '<td style="color:var(--cinza-texto);font-size:13px">' + (idx + 1) + '</td>' +
-        '<td class="participant-name">' + p.nome + '</td>' +
-        '<td style="text-align:center">' +
-          '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;background:' + badgeBg + ';color:' + badgeColor + '">' +
-            badgeText +
-          '</span>' +
-        '</td>' +
-      '</tr>';
-    }).join('');
-
-  } catch(err) {
-    console.warn('Erro tesouraria:', err);
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--cinza-texto);font-size:13px;">Não foi possível carregar. Tente novamente.</td></tr>';
+  var dados = await fetchAPI('tesouraria');
+  if (!dados || !dados.lista) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--cinza-texto);font-size:13px;">Não foi possível carregar.</td></tr>';
+    return;
   }
+
+  var pagos = 0, parciais = 0, pendentes = 0;
+
+  tbody.innerHTML = dados.lista.map(function(p, idx) {
+    var st     = p.status ? p.status.toLowerCase() : '';
+    var isPago    = st === 'pago';
+    var isParcial = st.indexOf('parcial') >= 0;
+
+    if (isPago)        pagos++;
+    else if (isParcial) parciais++;
+    else               pendentes++;
+
+    var badgeBg    = isPago ? '#d9ead3' : isParcial ? '#FFF3CD' : '#fce8e6';
+    var badgeColor = isPago ? '#276749' : isParcial ? '#856404' : '#C0392B';
+    var badgeText  = isPago ? '✅ Pago' : isParcial ? '⚠️ Pago Parcialmente' : '❌ Pendente';
+
+    return '<tr>' +
+      '<td style="color:var(--cinza-texto);font-size:13px">' + (idx + 1) + '</td>' +
+      '<td class="participant-name">' + p.nome + '</td>' +
+      '<td style="text-align:center">' +
+        '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;background:' + badgeBg + ';color:' + badgeColor + '">' +
+          badgeText +
+        '</span>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+
+  tPagos.textContent    = pagos;
+  tParciais.textContent = parciais;
+  tPend.textContent     = pendentes;
 }
 
 // ── Carrega bônus
@@ -1440,11 +1422,11 @@ setInterval(function() {
 // ── Relógio regressivo ──────────────────────────────────────────
 (function() {
   // Primeiro jogo: 11 de junho de 2026 às 16h BRT (19h UTC)
-  const alvo = new Date('2026-06-11T19:00:00.000Z'); // 11/jun 16h BRT
+  var alvo = new Date('2026-06-11T19:00:00.000Z'); // 11/jun 16h BRT
 
   function atualizar() {
-    const agora = new Date();
-    const diff  = alvo - agora;
+    var agora = new Date();
+    var diff  = alvo - agora;
 
     if (diff <= 0) {
       document.getElementById('countdown').innerHTML =
@@ -1452,12 +1434,12 @@ setInterval(function() {
       return;
     }
 
-    const dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const min   = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seg   = Math.floor((diff % (1000 * 60)) / 1000);
+    var dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var min   = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var seg   = Math.floor((diff % (1000 * 60)) / 1000);
 
-    const pad = n => String(n).padStart(2, '0');
+    var pad = n => String(n).padStart(2, '0');
     document.getElementById('cd-dias').textContent  = pad(dias);
     document.getElementById('cd-horas').textContent = pad(horas);
     document.getElementById('cd-min').textContent   = pad(min);
