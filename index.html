@@ -629,6 +629,24 @@ footer strong { color: rgba(255,255,255,0.7); }
     <div class="section-title">Jogos e Resultados</div>
     <p class="section-sub">104 jogos · 11/jun a 19/jul · Horários em BRT</p>
 
+    <!-- Widget 365Scores ao vivo -->
+    <div class="card" style="padding:20px; margin-bottom:24px;">
+      <div style="font-size:13px; font-weight:600; color:var(--azul); margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+        🔴 <span>Placares ao vivo — 365Scores</span>
+        <span style="font-size:10px; background:var(--verde-claro); color:var(--verde-escuro); padding:2px 7px; border-radius:4px; font-weight:700;">AO VIVO</span>
+      </div>
+      <div data-widget-type="entityScores"
+           data-entity-type="league"
+           data-entity-id="5930"
+           data-lang="pt-br"
+           data-widget-id="2399a407-7795-4a19-9fba-f6a4e731b7ff"
+           style="min-height:200px;">
+      </div>
+      <div style="font-size:11px; color:var(--cinza-texto); margin-top:10px; text-align:right;">
+        Desenvolvido por <a href="https://www.365scores.com/pt-br" target="_blank" style="color:var(--azul);">365Scores.com</a>
+      </div>
+    </div>
+
     <div class="filtros" id="filtros-fase">
       <button class="filtro-btn ativo" onclick="filtrarFase('todos', this)">Todos</button>
       <button class="filtro-btn" onclick="filtrarFase('1ª rodada', this)">1ª Rodada</button>
@@ -773,21 +791,63 @@ footer strong { color: rgba(255,255,255,0.7); }
 <div class="page" id="page-tesouraria">
   <div class="container" style="max-width:700px">
     <div class="section-title">Tesouraria</div>
-    <p class="section-sub">Status de pagamento dos participantes — atualizado automaticamente</p>
+    <p class="section-sub">Status de pagamento — R$ 50,00 por participante</p>
 
-    <!-- Resumo -->
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;" id="tesouraria-resumo">
+    <!-- Resumo: Pagos / Pendentes / Arrecadado -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;">
       <div class="card" style="padding:18px; text-align:center;">
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--verde-escuro);" id="t-pagos">—</div>
-        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--cinza-texto); margin-top:4px;">✅ Pagos</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--verde-escuro);" id="t-pagos">—</div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--cinza-texto); margin-top:2px;">✅ Pagos</div>
       </div>
       <div class="card" style="padding:18px; text-align:center;">
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#856404;" id="t-parciais">—</div>
-        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--cinza-texto); margin-top:4px;">⚠️ Parcial</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:40px; color:#C0392B;" id="t-pendentes">—</div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--cinza-texto); margin-top:2px;">❌ Pendentes</div>
       </div>
-      <div class="card" style="padding:18px; text-align:center;">
-        <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#C0392B;" id="t-pendentes">—</div>
-        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--cinza-texto); margin-top:4px;">❌ Pendentes</div>
+      <div class="card" style="padding:18px; text-align:center; background:var(--azul);">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--amarelo); line-height:1.1;" id="t-total">R$ —</div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.6); margin-top:2px;">💰 Arrecadado</div>
+      </div>
+    </div>
+
+    <!-- Premiação -->
+    <div class="card" style="padding:20px; margin-bottom:16px; border-top:3px solid var(--amarelo);">
+      <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:14px;">
+        🏆 Previsão de Premiação
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; text-align:center;">
+        <div style="background:#FFF8E1; border-radius:10px; padding:14px;">
+          <div style="font-size:22px; margin-bottom:4px;">🥇</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--amarelo-escuro);" id="premio-1">R$ —</div>
+          <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">1º Lugar · 70%</div>
+        </div>
+        <div style="background:#F4F3EF; border-radius:10px; padding:14px;">
+          <div style="font-size:22px; margin-bottom:4px;">🥈</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; color:#555;" id="premio-2">R$ —</div>
+          <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">2º Lugar · 20%</div>
+        </div>
+        <div style="background:#FEF0E7; border-radius:10px; padding:14px;">
+          <div style="font-size:22px; margin-bottom:4px;">🥉</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; color:#C0392B;" id="premio-3">R$ —</div>
+          <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">3º Lugar · 10%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIX -->
+    <div class="card" style="padding:20px; margin-bottom:16px; border-left:4px solid var(--verde); display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div style="font-size:32px; flex-shrink:0;">💸</div>
+      <div style="flex:1;">
+        <div style="font-size:13px; font-weight:700; color:var(--azul); margin-bottom:6px;">Chave PIX para pagamento</div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div style="font-family:'DM Mono',monospace; font-size:15px; font-weight:600; background:#F4F3EF; padding:8px 14px; border-radius:8px; border:1px solid var(--cinza-borda); letter-spacing:1px;">
+            14767179742
+          </div>
+          <button onclick="navigator.clipboard.writeText('14767179742').then(function(){ this.textContent='✅ Copiado!'; var b=this; setTimeout(function(){ b.textContent='📋 Copiar'; },2000); }.bind(this))"
+            style="padding:8px 16px; background:var(--verde); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+            📋 Copiar
+          </button>
+        </div>
+        <div style="font-size:11px; color:var(--cinza-texto); margin-top:6px;">CPF · Ítalo Silva · R$ 50,00 por participante</div>
       </div>
     </div>
 
@@ -811,26 +871,8 @@ footer strong { color: rgba(255,255,255,0.7); }
       </table>
     </div>
 
-    <!-- PIX -->
-    <div class="card" style="padding:20px; margin-top:16px; border-left:4px solid var(--verde); display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-      <div style="font-size:32px; flex-shrink:0;">💸</div>
-      <div style="flex:1;">
-        <div style="font-size:13px; font-weight:700; color:var(--azul); margin-bottom:6px;">Chave PIX para pagamento</div>
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <div style="font-family:'DM Mono',monospace; font-size:15px; font-weight:600; background:#F4F3EF; padding:8px 14px; border-radius:8px; border:1px solid var(--cinza-borda); letter-spacing:1px;">
-            14767179742
-          </div>
-          <button onclick="navigator.clipboard.writeText('14767179742').then(function(){ this.textContent='✅ Copiado!'; var b=this; setTimeout(function(){ b.textContent='📋 Copiar'; },2000); }.bind(this))"
-            style="padding:8px 16px; background:var(--verde); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
-            📋 Copiar
-          </button>
-        </div>
-        <div style="font-size:11px; color:var(--cinza-texto); margin-top:6px;">CPF · Ítalo Silva</div>
-      </div>
-    </div>
-
-    <p style="font-size:11px; color:var(--cinza-texto); margin-top:12px; text-align:center;">
-      ⚠️ Pago Parcialmente = foi feito um depósito insuficiente
+    <p style="font-size:11px; color:var(--cinza-texto); margin-top:10px; text-align:center;">
+      ⚠️ Pago Parcialmente = foi feito um depósito insuficiente — entre em contato para regularizar
     </p>
   </div>
 </div>
@@ -1398,9 +1440,26 @@ async function carregarTesouraria() {
     '</tr>';
   }).join('');
 
-  tPagos.textContent    = pagos;
-  tParciais.textContent = parciais;
-  tPend.textContent     = pendentes;
+  tPagos.textContent = pagos;
+  tPend.textContent  = pendentes;
+
+  // Calcula arrecadado e premiação (R$50 por pagante, parcial conta como pago)
+  var totalPagantes = pagos + parciais;
+  var arrecadado    = totalPagantes * 50;
+  var p1 = Math.floor(arrecadado * 0.70);
+  var p2 = Math.floor(arrecadado * 0.20);
+  var p3 = arrecadado - p1 - p2;
+
+  var tTotal = document.getElementById('t-total');
+  var pr1    = document.getElementById('premio-1');
+  var pr2    = document.getElementById('premio-2');
+  var pr3    = document.getElementById('premio-3');
+
+  function fmt(v) { return 'R$ ' + v.toLocaleString('pt-BR'); }
+  if (tTotal) tTotal.textContent = fmt(arrecadado);
+  if (pr1)    pr1.textContent    = fmt(p1);
+  if (pr2)    pr2.textContent    = fmt(p2);
+  if (pr3)    pr3.textContent    = fmt(p3);
 }
 
 // ── Carrega bônus
@@ -1472,5 +1531,6 @@ setInterval(function() {
 setInterval(inicializarDados, 5 * 60 * 1000);
 
 </script>
+<script src="https://widgets.365scores.com/main.js" async></script>
 </body>
 </html>
