@@ -541,6 +541,9 @@ footer strong { color: rgba(255,255,255,0.7); }
             </tbody>
           </table>
         </div>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-top:10px;">
+          🤖 As IAs não concorrem à premiação.
+        </p>
 
       </div>
 
@@ -1374,9 +1377,12 @@ async function carregarClassificacao() {
 
   tbody.innerHTML = dados.participantes.map(function(p) {
     var posClass = p.pos === 1 ? 'pos-1' : p.pos === 2 ? 'pos-2' : p.pos === 3 ? 'pos-3' : 'pos-other';
-    return '<tr>' +
+    var ias = ['Chat GPT', 'Gemini', 'Claude'];
+    var isIA = ias.indexOf(p.nome) >= 0;
+    var nomeDisplay = isIA ? p.nome + ' 🤖' : p.nome;
+    return '<tr' + (isIA ? ' style="background:#F0F4FF"' : '') + '>' +
       '<td><span class="pos-badge ' + posClass + '">' + p.pos + 'º</span></td>' +
-      '<td class="participant-name">' + p.nome + '</td>' +
+      '<td class="participant-name">' + nomeDisplay + '</td>' +
       '<td class="pts' + (p.pos <= 3 ? ' pts-destaque' : '') + '">' + p.pts + '</td>' +
       '<td style="text-align:center">' + p.cravadas + '</td>' +
       '<td style="text-align:center">' + p.palpites + '</td>' +
@@ -1417,15 +1423,19 @@ async function carregarTesouraria() {
   }
 
   var pagos = 0, parciais = 0, pendentes = 0;
+  var ias = ['Chat GPT', 'Gemini', 'Claude'];
 
   tbody.innerHTML = dados.lista.map(function(p, idx) {
     var st     = p.status ? p.status.toLowerCase() : '';
     var isPago    = st === 'pago';
     var isParcial = st.indexOf('parcial') >= 0;
+    var isIA      = ias.indexOf(p.nome) >= 0;
 
-    if (isPago)        pagos++;
-    else if (isParcial) parciais++;
-    else               pendentes++;
+    if (!isIA) {
+      if (isPago)        pagos++;
+      else if (isParcial) parciais++;
+      else               pendentes++;
+    }
 
     var badgeBg    = isPago ? '#d9ead3' : isParcial ? '#FFF3CD' : '#fce8e6';
     var badgeColor = isPago ? '#276749' : isParcial ? '#856404' : '#C0392B';
