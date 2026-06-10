@@ -149,6 +149,8 @@ nav a.active { color: var(--amarelo); }
 }
 .rank-table tbody tr:last-child { border-bottom: none; }
 .rank-table tbody tr:hover { background: #FAFAF7; }
+.rank-table td, .rank-table th { text-decoration: none; }
+.rank-table td * { text-decoration: none !important; }
 .rank-table td { padding: 12px 16px; font-size: 14px; }
 .rank-table td:not(:first-child):not(:nth-child(2)) { text-align: center; }
 .pos-badge {
@@ -430,9 +432,7 @@ footer strong { color: rgba(255,255,255,0.7); }
   /* Tabela de classificação: font menor */
   .rank-table td, .rank-table th { padding: 9px 10px; font-size: 12px; }
   .rank-table thead th:nth-child(5),
-  .rank-table thead th:nth-child(6),
-  .rank-table tbody td:nth-child(5),
-  .rank-table tbody td:nth-child(6) { display: none; }
+  .rank-table tbody td:nth-child(5) { display: none; }
 
   /* Regulamento */
   .pontuacao-table td, .pontuacao-table th { padding: 8px 10px; font-size: 12px; }
@@ -523,10 +523,9 @@ footer strong { color: rgba(255,255,255,0.7); }
               <tr>
                 <th style="width:44px">#</th>
                 <th>Participante</th>
-                <th>Pts</th>
-                <th>Jogos</th>
-                <th>Placar</th>
-                <th>Resultado</th>
+                <th>Pontos</th>
+                <th>Cravadas 🎯</th>
+                <th>Palpites ✅</th>
               </tr>
             </thead>
             <tbody id="tabela-classificacao">
@@ -1375,9 +1374,8 @@ async function carregarClassificacao() {
       '<td><span class="pos-badge ' + posClass + '">' + p.pos + 'º</span></td>' +
       '<td class="participant-name">' + p.nome + '</td>' +
       '<td class="pts' + (p.pos <= 3 ? ' pts-destaque' : '') + '">' + p.pts + '</td>' +
-      '<td>' + p.cravadas + '</td>' +
-      '<td>' + p.palpites + '</td>' +
-      '<td class="aproveitamento">' + p.ptsFase + '</td>' +
+      '<td style="text-align:center">' + p.cravadas + '</td>' +
+      '<td style="text-align:center">' + p.palpites + '</td>' +
       '</tr>';
   }).join('');
 }
