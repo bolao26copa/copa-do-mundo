@@ -498,7 +498,6 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </header>
 
-<!-- HERO -->
 <div class="hero">
   <h1>BOLÃO<br><span>COPA 2026</span></h1>
   <p>Canadá · Estados Unidos · México &nbsp;·&nbsp; 11 jun – 19 jul 2026</p>
@@ -530,12 +529,10 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
-<!-- PÁGINA: INÍCIO -->
 <div class="page active" id="page-inicio">
   <div class="container">
     <div style="display:grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; width:100%;">
 
-      <!-- Classificação -->
       <div>
         <div class="section-title">Classificação</div>
         <p class="section-sub">Atualizada após cada rodada de jogos</p>
@@ -565,10 +562,8 @@ footer strong { color: rgba(255,255,255,0.7); }
 
       </div>
 
-      <!-- Lateral -->
       <div style="display:flex; flex-direction:column; gap:16px;">
 
-        <!-- Próximos jogos -->
         <div class="card" style="padding:20px;">
           <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:14px;">
             Próximos jogos
@@ -580,7 +575,6 @@ footer strong { color: rgba(255,255,255,0.7); }
           </div>
         </div>
 
-        <!-- Apostar agora -->
         <div class="card" style="padding:20px; border-top: 3px solid var(--amarelo);">
           <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:8px;">
             Faça sua aposta
@@ -594,7 +588,6 @@ footer strong { color: rgba(255,255,255,0.7); }
           </a>
         </div>
 
-        <!-- Relógio regressivo -->
         <div class="card" style="padding:20px; background:var(--azul); border:none; text-align:center;">
           <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.5); margin-bottom:10px;">
             Copa do Mundo começa em
@@ -625,7 +618,6 @@ footer strong { color: rgba(255,255,255,0.7); }
           </div>
         </div>
 
-        <!-- WhatsApp figurinhas -->
         <div class="card" style="padding:18px; border-left:3px solid #25D366;">
           <div style="display:flex; align-items:center; gap:12px;">
             <div style="width:42px; height:42px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:22px;">
@@ -646,13 +638,11 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
-<!-- PÁGINA: JOGOS -->
 <div class="page" id="page-jogos">
   <div class="container">
     <div class="section-title">Jogos e Resultados</div>
     <p class="section-sub">104 jogos · 11/jun a 19/jul · Horários em BRT</p>
 
-    <!-- Widget 365Scores ao vivo -->
     <div class="card" style="padding:20px; margin-bottom:24px;">
       <div style="font-size:13px; font-weight:600; color:var(--azul); margin-bottom:14px; display:flex; align-items:center; gap:8px;">
         🔴 <span>Placares ao vivo — 365Scores</span>
@@ -681,7 +671,6 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
-<!-- PÁGINA: APOSTAS -->
 <div class="page" id="page-apostas">
   <div class="container">
     <div class="section-title">Faça sua Aposta</div>
@@ -771,13 +760,11 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
-<!-- PÁGINA: PALPITES -->
 <div class="page" id="page-palpites">
   <div class="container">
     <div class="section-title">Palpites</div>
     <p class="section-sub">Fase de Grupos · Revelados após o início de cada jogo</p>
 
-    <!-- Filtro de participante -->
     <div style="margin-bottom:18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
       <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
       <select id="filtro-participante" onchange="renderPalpitesParticipante()" style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px; border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; color:var(--texto); cursor:pointer;">
@@ -793,13 +780,11 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
-<!-- PÁGINA: BÔNUS -->
 <div class="page" id="page-bonus">
   <div class="container">
     <div class="section-title">Apostas Bônus</div>
     <p class="section-sub">Palpites de bônus da fase de grupos</p>
 
-    <!-- Subabas -->
     <div style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid var(--cinza-borda); padding-bottom:0;">
       <button id="tab-fixos" onclick="showBonusTab('fixos')" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid var(--azul); color:var(--azul); margin-bottom:-2px;">
         🏆 Campeão / Artilheiro
@@ -809,7 +794,6 @@ footer strong { color: rgba(255,255,255,0.7); }
       </button>
     </div>
 
-    <!-- Subaba: fixos -->
     <div id="bonus-fixos">
       <div class="card" style="overflow-x:auto;">
         <table class="rank-table" id="bonus-fixos-table">
@@ -829,7 +813,6 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
-    <!-- Subaba: classificados -->
     <div id="bonus-classificados" style="display:none;">
       <div style="margin-bottom:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
         <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
@@ -844,13 +827,11 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
-<!-- PÁGINA: TESOURARIA -->
 <div class="page" id="page-tesouraria">
   <div class="container" style="max-width:700px">
     <div class="section-title">Tesouraria</div>
     <p class="section-sub">Status de pagamento — R$ 50,00 por participante</p>
 
-    <!-- Resumo: Pagos / Pendentes / Arrecadado -->
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;">
       <div class="card" style="padding:18px; text-align:center;">
         <div style="font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--verde-escuro);" id="t-pagos">—</div>
@@ -866,7 +847,6 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
-    <!-- Premiação -->
     <div class="card" style="padding:20px; margin-bottom:16px; border-top:3px solid var(--amarelo);">
       <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:14px;">
         🏆 Previsão de Premiação
@@ -890,7 +870,6 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
-    <!-- PIX -->
     <div class="card" style="padding:20px; margin-bottom:16px; border-left:4px solid var(--verde); display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
       <div style="font-size:32px; flex-shrink:0;">💸</div>
       <div style="flex:1;">
@@ -907,7 +886,6 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
-    <!-- Tabela -->
     <div class="card">
       <table class="rank-table" id="tesouraria-table">
         <thead>
@@ -933,7 +911,6 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
-<!-- PÁGINA: REGULAMENTO -->
 <div class="page" id="page-regulamento">
   <div class="container" style="max-width:780px">
     <div class="section-title">Regulamento</div>
@@ -1576,7 +1553,6 @@ setInterval(function() {
 setInterval(inicializarDados, 5 * 60 * 1000);
 </script>
 
-<!-- SOLUÇÃO FIXA: Fechar o script externo corretamente sem misturar os códigos -->
 <script src="https://widgets.365scores.com/main.js" async></script>
 
 <script>
@@ -1659,14 +1635,25 @@ function renderPalpitesParticipante() {
     html += '<td style="text-align:center;font-weight:700;font-size:14px;">' + (j.g1 !== null ? (j.g1 + ' x ' + j.g2) : '—') + '</td>';
 
     parts.forEach(function(p) {
-      // BUSCA OTIMIZADA PELO NÚMERO DO JOGO (Evita desalinhamento)
       var palp = p.palpites.find(x => x.n === j.n);
       if (!palp || palp.p1 === null) {
         html += '<td style="text-align:center;color:var(--cinza-texto);font-size:12px;">—</td>';
         return;
       }
-      var acertou  = palp.p1 === j.g1 && palp.p2 === j.g2;
-      var acertRes = !acertou && ((palp.p1 > palp.p2) === (j.g1 > j.g2)) && ((palp.p1 === palp.p2) === (j.g1 === j.g2));
+      
+      var temResultado = j.g1 !== null && j.g2 !== null;
+      var acertou = false;
+      var acertRes = false;
+
+      if (temResultado) {
+        acertou = (palp.p1 === j.g1 && palp.p2 === j.g2);
+        var acertouVencedor1 = (palp.p1 > palp.p2) && (j.g1 > j.g2);
+        var acertouVencedor2 = (palp.p1 < palp.p2) && (j.g1 < j.g2);
+        var acertouEmpate    = (palp.p1 === palp.p2) && (j.g1 === j.g2);
+        
+        acertRes = !acertou && (acertouVencedor1 || acertouVencedor2 || acertouEmpate);
+      }
+
       var bg = acertou ? 'background:#d9ead3;' : acertRes ? 'background:#FFF8E1;' : '';
       var suffix = acertou ? ' 🎯' : acertRes ? ' ✅' : '';
       html += '<td style="text-align:center;font-size:12px;' + bg + '">' + palp.p1 + '×' + palp.p2 + suffix + '</td>';
