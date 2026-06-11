@@ -498,6 +498,7 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </header>
 
+<!-- HERO -->
 <div class="hero">
   <h1>BOLÃO<br><span>COPA 2026</span></h1>
   <p>Canadá · Estados Unidos · México &nbsp;·&nbsp; 11 jun – 19 jul 2026</p>
@@ -529,10 +530,12 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: INÍCIO -->
 <div class="page active" id="page-inicio">
   <div class="container">
     <div style="display:grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; width:100%;">
 
+      <!-- Classificação -->
       <div>
         <div class="section-title">Classificação</div>
         <p class="section-sub">Atualizada após cada rodada de jogos</p>
@@ -562,8 +565,10 @@ footer strong { color: rgba(255,255,255,0.7); }
 
       </div>
 
+      <!-- Lateral -->
       <div style="display:flex; flex-direction:column; gap:16px;">
 
+        <!-- Próximos jogos -->
         <div class="card" style="padding:20px;">
           <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:14px;">
             Próximos jogos
@@ -575,6 +580,7 @@ footer strong { color: rgba(255,255,255,0.7); }
           </div>
         </div>
 
+        <!-- Apostar agora -->
         <div class="card" style="padding:20px; border-top: 3px solid var(--amarelo);">
           <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:8px;">
             Faça sua aposta
@@ -588,6 +594,7 @@ footer strong { color: rgba(255,255,255,0.7); }
           </a>
         </div>
 
+        <!-- Relógio regressivo -->
         <div class="card" style="padding:20px; background:var(--azul); border:none; text-align:center;">
           <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.5); margin-bottom:10px;">
             Copa do Mundo começa em
@@ -618,6 +625,7 @@ footer strong { color: rgba(255,255,255,0.7); }
           </div>
         </div>
 
+        <!-- WhatsApp figurinhas -->
         <div class="card" style="padding:18px; border-left:3px solid #25D366;">
           <div style="display:flex; align-items:center; gap:12px;">
             <div style="width:42px; height:42px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:22px;">
@@ -638,11 +646,13 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: JOGOS -->
 <div class="page" id="page-jogos">
   <div class="container">
     <div class="section-title">Jogos e Resultados</div>
     <p class="section-sub">104 jogos · 11/jun a 19/jul · Horários em BRT</p>
 
+    <!-- Widget 365Scores ao vivo -->
     <div class="card" style="padding:20px; margin-bottom:24px;">
       <div style="font-size:13px; font-weight:600; color:var(--azul); margin-bottom:14px; display:flex; align-items:center; gap:8px;">
         🔴 <span>Placares ao vivo — 365Scores</span>
@@ -671,6 +681,7 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: APOSTAS -->
 <div class="page" id="page-apostas">
   <div class="container">
     <div class="section-title">Faça sua Aposta</div>
@@ -760,11 +771,13 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: PALPITES -->
 <div class="page" id="page-palpites">
   <div class="container">
     <div class="section-title">Palpites</div>
     <p class="section-sub">Fase de Grupos · Revelados após o início de cada jogo</p>
 
+    <!-- Filtro de participante -->
     <div style="margin-bottom:18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
       <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
       <select id="filtro-participante" onchange="renderPalpitesParticipante()" style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px; border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; color:var(--texto); cursor:pointer;">
@@ -780,11 +793,13 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: BÔNUS -->
 <div class="page" id="page-bonus">
   <div class="container">
     <div class="section-title">Apostas Bônus</div>
     <p class="section-sub">Palpites de bônus da fase de grupos</p>
 
+    <!-- Subabas -->
     <div style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid var(--cinza-borda); padding-bottom:0;">
       <button id="tab-fixos" onclick="showBonusTab('fixos')" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid var(--azul); color:var(--azul); margin-bottom:-2px;">
         🏆 Campeão / Artilheiro
@@ -794,6 +809,7 @@ footer strong { color: rgba(255,255,255,0.7); }
       </button>
     </div>
 
+    <!-- Subaba: fixos -->
     <div id="bonus-fixos">
       <div class="card" style="overflow-x:auto;">
         <table class="rank-table" id="bonus-fixos-table">
@@ -813,6 +829,7 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
+    <!-- Subaba: classificados -->
     <div id="bonus-classificados" style="display:none;">
       <div style="margin-bottom:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
         <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
@@ -827,11 +844,13 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: TESOURARIA -->
 <div class="page" id="page-tesouraria">
   <div class="container" style="max-width:700px">
     <div class="section-title">Tesouraria</div>
     <p class="section-sub">Status de pagamento — R$ 50,00 por participante</p>
 
+    <!-- Resumo: Pagos / Pendentes / Arrecadado -->
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;">
       <div class="card" style="padding:18px; text-align:center;">
         <div style="font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--verde-escuro);" id="t-pagos">—</div>
@@ -847,6 +866,7 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
+    <!-- Premiação -->
     <div class="card" style="padding:20px; margin-bottom:16px; border-top:3px solid var(--amarelo);">
       <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:14px;">
         🏆 Previsão de Premiação
@@ -870,6 +890,7 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
+    <!-- PIX -->
     <div class="card" style="padding:20px; margin-bottom:16px; border-left:4px solid var(--verde); display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
       <div style="font-size:32px; flex-shrink:0;">💸</div>
       <div style="flex:1;">
@@ -886,6 +907,7 @@ footer strong { color: rgba(255,255,255,0.7); }
       </div>
     </div>
 
+    <!-- Tabela -->
     <div class="card">
       <table class="rank-table" id="tesouraria-table">
         <thead>
@@ -911,6 +933,7 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: REGULAMENTO -->
 <div class="page" id="page-regulamento">
   <div class="container" style="max-width:780px">
     <div class="section-title">Regulamento</div>
@@ -1104,7 +1127,7 @@ const JOGOS = [
   {n:11, d:"14/jun", h:"17h",   f:"1ª rodada", g:"F", t1:"Holanda",         t2:"Japão",            g1:null, g2:null},
   {n:12, d:"14/jun", h:"23h",   f:"1ª rodada", g:"F", t1:"Suécia",          t2:"Tunísia",          g1:null, g2:null},
   {n:13, d:"15/jun", h:"19h",   f:"1ª rodada", g:"H", t1:"Arábia Saudita",  t2:"Uruguai",          g1:null, g2:null},
-  {n:14, d:"15/jun", h:"13h",   f:"1ª rodada", g:"H", t1:"Espanha",          t2:"Cabo Verde",       g1:null, g2:null},
+  {n:14, d:"15/jun", h:"13h",   f:"1ª rodada", g:"H", t1:"Espanha",         t2:"Cabo Verde",       g1:null, g2:null},
   {n:15, d:"15/jun", h:"22h",   f:"1ª rodada", g:"G", t1:"Irã",             t2:"Nova Zelândia",    g1:null, g2:null},
   {n:16, d:"15/jun", h:"16h",   f:"1ª rodada", g:"G", t1:"Bélgica",         t2:"Egito",            g1:null, g2:null},
   {n:17, d:"16/jun", h:"16h",   f:"1ª rodada", g:"I", t1:"França",          t2:"Senegal",          g1:null, g2:null},
@@ -1228,7 +1251,6 @@ function renderJogos(filtro) {
   const grid = document.getElementById('jogos-grid');
   const lista = filtro === 'todos' ? JOGOS : JOGOS.filter(j => j.f === filtro);
 
-  let lastFase = '';
   let html = '';
   if (filtro === 'todos') {
     const fases = [...new Set(JOGOS.map(j => j.f))];
@@ -1244,7 +1266,6 @@ function renderJogos(filtro) {
   } else {
     lista.forEach(j => { html += renderJogoCard(j); });
   }
-
   grid.innerHTML = html;
 }
 
@@ -1288,7 +1309,6 @@ function filtrarFase(fase, btn) {
   renderJogos(fase);
 }
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('stat-participantes').textContent = '…';
   document.getElementById('stat-jogos-feitos').textContent = JOGOS.filter(j => j.g1 !== null).length;
@@ -1314,48 +1334,73 @@ document.addEventListener('DOMContentLoaded', () => {
 // INTEGRAÇÃO GOOGLE SHEETS
 // ================================================================
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyI7NIIAttmJyFZkkVYhPNcGD9b-dDR4XX4IvF-rSE6Oq719M6mdSPSKk1SDWs-VVjV2w/exec";
-const SHEETS_PUBLISHED_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2l3iBmOzWA0N_7feIpkxM_IcECPc4uJKzCDTmRJ8X6KGcvpZZtroRk9g66ZQbL5kJJXgXr1EC2mWt/pubhtml?gid=1820913296&single=true";
 
-async function fetchAPI(tipo) {
+// NOVA FUNÇÃO: Lê os placares diretamente da planilha publicada em formato CSV
+async function carregarJogosDoGoogleSheets() {
+  // Substituímos pubhtml por pub?output=csv para facilitar a leitura via código
+  const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJqGzgnkzNdOHx3BYUQsBZaKoeEz1bgU7g-q78UNY95XPEJo6EEncmkE21lwAhP-9fU0L1UgkmG4LO/pub?gid=0&single=true&output=csv";
+  
   try {
-    const res = await fetch(APPS_SCRIPT_URL + '?tipo=' + tipo);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return await res.json();
-  } catch(e) {
-    console.warn('Erro ao buscar ' + tipo + ':', e);
-    return null;
-  }
-}
+    const res = await fetch(urlCSV);
+    if (!res.ok) throw new Error('Erro ao baixar planilha');
+    const text = await res.text();
+    
+    // Divide o CSV por quebras de linha
+    const linhas = text.split('\n');
+    let jogosFeitos = 0;
 
-// ── Carrega placares dos jogos na aba Jogos
-async function carregarJogos() {
-  const dados = await fetchAPI('jogos');
-  if (!dados || !dados.jogos) return;
-  const jogosList = dados.jogos;
+    // A partir da linha 0, varre para encontrar os dados
+    for (let i = 0; i < linhas.length; i++) {
+      // O split remove o caracter de "retorno de carro" (carriage return) do Windows
+      const colunas = linhas[i].replace('\r', '').split(',');
+      
+      // Checa se tem colunas suficientes (H é a 8ª coluna, índice 7)
+      if (colunas.length >= 8) {
+        const numJogoStr = colunas[0].trim(); // Coluna A
+        const g1Str = colunas[5].trim();      // Coluna F (Índice 5)
+        const g2Str = colunas[7].trim();      // Coluna H (Índice 7)
 
-  let jogosFeitos = 0;
-  for (let i = 0; i < jogosList.length; i++) {
-    const j = jogosList[i];
-    if (j.g1 !== null && j.g2 !== null) {
-      const jogo = JOGOS.find(x => x.n === j.n);
-      if (jogo) { jogo.g1 = j.g1; jogo.g2 = j.g2; jogosFeitos++; }
+        const numJogo = parseInt(numJogoStr);
+
+        // Se a Coluna A for um número (é um jogo válido)
+        if (!isNaN(numJogo)) {
+          const jogo = JOGOS.find(x => x.n === numJogo);
+          if (jogo) {
+            // Se as colunas F e H estiverem preenchidas com números
+            if (g1Str !== "" && g2Str !== "" && !isNaN(parseInt(g1Str)) && !isNaN(parseInt(g2Str))) {
+              jogo.g1 = parseInt(g1Str);
+              jogo.g2 = parseInt(g2Str);
+              jogosFeitos++;
+            } else {
+              jogo.g1 = null;
+              jogo.g2 = null;
+            }
+          }
+        }
+      }
     }
-  }
 
-  document.getElementById('stat-jogos-feitos').textContent = jogosFeitos;
-  const paginaJogos = document.getElementById('page-jogos');
-  if (paginaJogos && paginaJogos.classList.contains('active')) {
-    const btnAtivo = document.querySelector('.filtro-btn.ativo');
-    const fase = btnAtivo ? btnAtivo.textContent.trim() : 'todos';
-    const faseMap = {
-      'Todos': 'todos', '1ª Rodada': '1ª rodada', '2ª Rodada': '2ª rodada',
-      '3ª Rodada': '3ª rodada', '16 Avos': '16 avos', 'Oitavas': 'Oitavas',
-      'Quartas': 'Quartas', 'Semis': 'Semifinal', 'Final': 'Final'
-    };
-    renderJogos(faseMap[fase] || 'todos');
-  }
+    document.getElementById('stat-jogos-feitos').textContent = jogosFeitos;
+    
+    // Atualiza a tela de jogos se ela estiver aberta
+    const paginaJogos = document.getElementById('page-jogos');
+    if (paginaJogos && paginaJogos.classList.contains('active')) {
+      const btnAtivo = document.querySelector('.filtro-btn.ativo');
+      const fase = btnAtivo ? btnAtivo.textContent.trim() : 'todos';
+      const faseMap = { 'Todos': 'todos', '1ª Rodada': '1ª rodada', '2ª Rodada': '2ª rodada', '3ª Rodada': '3ª rodada', '16 Avos': '16 avos', 'Oitavas': 'Oitavas', 'Quartas': 'Quartas', 'Semis': 'Semifinal', 'Final': 'Final' };
+      renderJogos(faseMap[fase] || 'todos');
+    }
+    
+    renderProximosJogos();
 
-  renderProximosJogos();
+    // Força a atualização da tabela de palpites para renderizar emojis corretos
+    if (document.getElementById('page-palpites').classList.contains('active')) {
+       renderPalpitesParticipante();
+    }
+
+  } catch(e) {
+    console.warn('Erro ao carregar jogos da nova planilha:', e);
+  }
 }
 
 function renderProximosJogos() {
@@ -1377,6 +1422,17 @@ function renderProximosJogos() {
   `).join('') + `<div style="font-size:12px;color:var(--cinza-texto);padding-top:10px;text-align:center">
     <a href="#" onclick="showPage('jogos');return false;" style="color:var(--azul);text-decoration:none;font-weight:500">Ver todos os jogos →</a>
   </div>`;
+}
+
+async function fetchAPI(tipo) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL + '?tipo=' + tipo);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch(e) {
+    console.warn('Erro ao buscar ' + tipo + ':', e);
+    return null;
+  }
 }
 
 // ── Carrega classificação
@@ -1418,18 +1474,6 @@ async function carregarClassificacao() {
   }).join('');
 }
 
-function parsearDataJogoJS(dataTxt, horaTxt) {
-  const meses = {'jan':0,'fev':1,'mar':2,'abr':3,'mai':4,'jun':5,'jul':6,'ago':7,'set':8,'out':9,'nov':10,'dez':11};
-  const p = dataTxt.toLowerCase().split('/');
-  if (p.length !== 2) return null;
-  const dia = parseInt(p[0]);
-  const mes = meses[p[1].trim()];
-  if (isNaN(dia) || mes === undefined) return null;
-  const hm = horaTxt.toLowerCase().match(/(\d+)h(\d+)?/);
-  if (!hm) return null;
-  return new Date(2026, mes, dia, parseInt(hm[1]), hm[2] ? parseInt(hm[2]) : 0, 0);
-}
-
 // ── Carrega tesouraria via Apps Script API
 async function carregarTesouraria() {
   var tbody     = document.getElementById('tesouraria-tbody');
@@ -1445,6 +1489,7 @@ async function carregarTesouraria() {
 
   var pagos = 0, parciais = 0, pendentes = 0;
   var ias = ['Chat GPT', 'Gemini', 'Claude'];
+
   tbody.innerHTML = dados.lista.map(function(p, idx) {
     var st     = p.status ? p.status.toLowerCase() : '';
     var isPago    = st === 'pago';
@@ -1454,7 +1499,7 @@ async function carregarTesouraria() {
     if (!isIA) {
       if (isPago)        pagos++;
       else if (isParcial) parciais++;
-      else                pendentes++;
+      else               pendentes++;
     }
 
     var badgeBg    = isPago ? '#d9ead3' : isParcial ? '#FFF3CD' : '#fce8e6';
@@ -1496,32 +1541,28 @@ async function carregarTesouraria() {
 // ── Inicialização: carrega tudo ao abrir a página
 async function inicializarDados() {
   await Promise.all([
-    carregarJogos(),
-    carregarClassificacao(),
+    carregarJogosDoGoogleSheets(), // Chama a nova função direta
+    carregarClassificacao()
   ]);
 }
 
-// Carrega dados extras ao navegar
 function showPageExtra(id) {
   showPage(id);
   if (id === 'palpites') carregarPalpites();
   if (id === 'bonus') carregarBonus();
   if (id === 'tesouraria') carregarTesouraria();
-  if (id === 'jogos') carregarJogos();
+  if (id === 'jogos') carregarJogosDoGoogleSheets(); // Atualiza via CSV
 }
 
-// Inicia ao carregar
 window.addEventListener('load', inicializarDados);
 
-// Atualiza tesouraria a cada 10 minutos
 setInterval(function() {
   var pg = document.getElementById('page-tesouraria');
   if (pg && pg.classList.contains('active')) carregarTesouraria();
 }, 10 * 60 * 1000);
 
-// ── Relógio regressivo ──────────────────────────────────────────
 (function() {
-  var alvo = new Date('2026-06-11T19:00:00.000Z'); // 11/jun 16h BRT
+  var alvo = new Date('2026-06-11T19:00:00.000Z'); 
 
   function atualizar() {
     var agora = new Date();
@@ -1549,10 +1590,10 @@ setInterval(function() {
   setInterval(atualizar, 1000);
 })();
 
-// Atualiza a cada 5 minutos automaticamente
+// Atualiza a cada 5 minutos
 setInterval(inicializarDados, 5 * 60 * 1000);
-</script>
 
+</script>
 <script src="https://widgets.365scores.com/main.js" async></script>
 
 <script>
@@ -1579,6 +1620,7 @@ var _dadosPalpites = null;
 async function carregarPalpites() {
   var container = document.getElementById('palpites-container');
   if (!container) return;
+
   if (!_dadosPalpites) {
     container.innerHTML = '<div style="text-align:center;padding:48px;color:var(--cinza-texto);">⏳ Carregando palpites…</div>';
     var dados = await carregarDadosGrupos();
@@ -1612,14 +1654,14 @@ function renderPalpitesParticipante() {
   if (!container || !_dadosPalpites) return;
 
   var filtro = sel ? sel.value : 'todos';
-  var jogos  = _dadosPalpites.jogos;
 
   // Participantes a exibir
   var parts = filtro === 'todos'
     ? _dadosPalpites.participantes
     : _dadosPalpites.participantes.filter(function(p) { return p.nome === filtro; });
-    
-  var jogosLib = jogos;
+
+  // Usar JOGOS global que agora está sendo atualizado pela planilha nova
+  var jogosLib = JOGOS.filter(j => j.n <= 72); // Apenas fase de grupos no JSON 
 
   var html = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:600px;">';
   html += '<thead><tr><th>Jogo</th><th>Partida</th><th style="text-align:center">Resultado</th>';
@@ -1631,22 +1673,26 @@ function renderPalpitesParticipante() {
   jogosLib.forEach(function(j) {
     html += '<tr>';
     html += '<td style="color:var(--cinza-texto);font-size:12px">' + j.n + '</td>';
-    html += '<td style="font-size:12px;white-space:nowrap">' + (flag(j.t1)||'') + ' ' + j.t1 + ' × ' + j.t2 + ' ' + (flag(j.t2)||'') + '</td>';
+    html += '<td style="font-size:12px;white-space:nowrap">' +
+      (flag(j.t1)||'') + ' ' + j.t1 + ' × ' + j.t2 + ' ' + (flag(j.t2)||'') + '</td>';
     html += '<td style="text-align:center;font-weight:700;font-size:14px;">' + (j.g1 !== null ? (j.g1 + ' x ' + j.g2) : '—') + '</td>';
 
     parts.forEach(function(p) {
       var palp = p.palpites.find(x => x.n === j.n);
+      
       if (!palp || palp.p1 === null) {
         html += '<td style="text-align:center;color:var(--cinza-texto);font-size:12px;">—</td>';
         return;
       }
-      
-      var temResultado = j.g1 !== null && j.g2 !== null;
+
+      var temResultado = (j.g1 !== null && j.g2 !== null);
       var acertou = false;
       var acertRes = false;
 
+      // LÓGICA DE EMOJIS GARANTIDA APENAS COM RESULTADO REAL
       if (temResultado) {
         acertou = (palp.p1 === j.g1 && palp.p2 === j.g2);
+        
         var acertouVencedor1 = (palp.p1 > palp.p2) && (j.g1 > j.g2);
         var acertouVencedor2 = (palp.p1 < palp.p2) && (j.g1 < j.g2);
         var acertouEmpate    = (palp.p1 === palp.p2) && (j.g1 === j.g2);
@@ -1656,7 +1702,8 @@ function renderPalpitesParticipante() {
 
       var bg = acertou ? 'background:#d9ead3;' : acertRes ? 'background:#FFF8E1;' : '';
       var suffix = acertou ? ' 🎯' : acertRes ? ' ✅' : '';
-      html += '<td style="text-align:center;font-size:12px;' + bg + '">' + palp.p1 + '×' + palp.p2 + suffix + '</td>';
+      html += '<td style="text-align:center;font-size:12px;' + bg + '">' +
+        palp.p1 + '×' + palp.p2 + suffix + '</td>';
     });
     html += '</tr>';
   });
@@ -1682,7 +1729,6 @@ var NOMES_ABREV = {
   "Gabriel Lenziardi de Melo": "Gabriel Lenziardi",
   "JOAO PEDRO VIANA MONNERAT GRENHA": "João Pedro Viana",
 };
-
 function abrevNome(n) { return NOMES_ABREV[n] || n; }
 
 function showBonusTab(tab) {
@@ -1735,7 +1781,7 @@ async function carregarClassificadosBonus() {
     if (dados) _dadosClassif = { classificados: dados.classificados };
   }
   if (!_dadosClassif || !_dadosClassif.classificados) return;
-  
+
   var sel = document.getElementById('filtro-bonus-part');
   if (sel && sel.options.length === 1) {
     _dadosClassif.classificados.forEach(function(p) {
@@ -1758,7 +1804,7 @@ function renderClassificadosParticipante() {
   var lista  = filtro === 'todos'
     ? _dadosClassif.classificados
     : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
-    
+
   if (filtro === 'todos') {
     var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
     var tbl = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:500px;">';
@@ -1777,10 +1823,12 @@ function renderClassificadosParticipante() {
   } else {
     var p = lista[0];
     if (!p) { container.innerHTML = '<p style="color:var(--cinza-texto)">Sem dados.</p>'; return; }
-    container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' + abrevNome(p.nome) + ' — ' + p.classificados.length + ' seleções apostadas</div>' +
+    container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' +
+      abrevNome(p.nome) + ' — ' + p.classificados.length + ' seleções apostadas</div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
       p.classificados.map(function(s, i) {
-        return '<span style="font-size:12px;padding:4px 10px;background:#F4F3EF;border-radius:6px;border:1px solid var(--cinza-borda);">' + (i+1) + '. ' + s + '</span>';
+        return '<span style="font-size:12px;padding:4px 10px;background:#F4F3EF;border-radius:6px;border:1px solid var(--cinza-borda);">' +
+          (i+1) + '. ' + s + '</span>';
       }).join('') + '</div>';
   }
 }
