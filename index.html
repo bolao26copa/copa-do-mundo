@@ -1612,8 +1612,23 @@ setInterval(inicializarDados, 5 * 60 * 1000);
 </script>
 <script src="https://widgets.365scores.com/main.js" async>
 // ================================================================
-// PALPITES — Fase de grupos
+// PALPITES e BÔNUS — Dados estáticos da fase de grupos
 // ================================================================
+var _dadosGrupos = null;
+
+async function carregarDadosGrupos() {
+  if (_dadosGrupos) return _dadosGrupos;
+  try {
+    var res = await fetch("https://italopsilva-law.github.io/bolao-copa-2026/dados_grupos.json");
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    _dadosGrupos = await res.json();
+    return _dadosGrupos;
+  } catch(e) {
+    console.warn('Erro ao carregar dados_grupos.json:', e);
+    return null;
+  }
+}
+
 var _dadosPalpites = null;
 
 async function carregarPalpites() {
@@ -1622,7 +1637,10 @@ async function carregarPalpites() {
 
   if (!_dadosPalpites) {
     container.innerHTML = '<div style="text-align:center;padding:48px;color:var(--cinza-texto);">⏳ Carregando palpites…</div>';
-    _dadosPalpites = await fetchAPI('palpites');
+    var dados = await carregarDadosGrupos();
+    if (dados) {
+      _dadosPalpites = { participantes: dados.participantes, jogos: dados.jogos };
+    }
   }
 
   if (!_dadosPalpites || !_dadosPalpites.participantes) {
@@ -1740,7 +1758,8 @@ function showBonusTab(tab) {
 async function carregarBonus() {
   // Carrega bônus fixos
   if (!_dadosBonus) {
-    _dadosBonus = await fetchAPI('bonus');
+    var dados = await carregarDadosGrupos();
+    if (dados) _dadosBonus = { bonus: dados.bonus };
   }
   if (!_dadosBonus || !_dadosBonus.bonus) return;
 
@@ -1760,7 +1779,8 @@ async function carregarBonus() {
 
 async function carregarClassificadosBonus() {
   if (!_dadosClassif) {
-    _dadosClassif = await fetchAPI('classificados');
+    var dados = await carregarDadosGrupos();
+    if (dados) _dadosClassif = { classificados: dados.classificados };
   }
   if (!_dadosClassif || !_dadosClassif.classificados) return;
 
