@@ -451,10 +451,10 @@ footer strong { color: rgba(255,255,255,0.7); }
   /* Apostas grid: 1 coluna */
   .apostas-grid { grid-template-columns: 1fr; }
 
-  /* Tabela de classificação: font menor */
+  /* Tabela de classificação: font menor - APLICADA APENAS NA PÁGINA INÍCIO */
   .rank-table td, .rank-table th { padding: 9px 10px; font-size: 12px; }
-  .rank-table thead th:nth-child(5),
-  .rank-table tbody td:nth-child(5) { display: none; }
+  #page-inicio .rank-table thead th:nth-child(5),
+  #page-inicio .rank-table tbody td:nth-child(5) { display: none; }
 
   /* Regulamento */
   .pontuacao-table td, .pontuacao-table th { padding: 8px 10px; font-size: 12px; }
@@ -473,8 +473,8 @@ footer strong { color: rgba(255,255,255,0.7); }
   nav a span { display: none; }
   nav a { font-size: 10px; padding: 5px 7px; }
   .hero h1 { font-size: 30px; }
-  .rank-table thead th:nth-child(4),
-  .rank-table tbody td:nth-child(4) { display: none; }
+  #page-inicio .rank-table thead th:nth-child(4),
+  #page-inicio .rank-table tbody td:nth-child(4) { display: none; }
 }
 </style>
 </head>
@@ -1337,7 +1337,6 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyI7NIIAttmJyFZ
 
 // NOVA FUNÇÃO: Lê os placares diretamente da planilha publicada em formato CSV
 async function carregarJogosDoGoogleSheets() {
-  // Substituímos pubhtml por pub?output=csv para facilitar a leitura via código
   const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJqGzgnkzNdOHx3BYUQsBZaKoeEz1bgU7g-q78UNY95XPEJo6EEncmkE21lwAhP-9fU0L1UgkmG4LO/pub?gid=0&single=true&output=csv";
   
   try {
@@ -1351,7 +1350,6 @@ async function carregarJogosDoGoogleSheets() {
 
     // A partir da linha 0, varre para encontrar os dados
     for (let i = 0; i < linhas.length; i++) {
-      // O split remove o caracter de "retorno de carro" (carriage return) do Windows
       const colunas = linhas[i].replace('\r', '').split(',');
       
       // Checa se tem colunas suficientes (H é a 8ª coluna, índice 7)
