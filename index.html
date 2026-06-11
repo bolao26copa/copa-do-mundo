@@ -1690,8 +1690,7 @@ function renderPalpitesParticipante() {
     html += '<td style="color:var(--cinza-texto);font-size:12px">' + j.n + '</td>';
     html += '<td style="font-size:12px;white-space:nowrap">' +
       (flag(j.t1)||'') + ' ' + j.t1 + ' × ' + j.t2 + ' ' + (flag(j.t2)||'') + '</td>';
-    html += '<td style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:16px;">' +
-      j.g1 + ' × ' + j.g2 + '</td>';
+    html += '<td style="text-align:center;font-weight:700;font-size:14px;">' + (j.g1 !== null ? (j.g1 + ' x ' + j.g2) : '—') + '</td>';
 
     parts.forEach(function(p) {
       var palp = p.palpites[j.n - 1];
