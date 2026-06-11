@@ -1460,11 +1460,8 @@ async function carregarClassificacao() {
   }).join('');
 }
 
-async function carregarPalpites() {
-  var container = document.getElementById('palpites-container');
-  if (!container) return;
-  container.innerHTML = '<div style="text-align:center;padding:48px 24px;color:var(--cinza-texto)"><div style="font-size:48px;margin-bottom:12px">🔒</div><h3 style="font-size:16px;margin-bottom:8px">Palpites protegidos</h3><p style="font-size:13px">Os palpites de cada jogo aparecem aqui após o início da partida.</p></div>';
-}
+// carregarPalpites definida abaixo
+
 
 function parsearDataJogoJS(dataTxt, horaTxt) {
   const meses = {'jan':0,'fev':1,'mar':2,'abr':3,'mai':4,'jun':5,'jul':6,'ago':7,'set':8,'out':9,'nov':10,'dez':11};
@@ -1660,12 +1657,8 @@ function renderPalpitesParticipante() {
     ? _dadosPalpites.participantes
     : _dadosPalpites.participantes.filter(function(p) { return p.nome === filtro; });
 
-  // Jogos com pelo menos um palpite liberado
-  var jogosLib = jogos.filter(function(j) { return j.g1 !== null; });
-  if (jogosLib.length === 0) {
-    container.innerHTML = '<div class="card" style="padding:40px;text-align:center;color:var(--cinza-texto);">🔒 Os palpites serão revelados conforme os jogos começam.</div>';
-    return;
-  }
+  // Todos os jogos da fase de grupos
+  var jogosLib = jogos;
 
   var html = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:600px;">';
   html += '<thead><tr><th>Jogo</th><th>Partida</th><th style="text-align:center">Resultado</th>';
