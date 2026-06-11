@@ -1378,7 +1378,7 @@ async function carregarClassificacao() {
 
   tbody.innerHTML = dados.participantes.map(function(p) {
     var posClass = p.pos === 1 ? 'pos-1' : p.pos === 2 ? 'pos-2' : p.pos === 3 ? 'pos-3' : 'pos-other';
-    var ias = ['Chat GPT', 'Gemini', 'Claude'];
+    var ias = ['Chat GPT', 'Gemini', 'Claude', 'Claude AI', 'Google Gemini', 'Deepseek'];
     var isIA = ias.indexOf(p.nome) >= 0;
     var nomeDisplay = isIA ? p.nome + ' 🤖' : p.nome;
     return '<tr' + (isIA ? ' style="background:#F0F4FF"' : '') + '>' +
