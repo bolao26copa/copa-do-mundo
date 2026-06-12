@@ -395,12 +395,6 @@ footer strong { color: #fff; font-weight: 600; }
   #page-inicio .rank-table thead th:nth-child(5),
   #page-inicio .rank-table tbody td:nth-child(5) { display: none; }
   
-  #page-grupos .rank-table th:nth-child(5), #page-grupos .rank-table td:nth-child(5),
-  #page-grupos .rank-table th:nth-child(6), #page-grupos .rank-table td:nth-child(6),
-  #page-grupos .rank-table th:nth-child(7), #page-grupos .rank-table td:nth-child(7),
-  #page-grupos .rank-table th:nth-child(8), #page-grupos .rank-table td:nth-child(8),
-  #page-grupos .rank-table th:nth-child(9), #page-grupos .rank-table td:nth-child(9) { display: none; }
-
   .pontuacao-table td, .pontuacao-table th { padding: 8px 10px; font-size: 12px; }
   .pontuacao-table thead th:nth-child(4),
   .pontuacao-table tbody td:nth-child(4) { display: none; }
@@ -1345,22 +1339,23 @@ function renderGrupos() {
       <div style="background:var(--azul); color:#fff; padding:10px 16px; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1px;">
         GRUPO ${g}
       </div>
-      <table class="rank-table" style="width:100%; font-size:12px;">
-        <thead>
-          <tr>
-            <th style="padding:8px; text-align:center; width:20px;">#</th>
-            <th style="padding:8px; text-align:left;">Seleção</th>
-            <th style="padding:8px; text-align:center;" title="Pontos">P</th>
-            <th style="padding:8px; text-align:center;" title="Jogos">J</th>
-            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Vitórias">V</th>
-            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Empates">E</th>
-            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Derrotas">D</th>
-            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Gols Pró">GP</th>
-            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Gols Contra">GC</th>
-            <th style="padding:8px; text-align:center;" title="Saldo de Gols">SG</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div style="overflow-x: auto;">
+        <table class="rank-table" style="width:100%; min-width: 480px; font-size:12px;">
+          <thead>
+            <tr>
+              <th style="padding:8px; text-align:center; width:20px;">#</th>
+              <th style="padding:8px; text-align:left;">Seleção</th>
+              <th style="padding:8px; text-align:center;" title="Pontos">P</th>
+              <th style="padding:8px; text-align:center;" title="Jogos">J</th>
+              <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Vitórias">V</th>
+              <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Empates">E</th>
+              <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Derrotas">D</th>
+              <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Gols Pró">GP</th>
+              <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Gols Contra">GC</th>
+              <th style="padding:8px; text-align:center;" title="Saldo de Gols">SG</th>
+            </tr>
+          </thead>
+          <tbody>
     `;
 
     times.forEach((t, idx) => {
@@ -1385,7 +1380,7 @@ function renderGrupos() {
       `;
     });
 
-    html += `</tbody></table></div>`;
+    html += `</tbody></table></div></div>`;
   });
 
   container.innerHTML = html;
