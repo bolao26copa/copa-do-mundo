@@ -1621,7 +1621,7 @@ async function carregarTesouraria() {
 async function carregarDadosGrupos() {
   if (_dadosGrupos) return _dadosGrupos;
   try {
-    var res = await fetch("https://italopsilva-law.github.io/bolao-copa-2026/dados_grupos.json");
+    var res = await fetch("https://bolao26copa.github.io/copa-do-mundo/dados_grupos.json");
     if (!res.ok) throw new Error('HTTP ' + res.status);
     _dadosGrupos = await res.json();
     return _dadosGrupos;
