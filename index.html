@@ -455,14 +455,23 @@ footer strong { color: rgba(255,255,255,0.7); }
   .rank-table td, .rank-table th { padding: 9px 10px; font-size: 12px; }
   #page-inicio .rank-table thead th:nth-child(5),
   #page-inicio .rank-table tbody td:nth-child(5) { display: none; }
+  
+  /* Esconder colunas secundárias da tabela de Grupos no mobile para caber melhor */
+  #page-grupos .rank-table th:nth-child(5),
+  #page-grupos .rank-table td:nth-child(5),
+  #page-grupos .rank-table th:nth-child(6),
+  #page-grupos .rank-table td:nth-child(6),
+  #page-grupos .rank-table th:nth-child(7),
+  #page-grupos .rank-table td:nth-child(7),
+  #page-grupos .rank-table th:nth-child(8),
+  #page-grupos .rank-table td:nth-child(8),
+  #page-grupos .rank-table th:nth-child(9),
+  #page-grupos .rank-table td:nth-child(9) { display: none; }
 
   /* Regulamento */
   .pontuacao-table td, .pontuacao-table th { padding: 8px 10px; font-size: 12px; }
   .pontuacao-table thead th:nth-child(4),
   .pontuacao-table tbody td:nth-child(4) { display: none; }
-
-  /* Form incorporado: altura menor no mobile */
-  #page-apostas iframe { min-height: 600px !important; height: 600px !important; }
 
   /* Phase label */
   .phase-label { font-size: 15px; padding: 14px 0 8px; }
@@ -489,6 +498,7 @@ footer strong { color: rgba(255,255,255,0.7); }
     <nav>
       <a class="active" onclick="showPage('inicio')">Início</a>
       <a onclick="showPageExtra('jogos')">Jogos</a>
+      <a onclick="showPageExtra('grupos')">Grupos</a>
       <a onclick="showPageExtra('apostas')">Apostar</a>
       <a onclick="showPageExtra('palpites')">Palpites</a>
       <a onclick="showPageExtra('bonus')">Bônus</a>
@@ -580,18 +590,18 @@ footer strong { color: rgba(255,255,255,0.7); }
           </div>
         </div>
 
-        <!-- Apostar agora -->
-        <div class="card" style="padding:20px; border-top: 3px solid var(--amarelo);">
+        <!-- Apostar agora (Atualizado) -->
+        <div class="card" style="padding:20px; border-top: 3px solid var(--cinza-texto);">
           <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul); margin-bottom:8px;">
-            Faça sua aposta
+            1ª aposta encerrada
           </div>
-          <p style="font-size:13px; color:var(--cinza-texto); margin-bottom:16px; line-height:1.5;">
-            Formulário 1 aberto — Fase de Grupos + Apostas Bônus. Prazo: <strong>11/jun até 15h59</strong>
+          <p style="font-size:13px; color:var(--cinza-texto); margin-bottom:12px; line-height:1.5;">
+            Os palpites da Fase de Grupos estão fechados.
           </p>
-          <div class="aposta-status status-aberto">● Aberto</div>
-          <a href="#" onclick="showPage('apostas'); return false;" class="aposta-btn" style="margin-top:8px">
-            Acessar formulário →
-          </a>
+          <div style="background:#E8EEFF; padding:12px; border-radius:8px; border:1px solid var(--azul); color:var(--azul); font-size:12px; line-height: 1.5; margin-bottom:16px;">
+            A abertura para os próximos palpites acontecerá entre o término do último jogo da fase de grupos <strong>(27/jun)</strong> e o minuto anterior ao início do primeiro jogo dos 16 avos <strong>(28/jun às 15h59)</strong>. A partir dos 16 Avos, os palpites serão feitos <strong>diretamente aqui no site</strong>, sem formulário do Google.
+          </div>
+          <div class="aposta-status status-fechado" style="margin-bottom:0">● Aguardando próxima fase</div>
         </div>
 
         <!-- Relógio regressivo -->
@@ -636,7 +646,8 @@ footer strong { color: rgba(255,255,255,0.7); }
               <div style="font-size:12px; color:var(--cinza-texto); line-height:1.4;">Troca de figurinhas do álbum da Copa — entre no grupo do WhatsApp!</div>
             </div>
           </div>
-          <a href="https://chat.whatsapp.com/F5OQPk19TVj4FN9kgoiZ4S" target="_blank" style="display:block; margin-top:14px; padding:10px; background:#25D366; color:#fff; border-radius:8px; text-align:center; text-decoration:none; font-size:13px; font-weight:600;">
+          <a href="https://chat.whatsapp.com/F5OQPk19TVj4FN9kgoiZ4S" target="_blank"
+             style="display:block; margin-top:14px; padding:10px; background:#25D366; color:#fff; border-radius:8px; text-align:center; text-decoration:none; font-size:13px; font-weight:600;">
             Entrar no grupo →
           </a>
         </div>
@@ -658,7 +669,12 @@ footer strong { color: rgba(255,255,255,0.7); }
         🔴 <span>Placares ao vivo — 365Scores</span>
         <span style="font-size:10px; background:var(--verde-claro); color:var(--verde-escuro); padding:2px 7px; border-radius:4px; font-weight:700;">AO VIVO</span>
       </div>
-      <div data-widget-type="entityScores" data-entity-type="league" data-entity-id="5930" data-lang="pt-br" data-widget-id="2399a407-7795-4a19-9fba-f6a4e731b7ff" style="min-height:200px;">
+      <div data-widget-type="entityScores"
+           data-entity-type="league"
+           data-entity-id="5930"
+           data-lang="pt-br"
+           data-widget-id="2399a407-7795-4a19-9fba-f6a4e731b7ff"
+           style="min-height:200px;">
       </div>
       <div style="font-size:11px; color:var(--cinza-texto); margin-top:10px; text-align:right;">
         Desenvolvido por <a href="https://www.365scores.com/pt-br" target="_blank" style="color:var(--azul);">365Scores.com</a>
@@ -681,91 +697,93 @@ footer strong { color: rgba(255,255,255,0.7); }
   </div>
 </div>
 
+<!-- PÁGINA: GRUPOS (NOVA ABA) -->
+<div class="page" id="page-grupos">
+  <div class="container">
+    <div class="section-title">Classificação dos Grupos</div>
+    <p class="section-sub">Atualizada em tempo real de acordo com os resultados dos jogos.</p>
+    <div id="grupos-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+      <!-- Tabelas dos grupos renderizadas aqui -->
+    </div>
+  </div>
+</div>
+
 <!-- PÁGINA: APOSTAS -->
 <div class="page" id="page-apostas">
   <div class="container">
     <div class="section-title">Faça sua Aposta</div>
-    <p class="section-sub">Formulários liberados progressivamente conforme a Copa avança</p>
+    <p class="section-sub">Apostas liberadas progressivamente conforme a Copa avança</p>
 
     <div class="apostas-grid">
 
-      <div class="aposta-card" style="grid-column: 1 / -1; border-top: 3px solid var(--verde);">
+      <div class="aposta-card" style="grid-column: 1 / -1; border-top: 3px solid var(--cinza-texto);">
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
           <div>
-            <div class="aposta-status status-aberto" style="margin-bottom:6px">● Aberto agora</div>
-            <h3 style="font-size:18px; margin-bottom:4px">Form 1 — Grupos + Bônus</h3>
-            <p style="font-size:13px; color:var(--cinza-texto); margin:0">72 jogos da fase de grupos + apostas bônus: campeão, vice, artilheiro e 32 classificados.</p>
-          </div>
-          <div style="text-align:right; flex-shrink:0">
-            <p style="font-size:12px; color:#C0392B; font-weight:600; margin-bottom:4px;">⏰ Prazo: 11/jun até 15h59</p>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWuSZjuU6nweWl3FZUX4XRmXs105YtaHjQ0HV-E-ttfqTR4w/viewform" target="_blank" class="aposta-btn" style="display:inline-block; width:auto; padding:8px 20px;">
-              Abrir em tela cheia ↗
-            </a>
+            <div class="aposta-status status-fechado" style="margin-bottom:6px">● Fechado</div>
+            <h3 style="font-size:18px; margin-bottom:4px">1ª aposta encerrada (Grupos + Bônus)</h3>
+            <p style="font-size:13px; color:var(--cinza-texto); margin:0">Apostas da primeira fase estão encerradas.</p>
           </div>
         </div>
-        <div style="border-radius:10px; overflow:hidden; border:1px solid var(--cinza-borda);">
-          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeWuSZjuU6nweWl3FZUX4XRmXs105YtaHjQ0HV-E-ttfqTR4w/viewform?embedded=true" width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0" style="display:block; min-height:800px;">Carregando…</iframe>
+        <div style="background:#E8EEFF; padding:16px; border-radius:8px; border:1px solid var(--azul); color:var(--azul); font-size:13px; line-height: 1.6;">
+          <strong>📣 Próximos Palpites:</strong><br>
+          A abertura acontecerá entre o término do último jogo da fase de grupos (27/jun) e o minuto anterior ao início do primeiro jogo dos 16 avos (28/jun às 15h59).<br><br>
+          Para facilitar, a partir das fases de mata-mata (16 Avos em diante), <strong>os palpites serão realizados diretamente neste site</strong>. Nós criaremos um sistema próprio onde não será mais necessário utilizar formulários externos do Google.
         </div>
-        <p style="font-size:12px; color:var(--cinza-texto); margin-top:10px; text-align:center;">
-          Role dentro do formulário para ver todos os 72 jogos · Use sempre o mesmo nome em todos os formulários
-        </p>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
         <div class="aposta-icon" style="background:#F0EDE6">🔒</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
-        <h3>Form 2 — 16 Avos</h3>
+        <h3>Mata-Mata — 16 Avos</h3>
         <p>16 jogos dos 16 avos de final + quais 16 seleções avançam para as oitavas.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 28/jun</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 28/jun</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 28/jun no Site</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
         <div class="aposta-icon" style="background:#E8EEFF">🔒</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
-        <h3>Form 3 — Oitavas</h3>
+        <h3>Mata-Mata — Oitavas</h3>
         <p>8 jogos das oitavas de final + quais 8 avançam para as quartas.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 04/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 04/jul</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 04/jul no Site</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
         <div class="aposta-icon" style="background:#F3E8FF">🔒</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
-        <h3>Form 4 — Quartas</h3>
+        <h3>Mata-Mata — Quartas</h3>
         <p>4 jogos das quartas de final + quais 4 avançam para as semis.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 09/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 09/jul</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 09/jul no Site</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
         <div class="aposta-icon" style="background:#FDE8F0">🔒</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
-        <h3>Form 5 — Semifinais</h3>
+        <h3>Mata-Mata — Semifinais</h3>
         <p>Palpites dos 2 jogos das semifinais.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 14/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 14/jul</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 14/jul no Site</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
         <div class="aposta-icon" style="background:var(--azul-claro)">🥇</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
-        <h3>Form 6 — Final</h3>
+        <h3>Mata-Mata — Final</h3>
         <p>Palpites do jogo do 3º lugar e da grande final.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 18/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 18/jul</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 18/jul no Site</button>
       </div>
 
     </div>
 
     <div class="card" style="padding:24px; margin-top:28px; border-left: 4px solid var(--amarelo);">
-      <div style="font-size:14px; font-weight:600; margin-bottom:8px;">ℹ️ Como funciona</div>
+      <div style="font-size:14px; font-weight:600; margin-bottom:8px;">ℹ️ Como funciona agora</div>
       <ul style="font-size:13px; color:var(--cinza-texto); line-height:1.8; padding-left:20px;">
-        <li>Use o <strong>mesmo nome</strong> em todos os formulários — é assim que o sistema te reconhece</li>
-        <li>Palpites usam grade de múltipla escolha — selecione os gols de cada time (0 a 15)</li>
-        <li>Deixar uma linha em branco na grade = sem aposta para aquele jogo</li>
-        <li>Palpites só ficam visíveis para todos <strong>após o início de cada jogo</strong></li>
-        <li>Você pode refazer um formulário para corrigir palpites, desde que dentro do prazo</li>
+        <li>Para o restante da Copa, todas as suas apostas serão feitas usando o sistema próprio dentro do site.</li>
+        <li>Palpites usam a mesma regra de pontuação (selecione os gols de cada time).</li>
+        <li>Palpites só ficam visíveis para os outros participantes <strong>após o início de cada jogo</strong>.</li>
       </ul>
     </div>
   </div>
@@ -780,7 +798,9 @@ footer strong { color: rgba(255,255,255,0.7); }
     <!-- Filtro de participante -->
     <div style="margin-bottom:18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
       <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
-      <select id="filtro-participante" onchange="renderPalpitesParticipante()" style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px; border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; color:var(--texto); cursor:pointer;">
+      <select id="filtro-participante" onchange="renderPalpitesParticipante()"
+        style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px;
+               border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; color:var(--texto); cursor:pointer;">
         <option value="todos">Todos os participantes</option>
       </select>
     </div>
@@ -801,10 +821,16 @@ footer strong { color: rgba(255,255,255,0.7); }
 
     <!-- Subabas -->
     <div style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid var(--cinza-borda); padding-bottom:0;">
-      <button id="tab-fixos" onclick="showBonusTab('fixos')" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid var(--azul); color:var(--azul); margin-bottom:-2px;">
+      <button id="tab-fixos" onclick="showBonusTab('fixos')"
+        style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+               padding:10px 20px; border:none; background:none; cursor:pointer;
+               border-bottom:3px solid var(--azul); color:var(--azul); margin-bottom:-2px;">
         🏆 Campeão / Artilheiro
       </button>
-      <button id="tab-classificados" onclick="showBonusTab('classificados')" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid transparent; color:var(--cinza-texto); margin-bottom:-2px;">
+      <button id="tab-classificados" onclick="showBonusTab('classificados')"
+        style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+               padding:10px 20px; border:none; background:none; cursor:pointer;
+               border-bottom:3px solid transparent; color:var(--cinza-texto); margin-bottom:-2px;">
         🎯 Classificados para 16 avos
       </button>
     </div>
@@ -833,7 +859,9 @@ footer strong { color: rgba(255,255,255,0.7); }
     <div id="bonus-classificados" style="display:none;">
       <div style="margin-bottom:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
         <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
-        <select id="filtro-bonus-part" onchange="renderClassificadosParticipante()" style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px; border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; cursor:pointer;">
+        <select id="filtro-bonus-part" onchange="renderClassificadosParticipante()"
+          style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px;
+                 border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; cursor:pointer;">
           <option value="todos">Todos</option>
         </select>
       </div>
@@ -899,7 +927,8 @@ footer strong { color: rgba(255,255,255,0.7); }
           <div style="font-family:'DM Mono',monospace; font-size:15px; font-weight:600; background:#F4F3EF; padding:8px 14px; border-radius:8px; border:1px solid var(--cinza-borda); letter-spacing:1px;">
             14767179742
           </div>
-          <button onclick="navigator.clipboard.writeText('14767179742').then(function(){ this.textContent='✅ Copiado!'; var b=this; setTimeout(function(){ b.textContent='📋 Copiar'; },2000); }.bind(this))" style="padding:8px 16px; background:var(--verde); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+          <button onclick="navigator.clipboard.writeText('14767179742').then(function(){ this.textContent='✅ Copiado!'; var b=this; setTimeout(function(){ b.textContent='📋 Copiar'; },2000); }.bind(this))"
+            style="padding:8px 16px; background:var(--verde); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
             📋 Copiar
           </button>
         </div>
@@ -942,10 +971,10 @@ footer strong { color: rgba(255,255,255,0.7); }
     <div class="reg-section">
       <h3>Participação</h3>
       <ul>
-        <li>O bolão é aberto a todos os convidados. Participe usando sempre <strong>o mesmo nome</strong> em todos os formulários.</li>
-        <li>Os formulários são liberados progressivamente a cada fase da competição.</li>
-        <li>Palpites só podem ser feitos dentro do prazo de cada formulário.</li>
-        <li>É possível refazer o formulário para corrigir palpites, desde que dentro do prazo.</li>
+        <li>O bolão é aberto a todos os convidados. Participe usando sempre <strong>o mesmo nome</strong>.</li>
+        <li>A partir da fase de 16 Avos de Final, os palpites serão realizados dentro deste mesmo site.</li>
+        <li>Palpites só podem ser feitos dentro do prazo estabelecido.</li>
+        <li>É possível editar os palpites enviados, desde que dentro do prazo da rodada.</li>
       </ul>
     </div>
 
@@ -1236,7 +1265,7 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + id).classList.add('active');
   document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
-  
+  // Mark active nav item
   var navLinks = document.querySelectorAll('nav a');
   navLinks.forEach(function(a) {
     if (a.getAttribute('onclick') && a.getAttribute('onclick').indexOf("'" + id + "'") >= 0) {
@@ -1251,7 +1280,9 @@ function renderJogos(filtro) {
   const grid = document.getElementById('jogos-grid');
   const lista = filtro === 'todos' ? JOGOS : JOGOS.filter(j => j.f === filtro);
 
+  let lastFase = '';
   let html = '';
+
   if (filtro === 'todos') {
     const fases = [...new Set(JOGOS.map(j => j.f))];
     fases.forEach(fase => {
@@ -1266,6 +1297,7 @@ function renderJogos(filtro) {
   } else {
     lista.forEach(j => { html += renderJogoCard(j); });
   }
+
   grid.innerHTML = html;
 }
 
@@ -1309,25 +1341,118 @@ function filtrarFase(fase, btn) {
   renderJogos(fase);
 }
 
+// ================================================================
+// LÓGICA DOS GRUPOS (NOVO)
+// ================================================================
+function renderGrupos() {
+  const container = document.getElementById('grupos-container');
+  if (!container) return;
+
+  const stats = {};
+  
+  // Extrai as seleções e grupos e inicializa as estatísticas a zero
+  JOGOS.forEach(j => {
+    if (j.g) { // Somente jogos que tem grupo (A-L)
+      if (!stats[j.g]) stats[j.g] = {};
+      if (!stats[j.g][j.t1]) stats[j.g][j.t1] = { nome: j.t1, p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0 };
+      if (!stats[j.g][j.t2]) stats[j.g][j.t2] = { nome: j.t2, p: 0, j: 0, v: 0, e: 0, d: 0, gp: 0, gc: 0, sg: 0 };
+      
+      // Se o jogo tem placar, atualizar stats
+      if (j.g1 !== null && j.g2 !== null) {
+        const t1 = stats[j.g][j.t1];
+        const t2 = stats[j.g][j.t2];
+        
+        t1.j++; t2.j++;
+        t1.gp += j.g1; t1.gc += j.g2;
+        t2.gp += j.g2; t2.gc += j.g1;
+        
+        if (j.g1 > j.g2) {
+          t1.v++; t1.p += 3;
+          t2.d++;
+        } else if (j.g1 < j.g2) {
+          t2.v++; t2.p += 3;
+          t1.d++;
+        } else {
+          t1.e++; t2.e++;
+          t1.p += 1; t2.p += 1;
+        }
+        
+        t1.sg = t1.gp - t1.gc;
+        t2.sg = t2.gp - t2.gc;
+      }
+    }
+  });
+
+  let html = '';
+  const gruposKeys = Object.keys(stats).sort();
+  
+  gruposKeys.forEach(g => {
+    // Ordenar os times dentro do grupo: Pontos > SG > GP
+    const times = Object.values(stats[g]).sort((a, b) => {
+      if (b.p !== a.p) return b.p - a.p;
+      if (b.sg !== a.sg) return b.sg - a.sg;
+      if (b.gp !== a.gp) return b.gp - a.gp;
+      return a.nome.localeCompare(b.nome); // Ordem alfabética se empatar tudo
+    });
+
+    html += `
+    <div class="card" style="overflow:hidden;">
+      <div style="background:var(--azul); color:#fff; padding:10px 16px; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1px;">
+        GRUPO ${g}
+      </div>
+      <table class="rank-table" style="width:100%; font-size:12px;">
+        <thead>
+          <tr>
+            <th style="padding:8px; text-align:center; width:20px;">#</th>
+            <th style="padding:8px; text-align:left;">Seleção</th>
+            <th style="padding:8px; text-align:center;" title="Pontos">P</th>
+            <th style="padding:8px; text-align:center;" title="Jogos">J</th>
+            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Vitórias">V</th>
+            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Empates">E</th>
+            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Derrotas">D</th>
+            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Gols Pró">GP</th>
+            <th style="padding:8px; text-align:center; color:var(--cinza-texto);" title="Gols Contra">GC</th>
+            <th style="padding:8px; text-align:center;" title="Saldo de Gols">SG</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    times.forEach((t, idx) => {
+      let posColor = '';
+      if (idx < 2) posColor = 'border-left: 3px solid var(--verde);'; // 1º e 2º passam
+      else if (idx === 2) posColor = 'border-left: 3px solid var(--amarelo);'; // 3º pode passar
+      else posColor = 'border-left: 3px solid transparent; opacity: 0.6;'; // Eliminado
+
+      html += `
+        <tr>
+          <td style="${posColor} padding:8px; font-weight:600; text-align:center;">${idx+1}</td>
+          <td style="padding:8px; white-space:nowrap; text-align:left;">${flag(t.nome)} ${t.nome}</td>
+          <td style="padding:8px; text-align:center; font-weight:700; color:var(--verde-escuro);">${t.p}</td>
+          <td style="padding:8px; text-align:center;">${t.j}</td>
+          <td style="padding:8px; text-align:center; color:var(--cinza-texto);">${t.v}</td>
+          <td style="padding:8px; text-align:center; color:var(--cinza-texto);">${t.e}</td>
+          <td style="padding:8px; text-align:center; color:var(--cinza-texto);">${t.d}</td>
+          <td style="padding:8px; text-align:center; color:var(--cinza-texto);">${t.gp}</td>
+          <td style="padding:8px; text-align:center; color:var(--cinza-texto);">${t.gc}</td>
+          <td style="padding:8px; text-align:center; font-weight:600;">${t.sg}</td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// Init
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('stat-participantes').textContent = '…';
-  document.getElementById('stat-jogos-feitos').textContent = JOGOS.filter(j => j.g1 !== null).length;
+  document.getElementById('stat-jogos-feitos').textContent =
+    JOGOS.filter(j => j.g1 !== null).length;
 
-  const proximos = JOGOS.filter(j => j.g1 === null).slice(0, 3);
-  const el = document.getElementById('proximos-jogos');
-  if (proximos.length) {
-    el.innerHTML = proximos.map(j => `
-      <div style="padding:10px 0; border-bottom:1px solid var(--cinza-borda); display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-size:13px; font-weight:500;">${flag(j.t1)} ${j.t1} × ${flag(j.t2)} ${j.t2}</div>
-          <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">${j.d} · ${j.h} · Jogo ${j.n}</div>
-        </div>
-        <span class="phase-tag ${FASE_TAG[j.f]}" style="font-size:10px">${j.f}</span>
-      </div>
-    `).join('') + `<div style="font-size:12px; color:var(--cinza-texto); padding-top:10px; text-align:center">
-      <a href="#" onclick="showPage('jogos'); return false;" style="color:var(--azul); text-decoration:none; font-weight:500">Ver todos os jogos →</a>
-    </div>`;
-  }
+  renderProximosJogos();
 });
 
 // ================================================================
@@ -1388,6 +1513,11 @@ async function carregarJogosDoGoogleSheets() {
       const faseMap = { 'Todos': 'todos', '1ª Rodada': '1ª rodada', '2ª Rodada': '2ª rodada', '3ª Rodada': '3ª rodada', '16 Avos': '16 avos', 'Oitavas': 'Oitavas', 'Quartas': 'Quartas', 'Semis': 'Semifinal', 'Final': 'Final' };
       renderJogos(faseMap[fase] || 'todos');
     }
+
+    // Atualiza a tela de grupos se ela estiver aberta
+    if (document.getElementById('page-grupos').classList.contains('active')) {
+       renderGrupos();
+    }
     
     renderProximosJogos();
 
@@ -1409,11 +1539,12 @@ function renderProximosJogos() {
     el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">🏆 Copa encerrada!</div>';
     return;
   }
-  el.innerHTML = proximos.map(j => `
+  el.innerHTML = proximos.map((j, idx) => `
     <div style="padding:10px 0; border-bottom:1px solid var(--cinza-borda); display:flex; justify-content:space-between; align-items:center;">
       <div>
         <div style="font-size:13px; font-weight:500;">${flag(j.t1)} ${j.t1} × ${flag(j.t2)} ${j.t2}</div>
         <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">${j.d} · ${j.h} · Jogo ${j.n}</div>
+        ${idx === 0 ? `<div id="mini-cd-${j.n}" style="font-size:11px; color:var(--verde-escuro); font-weight:600; margin-top:4px;"></div>` : ''}
       </div>
       <span class="phase-tag ${FASE_TAG[j.f]}" style="font-size:10px">${j.f}</span>
     </div>
@@ -1539,7 +1670,7 @@ async function carregarTesouraria() {
 // ── Inicialização: carrega tudo ao abrir a página
 async function inicializarDados() {
   await Promise.all([
-    carregarJogosDoGoogleSheets(), // Chama a nova função direta
+    carregarJogosDoGoogleSheets(), // Chama a nova função direta (que também chama renderGrupos)
     carregarClassificacao()
   ]);
 }
@@ -1550,6 +1681,7 @@ function showPageExtra(id) {
   if (id === 'bonus') carregarBonus();
   if (id === 'tesouraria') carregarTesouraria();
   if (id === 'jogos') carregarJogosDoGoogleSheets(); // Atualiza via CSV
+  if (id === 'grupos') renderGrupos(); 
 }
 
 window.addEventListener('load', inicializarDados);
@@ -1559,6 +1691,18 @@ setInterval(function() {
   if (pg && pg.classList.contains('active')) carregarTesouraria();
 }, 10 * 60 * 1000);
 
+function getGameDate(d, h) {
+  const meses = {"jan":0,"fev":1,"mar":2,"abr":3,"mai":4,"jun":5,"jul":6,"ago":7,"set":8,"out":9,"nov":10,"dez":11};
+  const p = d.toLowerCase().split('/');
+  if (p.length !== 2) return new Date();
+  const dia = parseInt(p[0]);
+  const mes = meses[p[1].trim()];
+  let [horaStr, minStr] = h.toLowerCase().replace('h', ':').split(':');
+  const hora = parseInt(horaStr) || 0;
+  const minuto = parseInt(minStr) || 0;
+  return new Date(2026, mes, dia, hora, minuto, 0);
+}
+
 (function() {
   var alvo = new Date('2026-06-11T19:00:00.000Z'); 
 
@@ -1567,21 +1711,48 @@ setInterval(function() {
     var diff  = alvo - agora;
 
     if (diff <= 0) {
-      document.getElementById('countdown').innerHTML =
-        '<div style="font-family:Bebas Neue,sans-serif;font-size:32px;color:var(--amarelo);letter-spacing:2px;">🏆 A COPA COMEÇOU! 🏆</div>';
-      return;
+      const cd = document.getElementById('countdown');
+      if (cd && !cd.classList.contains('started')) {
+        cd.innerHTML = '<div style="font-family:Bebas Neue,sans-serif;font-size:32px;color:var(--amarelo);letter-spacing:2px;">🏆 A COPA COMEÇOU! 🏆</div>';
+        cd.classList.add('started');
+      }
+    } else {
+      var dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var min   = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      var seg   = Math.floor((diff % (1000 * 60)) / 1000);
+
+      var pad = n => String(n).padStart(2, '0');
+      const elDias = document.getElementById('cd-dias');
+      if (elDias) {
+        elDias.textContent  = pad(dias);
+        document.getElementById('cd-horas').textContent = pad(horas);
+        document.getElementById('cd-min').textContent   = pad(min);
+        document.getElementById('cd-seg').textContent   = pad(seg);
+      }
     }
 
-    var dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
-    var horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var min   = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    var seg   = Math.floor((diff % (1000 * 60)) / 1000);
-
-    var pad = n => String(n).padStart(2, '0');
-    document.getElementById('cd-dias').textContent  = pad(dias);
-    document.getElementById('cd-horas').textContent = pad(horas);
-    document.getElementById('cd-min').textContent   = pad(min);
-    document.getElementById('cd-seg').textContent   = pad(seg);
+    const proximos = JOGOS.filter(j => j.g1 === null);
+    if (proximos.length > 0) {
+      const nextGame = proximos[0];
+      const nextGameDate = getGameDate(nextGame.d, nextGame.h);
+      const diffNext = nextGameDate - agora;
+      const elMini = document.getElementById('mini-cd-' + nextGame.n);
+      if (elMini) {
+        if (diffNext <= 0) {
+          elMini.innerHTML = '<span style="color:var(--amarelo-escuro); font-weight:bold;">Bola rolando! ⚽</span>';
+        } else {
+          let d = Math.floor(diffNext / (1000 * 60 * 60 * 24));
+          let h = Math.floor((diffNext % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          let m = Math.floor((diffNext % (1000 * 60 * 60)) / (1000 * 60));
+          let s = Math.floor((diffNext % (1000 * 60)) / 1000);
+          let str = '⏳ Faltam: ';
+          if (d > 0) str += d + 'd ';
+          str += String(h).padStart(2, '0') + 'h ' + String(m).padStart(2, '0') + 'm ' + String(s).padStart(2, '0') + 's';
+          elMini.textContent = str;
+        }
+      }
+    }
   }
 
   atualizar();
@@ -1753,6 +1924,7 @@ function showBonusTab(tab) {
 }
 
 async function carregarBonus() {
+  // Carrega bônus fixos
   if (!_dadosBonus) {
     var dados = await carregarDadosGrupos();
     if (dados) _dadosBonus = { bonus: dados.bonus };
@@ -1780,6 +1952,7 @@ async function carregarClassificadosBonus() {
   }
   if (!_dadosClassif || !_dadosClassif.classificados) return;
 
+  // Popula dropdown
   var sel = document.getElementById('filtro-bonus-part');
   if (sel && sel.options.length === 1) {
     _dadosClassif.classificados.forEach(function(p) {
@@ -1804,6 +1977,7 @@ function renderClassificadosParticipante() {
     : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
 
   if (filtro === 'todos') {
+    // Mostra tabela: cada coluna é um participante, linhas são os 32 classificados
     var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
     var tbl = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:500px;">';
     tbl += '<thead><tr><th>#</th>';
@@ -1819,6 +1993,7 @@ function renderClassificadosParticipante() {
     tbl += '</tbody></table></div>';
     container.innerHTML = tbl;
   } else {
+    // Mostra lista do participante selecionado em grid
     var p = lista[0];
     if (!p) { container.innerHTML = '<p style="color:var(--cinza-texto)">Sem dados.</p>'; return; }
     container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' +
@@ -1830,6 +2005,7 @@ function renderClassificadosParticipante() {
       }).join('') + '</div>';
   }
 }
+
 </script>
 </body>
 </html>
