@@ -345,6 +345,18 @@ nav a.active { color: var(--amarelo); }
   padding: 2px 10px; border-radius: 5px;
 }
 
+/* ── FOOTER ── */
+footer {
+  background: var(--azul); 
+  color: rgba(255,255,255,0.6);
+  text-align: center; 
+  padding: 30px 20px;
+  font-size: 13px; 
+  margin-top: 48px;
+  border-top: 3px solid var(--amarelo);
+}
+footer strong { color: #fff; font-weight: 600; }
+
 /* ── RESPONSIVO ── */
 @media (max-width: 900px) {
   .container { padding: 28px 20px; }
@@ -1018,6 +1030,22 @@ function sortParticipants(arr) {
   return humanos.concat(ias);
 }
 
+const NOMES_ABREV = {
+  'Rafael Signorelli Montesanto Botti Alves': 'Rafael Signorelli',
+  'George Eduardo Scheer': 'George Scheer',
+  'Arthur Aboud Scheer': 'Arthur Scheer',
+  'Eduardo Nogueira Lopes': 'Eduardo Nogueira',
+  'Pedro Paulo Signorelli Montalvão Montesanto': 'Pedro Paulo Signorelli',
+  'Larissa Aires Caldas Pereira': 'Larissa Aires',
+  'Juliano Vitório Bernardo do Nascimento': 'Juliano Vitório',
+  'Gabriel Lenziardi de Melo': 'Gabriel Lenziardi',
+  'JOAO PEDRO VIANA MONNERAT GRENHA': 'João Pedro Viana',
+};
+
+function abrevNome(n) {
+  return NOMES_ABREV[n] || n;
+}
+
 function padronizarArtilheiro(nome) {
   if (!nome) return '—';
   const n = nome.toLowerCase();
@@ -1058,6 +1086,7 @@ const FLAGS = {
   "Gana":"https://flagcdn.com/w40/gh.png","Panamá":"https://flagcdn.com/w40/pa.png",
   "Bósnia-Herzegovina":"https://flagcdn.com/w40/ba.png",
 };
+
 function flag(n){if(!FLAGS[n])return '';return '<img src="'+FLAGS[n]+'" style="width:22px;height:15px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-bottom:2px;" alt="'+n+'" loading="lazy">';}
 
 const JOGOS = [
@@ -1179,6 +1208,12 @@ const FASE_TAG = {
   "Final":     "tag-final",
 };
 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyI7NIIAttmJyFZkkVYhPNcGD9b-dDR4XX4IvF-rSE6Oq719M6mdSPSKk1SDWs-VVjV2w/exec";
+var _dadosGrupos = null;
+var _dadosPalpites = null;
+var _dadosBonus = null;
+var _dadosClassif = null;
+
 function showPage(id) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + id).classList.add('active');
@@ -1257,9 +1292,6 @@ function filtrarFase(fase, btn) {
   renderJogos(fase);
 }
 
-// ================================================================
-// LÓGICA DOS GRUPOS
-// ================================================================
 function renderGrupos() {
   const container = document.getElementById('grupos-container');
   if (!container) return;
@@ -1359,19 +1391,40 @@ function renderGrupos() {
   container.innerHTML = html;
 }
 
-// Init
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('stat-participantes').textContent = '…';
-  document.getElementById('stat-jogos-feitos').textContent = JOGOS.filter(j => j.g1 !== null).length;
-  renderProximosJogos();
-});
+function renderProximosJogos() {
+  const proximos = JOGOS.filter(j => j.g1 === null).slice(0, 3);
+  const el = document.getElementById('proximos-jogos');
+  if (!el) return;
+  if (!proximos.length) {
+    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">🏆 Copa encerrada!</div>';
+    return;
+  }
+  
+  el.innerHTML = proximos.map((j, idx) => `
+    <div style="padding:10px 0; border-bottom:1px solid var(--cinza-borda); display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-size:13px; font-weight:500;">${flag(j.t1)} ${j.t1} × ${flag(j.t2)} ${j.t2}</div>
+        <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">${j.d} · ${j.h} · Jogo ${j.n}</div>
+        ${idx === 0 ? `<div id="mini-cd-${j.n}" style="font-size:11px; color:var(--verde-escuro); font-weight:600; margin-top:4px;"></div>` : ''}
+      </div>
+      <span class="phase-tag ${FASE_TAG[j.f]}" style="font-size:10px">${j.f}</span>
+    </div>
+  `).join('') + `<div style="font-size:12px;color:var(--cinza-texto);padding-top:10px;text-align:center">
+    <a href="#" onclick="showPage('jogos');return false;" style="color:var(--azul);text-decoration:none;font-weight:500">Ver todos os jogos →</a>
+  </div>`;
+}
 
-// ================================================================
-// INTEGRAÇÃO GOOGLE SHEETS E APIS
-// ================================================================
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyI7NIIAttmJyFZkkVYhPNcGD9b-dDR4XX4IvF-rSE6Oq719M6mdSPSKk1SDWs-VVjV2w/exec";
+async function fetchAPI(tipo) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL + '?tipo=' + tipo);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch(e) {
+    console.warn('Erro ao buscar ' + tipo + ':', e);
+    return null;
+  }
+}
 
-// LÊ PLACARES VIA CSV
 async function carregarJogosDoGoogleSheets() {
   const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJqGzgnkzNdOHx3BYUQsBZaKoeEz1bgU7g-q78UNY95XPEJo6EEncmkE21lwAhP-9fU0L1UgkmG4LO/pub?gid=0&single=true&output=csv";
   try {
@@ -1414,25 +1467,17 @@ async function carregarJogosDoGoogleSheets() {
       renderJogos(faseMap[fase] || 'todos');
     }
 
-    if (document.getElementById('page-grupos').classList.contains('active')) {
-       renderGrupos();
-    }
-    
+    if (document.getElementById('page-grupos').classList.contains('active')) renderGrupos();
     renderProximosJogos();
-
-    if (document.getElementById('page-palpites').classList.contains('active')) {
-       renderPalpitesParticipante();
-    }
+    if (document.getElementById('page-palpites').classList.contains('active')) renderPalpitesParticipante();
 
   } catch(e) {
     console.warn('Erro ao carregar jogos da nova planilha:', e);
   }
 }
 
-// LÊ ARTILHARIA VIA CSV
 async function carregarArtilhariaDoGoogleSheets() {
   const tbody = document.getElementById('artilharia-tbody');
-  
   const urlCSVArtilharia = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSJqGzgnkzNdOHx3BYUQsBZaKoeEz1bgU7g-q78UNY95XPEJo6EEncmkE21lwAhP-9fU0L1UgkmG4LO/pub?gid=1188799022&single=true&output=csv"; 
   
   try {
@@ -1443,30 +1488,31 @@ async function carregarArtilhariaDoGoogleSheets() {
     
     let html = '';
     
-    // Ignora a linha de cabeçalho da ESPN (i=1)
     for (let i = 1; i < linhas.length; i++) {
       const colunas = linhas[i].replace('\r', '').split(',');
-      
-      // A estrutura da ESPN é: [Rank, Nome, Equipe, P, Gols, Assistências]
       if (colunas.length >= 5) {
         const jogador = colunas[1] ? colunas[1].trim() : 'Desconhecido';
-        const selecao = colunas[2] ? colunas[2].trim() : '';
+        let selecaoStr = colunas[2] ? colunas[2].trim() : '';
         const gols = colunas[4] ? colunas[4].trim() : '0';
         
-        // Se a linha não tiver dados válidos, ignorar
         if (!jogador || jogador === "") continue;
+
+        let sLower = selecaoStr.toLowerCase();
+        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
+        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
+        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
+        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
 
         html += `
           <tr>
             <td style="text-align:center; color:var(--cinza-texto); font-size:12px;">${i}</td>
             <td style="font-weight:500;">${jogador}</td>
-            <td style="text-align:center; font-size:13px;">${flag(selecao)} ${selecao}</td>
+            <td style="text-align:center; font-size:13px;">${flag(selecaoStr)} ${selecaoStr}</td>
             <td style="text-align:center; font-weight:700; color:var(--verde-escuro);">${gols}</td>
           </tr>
         `;
       }
     }
-    
     if(html === '') {
        html = '<tr><td colspan="4" style="text-align:center; padding:32px; color:var(--cinza-texto);">Nenhum artilheiro encontrado no momento.</td></tr>';
     }
@@ -1475,40 +1521,6 @@ async function carregarArtilhariaDoGoogleSheets() {
   } catch(e) {
     console.warn('Erro ao carregar artilharia:', e);
     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:32px; color:#C0392B;">Falha ao carregar a artilharia no momento.</td></tr>';
-  }
-}
-
-function renderProximosJogos() {
-  const proximos = JOGOS.filter(j => j.g1 === null).slice(0, 3);
-  const el = document.getElementById('proximos-jogos');
-  if (!el) return;
-  if (!proximos.length) {
-    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">🏆 Copa encerrada!</div>';
-    return;
-  }
-  
-  el.innerHTML = proximos.map((j, idx) => `
-    <div style="padding:10px 0; border-bottom:1px solid var(--cinza-borda); display:flex; justify-content:space-between; align-items:center;">
-      <div>
-        <div style="font-size:13px; font-weight:500;">${flag(j.t1)} ${j.t1} × ${flag(j.t2)} ${j.t2}</div>
-        <div style="font-size:11px; color:var(--cinza-texto); margin-top:2px;">${j.d} · ${j.h} · Jogo ${j.n}</div>
-        ${idx === 0 ? `<div id="mini-cd-${j.n}" style="font-size:11px; color:var(--verde-escuro); font-weight:600; margin-top:4px;"></div>` : ''}
-      </div>
-      <span class="phase-tag ${FASE_TAG[j.f]}" style="font-size:10px">${j.f}</span>
-    </div>
-  `).join('') + `<div style="font-size:12px;color:var(--cinza-texto);padding-top:10px;text-align:center">
-    <a href="#" onclick="showPage('jogos');return false;" style="color:var(--azul);text-decoration:none;font-weight:500">Ver todos os jogos →</a>
-  </div>`;
-}
-
-async function fetchAPI(tipo) {
-  try {
-    const res = await fetch(APPS_SCRIPT_URL + '?tipo=' + tipo);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return await res.json();
-  } catch(e) {
-    console.warn('Erro ao buscar ' + tipo + ':', e);
-    return null;
   }
 }
 
@@ -1522,33 +1534,23 @@ async function carregarClassificacao() {
   }
 
   document.getElementById('stat-participantes').textContent = dados.total;
-
   var parts = sortParticipants(dados.participantes);
 
   tbody.innerHTML = parts.map(function(p) {
     var posClass = p.pos === 1 ? 'pos-1' : p.pos === 2 ? 'pos-2' : p.pos === 3 ? 'pos-3' : 'pos-other';
     var isIA_part = isIA(p.nome);
-    var nomeAbrev = {
-      'Rafael Signorelli Montesanto Botti Alves': 'Rafael Signorelli',
-      'George Eduardo Scheer': 'George Scheer',
-      'Arthur Aboud Scheer': 'Arthur Scheer',
-      'Eduardo Nogueira Lopes': 'Eduardo Nogueira',
-      'Pedro Paulo Signorelli Montalvão Montesanto': 'Pedro Paulo Signorelli',
-      'Larissa Aires Caldas Pereira': 'Larissa Aires',
-      'Juliano Vitório Bernardo do Nascimento': 'Juliano Vitório',
-      'Gabriel Lenziardi de Melo': 'Gabriel Lenziardi',
-      'JOAO PEDRO VIANA MONNERAT GRENHA': 'João Pedro Viana',
-    };
-    var nomeBase = nomeAbrev[p.nome] || p.nome;
+    var nomeBase = abrevNome(p.nome);
     var nomeDisplay = isIA_part ? nomeBase + ' 🤖' : nomeBase;
-    
     var rankDisplay = isIA_part ? '-' : p.pos + 'º';
     var badgeClass = isIA_part ? 'pos-other' : posClass;
+    
+    // Tratamento para esconder o erro #REF! do Excel caso ocorra novamente
+    var pontosExibicao = (String(p.pts).includes('#REF')) ? '0' : p.pts;
 
     return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
       '<td><span class="pos-badge ' + badgeClass + '">' + rankDisplay + '</span></td>' +
       '<td class="participant-name">' + nomeDisplay + '</td>' +
-      '<td class="pts' + (!isIA_part && p.pos <= 3 ? ' pts-destaque' : '') + '">' + p.pts + '</td>' +
+      '<td class="pts' + (!isIA_part && p.pos <= 3 ? ' pts-destaque' : '') + '">' + pontosExibicao + '</td>' +
       '<td style="text-align:center">' + p.cravadas + '</td>' +
       '<td style="text-align:center">' + p.palpites + '</td>' +
       '</tr>';
@@ -1568,7 +1570,6 @@ async function carregarTesouraria() {
   }
 
   var pagos = 0, parciais = 0, pendentes = 0;
-
   var parts = sortParticipants(dados.lista);
 
   tbody.innerHTML = parts.map(function(p, idx) {
@@ -1620,114 +1621,6 @@ async function carregarTesouraria() {
   if (pr3)    pr3.textContent    = fmt(p3);
 }
 
-// ── Inicialização
-async function inicializarDados() {
-  await Promise.all([
-    carregarJogosDoGoogleSheets(), 
-    carregarClassificacao()
-  ]);
-}
-
-function showPageExtra(id) {
-  showPage(id);
-  if (id === 'palpites') carregarPalpites();
-  if (id === 'bonus') carregarBonus();
-  if (id === 'tesouraria') carregarTesouraria();
-  if (id === 'jogos') carregarJogosDoGoogleSheets(); 
-  if (id === 'grupos') renderGrupos(); 
-  if (id === 'artilharia') carregarArtilhariaDoGoogleSheets();
-}
-
-window.addEventListener('load', inicializarDados);
-
-setInterval(function() {
-  var pg = document.getElementById('page-tesouraria');
-  if (pg && pg.classList.contains('active')) carregarTesouraria();
-}, 10 * 60 * 1000);
-
-function getGameDate(d, h) {
-  const meses = {"jan":0,"fev":1,"mar":2,"abr":3,"mai":4,"jun":5,"jul":6,"ago":7,"set":8,"out":9,"nov":10,"dez":11};
-  const p = d.toLowerCase().split('/');
-  if (p.length !== 2) return new Date();
-  const dia = parseInt(p[0]);
-  const mes = meses[p[1].trim()];
-  
-  let [horaStr, minStr] = h.toLowerCase().replace('h', ':').split(':');
-  const hora = parseInt(horaStr) || 0;
-  const minuto = parseInt(minStr) || 0;
-  
-  return new Date(2026, mes, dia, hora, minuto, 0);
-}
-
-(function() {
-  var alvo = new Date('2026-06-11T19:00:00.000Z'); 
-
-  function atualizar() {
-    var agora = new Date();
-    var diff  = alvo - agora;
-
-    if (diff <= 0) {
-      const cd = document.getElementById('countdown');
-      if (cd && !cd.classList.contains('started')) {
-        cd.innerHTML = '<div style="font-family:Bebas Neue,sans-serif;font-size:32px;color:var(--amarelo);letter-spacing:2px;">🏆 A COPA COMEÇOU! 🏆</div>';
-        cd.classList.add('started');
-      }
-    } else {
-      var dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
-      var horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var min   = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      var seg   = Math.floor((diff % (1000 * 60)) / 1000);
-
-      var pad = n => String(n).padStart(2, '0');
-      const elDias = document.getElementById('cd-dias');
-      if (elDias) {
-        elDias.textContent  = pad(dias);
-        document.getElementById('cd-horas').textContent = pad(horas);
-        document.getElementById('cd-min').textContent   = pad(min);
-        document.getElementById('cd-seg').textContent   = pad(seg);
-      }
-    }
-
-    const proximos = JOGOS.filter(j => j.g1 === null);
-    if (proximos.length > 0) {
-      const nextGame = proximos[0];
-      const nextGameDate = getGameDate(nextGame.d, nextGame.h);
-      const diffNext = nextGameDate - agora;
-      
-      const elMini = document.getElementById('mini-cd-' + nextGame.n);
-      if (elMini) {
-        if (diffNext <= 0) {
-          elMini.innerHTML = '<span style="color:var(--amarelo-escuro); font-weight:bold;">Bola rolando! ⚽</span>';
-        } else {
-          let d = Math.floor(diffNext / (1000 * 60 * 60 * 24));
-          let h = Math.floor((diffNext % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          let m = Math.floor((diffNext % (1000 * 60 * 60)) / (1000 * 60));
-          let s = Math.floor((diffNext % (1000 * 60)) / 1000);
-          
-          let str = '⏳ Faltam: ';
-          if (d > 0) str += d + 'd ';
-          str += String(h).padStart(2, '0') + 'h ' + String(m).padStart(2, '0') + 'm ' + String(s).padStart(2, '0') + 's';
-          
-          elMini.textContent = str;
-        }
-      }
-    }
-  }
-
-  atualizar();
-  setInterval(atualizar, 1000);
-})();
-
-setInterval(inicializarDados, 5 * 60 * 1000);
-
-</script>
-
-<script>
-// ================================================================
-// PALPITES e BÔNUS — Dados estáticos da fase de grupos
-// ================================================================
-var _dadosGrupos = null;
-
 async function carregarDadosGrupos() {
   if (_dadosGrupos) return _dadosGrupos;
   try {
@@ -1740,8 +1633,6 @@ async function carregarDadosGrupos() {
     return null;
   }
 }
-
-var _dadosPalpites = null;
 
 async function carregarPalpites() {
   var container = document.getElementById('palpites-container');
@@ -1779,7 +1670,6 @@ function renderPalpitesParticipante() {
   if (!container || !_dadosPalpites) return;
 
   var filtro = sel ? sel.value : 'todos';
-
   var parts = filtro === 'todos'
     ? _dadosPalpites.participantes
     : _dadosPalpites.participantes.filter(function(p) { return p.nome === filtro; });
@@ -1814,11 +1704,9 @@ function renderPalpitesParticipante() {
 
       if (temResultado) {
         acertou = (palp.p1 === j.g1 && palp.p2 === j.g2);
-        
         var acertouVencedor1 = (palp.p1 > palp.p2) && (j.g1 > j.g2);
         var acertouVencedor2 = (palp.p1 < palp.p2) && (j.g1 < j.g2);
         var acertouEmpate    = (palp.p1 === palp.p2) && (j.g1 === j.g2);
-        
         acertRes = !acertou && (acertouVencedor1 || acertouVencedor2 || acertouEmpate);
       }
 
@@ -1833,12 +1721,6 @@ function renderPalpitesParticipante() {
   html += '</tbody></table></div>';
   container.innerHTML = html;
 }
-
-// ================================================================
-// BÔNUS
-// ================================================================
-var _dadosBonus = null;
-var _dadosClassif = null;
 
 function showBonusTab(tab) {
   var fixos  = document.getElementById('bonus-fixos');
@@ -1942,6 +1824,112 @@ function renderClassificadosParticipante() {
       }).join('') + '</div>';
   }
 }
+
+async function inicializarDados() {
+  await Promise.all([
+    carregarJogosDoGoogleSheets(), 
+    carregarClassificacao()
+  ]);
+}
+
+function showPageExtra(id) {
+  showPage(id);
+  if (id === 'palpites') carregarPalpites();
+  if (id === 'bonus') carregarBonus();
+  if (id === 'tesouraria') carregarTesouraria();
+  if (id === 'jogos') carregarJogosDoGoogleSheets(); 
+  if (id === 'grupos') renderGrupos(); 
+  if (id === 'artilharia') carregarArtilhariaDoGoogleSheets();
+}
+
+function getGameDate(d, h) {
+  const meses = {"jan":0,"fev":1,"mar":2,"abr":3,"mai":4,"jun":5,"jul":6,"ago":7,"set":8,"out":9,"nov":10,"dez":11};
+  const p = d.toLowerCase().split('/');
+  if (p.length !== 2) return new Date();
+  const dia = parseInt(p[0]);
+  const mes = meses[p[1].trim()];
+  
+  let [horaStr, minStr] = h.toLowerCase().replace('h', ':').split(':');
+  const hora = parseInt(horaStr) || 0;
+  const minuto = parseInt(minStr) || 0;
+  
+  return new Date(2026, mes, dia, hora, minuto, 0);
+}
+
+// Inicializações de layout e relógio
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('stat-participantes').textContent = '…';
+  document.getElementById('stat-jogos-feitos').textContent = JOGOS.filter(j => j.g1 !== null).length;
+  renderProximosJogos();
+});
+
+window.addEventListener('load', inicializarDados);
+
+setInterval(function() {
+  var pg = document.getElementById('page-tesouraria');
+  if (pg && pg.classList.contains('active')) carregarTesouraria();
+}, 10 * 60 * 1000);
+
+(function() {
+  var alvo = new Date('2026-06-11T19:00:00.000Z'); 
+
+  function atualizar() {
+    var agora = new Date();
+    var diff  = alvo - agora;
+
+    if (diff <= 0) {
+      const cd = document.getElementById('countdown');
+      if (cd && !cd.classList.contains('started')) {
+        cd.innerHTML = '<div style="font-family:Bebas Neue,sans-serif;font-size:32px;color:var(--amarelo);letter-spacing:2px;">🏆 A COPA COMEÇOU! 🏆</div>';
+        cd.classList.add('started');
+      }
+    } else {
+      var dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var min   = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      var seg   = Math.floor((diff % (1000 * 60)) / 1000);
+
+      var pad = n => String(n).padStart(2, '0');
+      const elDias = document.getElementById('cd-dias');
+      if (elDias) {
+        elDias.textContent  = pad(dias);
+        document.getElementById('cd-horas').textContent = pad(horas);
+        document.getElementById('cd-min').textContent   = pad(min);
+        document.getElementById('cd-seg').textContent   = pad(seg);
+      }
+    }
+
+    const proximos = JOGOS.filter(j => j.g1 === null);
+    if (proximos.length > 0) {
+      const nextGame = proximos[0];
+      const nextGameDate = getGameDate(nextGame.d, nextGame.h);
+      const diffNext = nextGameDate - agora;
+      
+      const elMini = document.getElementById('mini-cd-' + nextGame.n);
+      if (elMini) {
+        if (diffNext <= 0) {
+          elMini.innerHTML = '<span style="color:var(--amarelo-escuro); font-weight:bold;">Bola rolando! ⚽</span>';
+        } else {
+          let d = Math.floor(diffNext / (1000 * 60 * 60 * 24));
+          let h = Math.floor((diffNext % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          let m = Math.floor((diffNext % (1000 * 60 * 60)) / (1000 * 60));
+          let s = Math.floor((diffNext % (1000 * 60)) / 1000);
+          
+          let str = '⏳ Faltam: ';
+          if (d > 0) str += d + 'd ';
+          str += String(h).padStart(2, '0') + 'h ' + String(m).padStart(2, '0') + 'm ' + String(s).padStart(2, '0') + 's';
+          
+          elMini.textContent = str;
+        }
+      }
+    }
+  }
+
+  atualizar();
+  setInterval(atualizar, 1000);
+})();
+
+setInterval(inicializarDados, 5 * 60 * 1000);
 
 </script>
 </body>
