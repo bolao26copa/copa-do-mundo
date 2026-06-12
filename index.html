@@ -1529,15 +1529,19 @@ async function carregarClassificacao() {
   }
 
   document.getElementById('stat-participantes').textContent = dados.total;
-  var parts = sortParticipants(dados.participantes);
+  
+  // Não usa o sortParticipants aqui para manter a ordem e rank originais das IAs
+  var parts = dados.participantes;
 
   tbody.innerHTML = parts.map(function(p) {
     var posClass = p.pos === 1 ? 'pos-1' : p.pos === 2 ? 'pos-2' : p.pos === 3 ? 'pos-3' : 'pos-other';
     var isIA_part = isIA(p.nome);
     var nomeBase = abrevNome(p.nome);
     var nomeDisplay = isIA_part ? nomeBase + ' 🤖' : nomeBase;
-    var rankDisplay = isIA_part ? '-' : p.pos + 'º';
-    var badgeClass = isIA_part ? 'pos-other' : posClass;
+    
+    // IAs mantêm o ranking visual e a medalha
+    var rankDisplay = p.pos + 'º';
+    var badgeClass = posClass;
     
     // Tratamento para esconder o erro #REF! do Excel caso ocorra novamente
     var pontosExibicao = (String(p.pts).includes('#REF')) ? '0' : p.pts;
@@ -1545,7 +1549,7 @@ async function carregarClassificacao() {
     return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
       '<td><span class="pos-badge ' + badgeClass + '">' + rankDisplay + '</span></td>' +
       '<td class="participant-name">' + nomeDisplay + '</td>' +
-      '<td class="pts' + (!isIA_part && p.pos <= 3 ? ' pts-destaque' : '') + '">' + pontosExibicao + '</td>' +
+      '<td class="pts' + (p.pos <= 3 ? ' pts-destaque' : '') + '">' + pontosExibicao + '</td>' +
       '<td style="text-align:center">' + p.cravadas + '</td>' +
       '<td style="text-align:center">' + p.palpites + '</td>' +
       '</tr>';
@@ -1565,27 +1569,25 @@ async function carregarTesouraria() {
   }
 
   var pagos = 0, parciais = 0, pendentes = 0;
-  var parts = sortParticipants(dados.lista);
+  
+  // Remove as IAs completamente da tabela de tesouraria
+  var parts = dados.lista.filter(function(p) { return !isIA(p.nome); });
 
   tbody.innerHTML = parts.map(function(p, idx) {
     var st     = p.status ? p.status.toLowerCase() : '';
     var isPago    = st === 'pago';
     var isParcial = st.indexOf('parcial') >= 0;
-    var isIA_part = isIA(p.nome);
 
-    if (!isIA_part) {
-      if (isPago)        pagos++;
-      else if (isParcial) parciais++;
-      else               pendentes++;
-    }
+    if (isPago)        pagos++;
+    else if (isParcial) parciais++;
+    else               pendentes++;
 
     var badgeBg    = isPago ? '#d9ead3' : isParcial ? '#FFF3CD' : '#fce8e6';
     var badgeColor = isPago ? '#276749' : isParcial ? '#856404' : '#C0392B';
     var badgeText  = isPago ? '✅ Pago' : isParcial ? '⚠️ Pago Parcialmente' : '❌ Pendente';
-    if(isIA_part) badgeText = '🤖 IA';
 
-    return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
-      '<td style="color:var(--cinza-texto);font-size:13px">' + (isIA_part ? '-' : (idx + 1)) + '</td>' +
+    return '<tr>' +
+      '<td style="color:var(--cinza-texto);font-size:13px">' + (idx + 1) + '</td>' +
       '<td class="participant-name">' + p.nome + '</td>' +
       '<td style="text-align:center">' +
         '<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;background:' + badgeBg + ';color:' + badgeColor + '">' +
