@@ -1624,6 +1624,28 @@ async function carregarDadosGrupos() {
     var res = await fetch("https://bolao26copa.github.io/copa-do-mundo/dados_grupos.json");
     if (!res.ok) throw new Error('HTTP ' + res.status);
     _dadosGrupos = await res.json();
+    
+    // Correção para o caso do "Congo, RD" ter sido dividido em dois ao ler da planilha no backend
+    if (_dadosGrupos && _dadosGrupos.classificados) {
+      _dadosGrupos.classificados.forEach(p => {
+        if (p.classificados && Array.isArray(p.classificados)) {
+          let arr = [];
+          for (let i = 0; i < p.classificados.length; i++) {
+            let t = p.classificados[i] ? p.classificados[i].trim() : '';
+            if (t === "Congo" && i + 1 < p.classificados.length && p.classificados[i+1] && p.classificados[i+1].trim() === "RD") {
+              arr.push("RD Congo");
+              i++; // salta o "RD"
+            } else if (t === "RD" && arr.length > 0 && arr[arr.length - 1] === "Congo") {
+              arr[arr.length - 1] = "RD Congo";
+            } else {
+              arr.push(t);
+            }
+          }
+          p.classificados = arr;
+        }
+      });
+    }
+
     return _dadosGrupos;
   } catch(e) {
     console.warn('Erro ao carregar dados_grupos.json:', e);
@@ -1803,7 +1825,16 @@ function renderClassificadosParticipante() {
     for (var i = 0; i < maxLen; i++) {
       tbl += '<tr><td style="color:var(--cinza-texto);font-size:12px">' + (i+1) + '</td>';
       lista.forEach(function(p) {
-        tbl += '<td style="text-align:center;font-size:12px;' + (isIA(p.nome) ? 'background:#F0F4FF;' : '') + '">' + (p.classificados[i] || '—') + '</td>';
+        let selecaoStr = p.classificados[i] || '—';
+        let sLower = selecaoStr.toLowerCase();
+        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
+        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
+        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
+        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
+        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
+
+        let cellContent = selecaoStr === '—' ? '—' : `<div style="display:flex;align-items:center;justify-content:center;gap:4px;">${flag(selecaoStr)}<span>${selecaoStr}</span></div>`;
+        tbl += '<td style="text-align:center;font-size:12px;' + (isIA(p.nome) ? 'background:#F0F4FF;' : '') + '">' + cellContent + '</td>';
       });
       tbl += '</tr>';
     }
@@ -1816,8 +1847,16 @@ function renderClassificadosParticipante() {
       (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + ' — ' + p.classificados.length + ' seleções apostadas</div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
       p.classificados.map(function(s, i) {
-        return '<span style="font-size:12px;padding:4px 10px;background:#F4F3EF;border-radius:6px;border:1px solid var(--cinza-borda);">' +
-          (i+1) + '. ' + s + '</span>';
+        let selecaoStr = s;
+        let sLower = selecaoStr.toLowerCase();
+        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
+        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
+        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
+        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
+        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
+
+        return '<span style="font-size:12px;padding:4px 10px;background:#F4F3EF;border-radius:6px;border:1px solid var(--cinza-borda);display:inline-flex;align-items:center;gap:4px;">' +
+          '<strong>' + (i+1) + '.</strong> ' + flag(selecaoStr) + selecaoStr + '</span>';
       }).join('') + '</div>';
   }
 }
