@@ -431,6 +431,7 @@ footer strong { color: #fff; font-weight: 600; }
       <a onclick="showPageExtra('artilharia')">Artilheiros</a>
       <a onclick="showPageExtra('apostas')">Apostar</a>
       <a onclick="showPageExtra('palpites')">Palpites</a>
+      <a onclick="showPageExtra('estatisticas')">Estatísticas</a>
       <a onclick="showPageExtra('bonus')">Bônus</a>
       <a onclick="showPageExtra('tesouraria')">Tesouraria</a>
       <a onclick="showPageExtra('regulamento')">Regulamento</a>
@@ -609,7 +610,7 @@ footer strong { color: #fff; font-weight: 600; }
   </div>
 </div>
 
-<!-- NOVA PÁGINA: ARTILHARIA -->
+<!-- PÁGINA: ARTILHARIA -->
 <div class="page" id="page-artilharia">
   <div class="container" style="max-width: 600px;">
     <div class="section-title">Artilheiros</div>
@@ -724,6 +725,78 @@ footer strong { color: #fff; font-weight: 600; }
     <div id="palpites-container" style="overflow-x:auto;">
       <div style="text-align:center;padding:48px;color:var(--cinza-texto);font-size:14px;">⏳ Carregando palpites…</div>
     </div>
+  </div>
+</div>
+
+<!-- PÁGINA: ESTATÍSTICAS -->
+<div class="page" id="page-estatisticas">
+  <div class="container">
+    <div class="section-title">Estatísticas Avançadas</div>
+    <p class="section-sub">Mergulhe nos dados: quem é mais ousado e quais jogos dividiram a galera</p>
+
+    <div style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid var(--cinza-borda); padding-bottom:0;">
+      <button id="tab-stat-jogos" onclick="showStatTab('jogos')"
+        style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid var(--azul); color:var(--azul); margin-bottom:-2px;">
+        ⚖️ Distribuição (Jogos)
+      </button>
+      <button id="tab-stat-participantes" onclick="showStatTab('participantes')"
+        style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid transparent; color:var(--cinza-texto); margin-bottom:-2px;">
+        📊 Desempenho (Participantes)
+      </button>
+    </div>
+
+    <!-- Subaba 1: Jogos (Agora é a padrão) -->
+    <div id="stat-jogos">
+       <div style="margin-bottom:12px; font-size:13px; color:var(--cinza-texto); background:#FFF3CD; padding:10px 14px; border-radius:8px; border-left:3px solid #856404;">
+         <strong>Jogos Equilibrados:</strong> partidas onde nenhum dos três resultados (Vitória Casa, Empate ou Vitória Fora) obteve mais de 70% dos palpites da galera.
+       </div>
+       <div class="card" style="overflow-x:auto;">
+         <table class="rank-table" style="min-width:600px; font-size:12px;">
+           <thead>
+             <tr>
+               <th style="text-align:center; width:60px;">Jogo</th>
+               <th>Partida</th>
+               <th style="text-align:center">País 1 (%)</th>
+               <th style="text-align:center">Empate (%)</th>
+               <th style="text-align:center">País 2 (%)</th>
+               <th style="text-align:center">Status</th>
+             </tr>
+           </thead>
+           <tbody id="stat-jogos-tbody">
+             <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Carregando distribuição...</td></tr>
+           </tbody>
+         </table>
+       </div>
+    </div>
+
+    <!-- Subaba 2: Participantes (Oculta por padrão) -->
+    <div id="stat-participantes" style="display:none;">
+       <div class="card" style="overflow-x:auto;">
+         <table class="rank-table" style="min-width:900px; font-size:12px;">
+           <thead>
+             <tr>
+               <th rowspan="2" style="border-right:1px solid var(--cinza-borda); vertical-align:middle;">Participante</th>
+               <th colspan="2" style="text-align:center; background:#E8EEFF; border-right:1px solid var(--cinza-borda);">Distribuição dos Palpites</th>
+               <th colspan="2" style="text-align:center; background:#FFF8E1; border-right:1px solid var(--cinza-borda);">Aprov. (Acertou Vencedor/Empate)</th>
+               <th colspan="2" style="text-align:center; background:#FDE8F0; border-right:1px solid var(--cinza-borda);">Rend. (Pts por Palpite)</th>
+               <th rowspan="2" style="text-align:center; background:#C0392B; color:white; vertical-align:middle;" title="Palpites com menos de 20% de escolhas iguais">Ousadia 🤡</th>
+             </tr>
+             <tr>
+               <th style="text-align:center; background:#E8EEFF; font-size:10px;">Empates</th>
+               <th style="text-align:center; background:#E8EEFF; font-size:10px; border-right:1px solid var(--cinza-borda);">Ñ-Empates</th>
+               <th style="text-align:center; background:#FFF8E1; font-size:10px;">Empates</th>
+               <th style="text-align:center; background:#FFF8E1; font-size:10px; border-right:1px solid var(--cinza-borda);">Ñ-Empates</th>
+               <th style="text-align:center; background:#FDE8F0; font-size:10px;">Empates</th>
+               <th style="text-align:center; background:#FDE8F0; font-size:10px; border-right:1px solid var(--cinza-borda);">Ñ-Empates</th>
+             </tr>
+           </thead>
+           <tbody id="stat-participantes-tbody">
+             <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Carregando estatísticas...</td></tr>
+           </tbody>
+         </table>
+       </div>
+    </div>
+
   </div>
 </div>
 
@@ -1936,6 +2009,190 @@ function renderClassificadosParticipante() {
   }
 }
 
+// ----------------------------------------------------------------
+// NOVA PÁGINA: ESTATÍSTICAS
+// ----------------------------------------------------------------
+async function renderEstatisticas() {
+  var container1 = document.getElementById('stat-participantes-tbody');
+  var container2 = document.getElementById('stat-jogos-tbody');
+  if (!container1 || !container2) return;
+
+  if (!_dadosPalpites) {
+    container1.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;">⏳ Carregando dados...</td></tr>';
+    var dados = await carregarDadosGrupos();
+    if (dados) {
+      _dadosPalpites = { participantes: sortParticipants(dados.participantes), jogos: dados.jogos };
+    }
+  }
+  if (!_dadosPalpites) return;
+
+  // 1. Processar dados agregados de todos os jogos
+  let jogosStats = {};
+  _dadosPalpites.participantes.forEach(p => {
+    if (isIA(p.nome)) return; // Excluímos as IAs do cálculo global (o "comportamento da galera")
+    p.palpites.forEach(palp => {
+      if (palp.p1 === null) return;
+      if (!jogosStats[palp.n]) jogosStats[palp.n] = { total: 0, t1: 0, emp: 0, t2: 0 };
+      jogosStats[palp.n].total++;
+      if (palp.p1 > palp.p2) jogosStats[palp.n].t1++;
+      else if (palp.p1 < palp.p2) jogosStats[palp.n].t2++;
+      else jogosStats[palp.n].emp++;
+    });
+  });
+
+  // Renderizar Subaba 2: Jogos
+  let htmlJogos = '';
+  let jogosLib = JOGOS.filter(j => j.n <= 72); 
+  jogosLib.forEach(j => {
+    let js = jogosStats[j.n];
+    if (!js || js.total === 0) return;
+    
+    let pT1 = Math.round((js.t1 / js.total) * 100);
+    let pEmp = Math.round((js.emp / js.total) * 100);
+    let pT2 = Math.round((js.t2 / js.total) * 100);
+    
+    let maxP = Math.max(pT1, pEmp, pT2);
+    let isEquilibrado = (maxP <= 70);
+    
+    let rowStyle = isEquilibrado ? 'background-color:#FFF3CD;' : '';
+    let badge = isEquilibrado ? '<span style="background:#856404; color:#fff; font-size:10px; padding:2px 6px; border-radius:4px;">🔥 Equilibrado</span>' : '<span style="color:var(--cinza-texto); font-size:10px;">Comum</span>';
+    
+    let sT1 = pT1 === maxP ? 'font-weight:700; color:var(--azul);' : 'color:var(--cinza-texto);';
+    let sEmp = pEmp === maxP ? 'font-weight:700; color:var(--amarelo-escuro);' : 'color:var(--cinza-texto);';
+    let sT2 = pT2 === maxP ? 'font-weight:700; color:var(--azul);' : 'color:var(--cinza-texto);';
+
+    htmlJogos += `
+      <tr style="${rowStyle}">
+        <td style="color:var(--cinza-texto); text-align:center;">${j.n}</td>
+        <td style="white-space:nowrap;">${flag(j.t1)} ${j.t1} × ${j.t2} ${flag(j.t2)}</td>
+        <td style="text-align:center; ${sT1}">${pT1}%</td>
+        <td style="text-align:center; ${sEmp}">${pEmp}%</td>
+        <td style="text-align:center; ${sT2}">${pT2}%</td>
+        <td style="text-align:center;">${badge}</td>
+      </tr>
+    `;
+  });
+  if(htmlJogos === '') htmlJogos = '<tr><td colspan="6" style="text-align:center;padding:24px;">Sem dados de palpites suficientes.</td></tr>';
+  container2.innerHTML = htmlJogos;
+
+  // Renderizar Subaba 1: Participantes
+  let htmlParts = '';
+  _dadosPalpites.participantes.forEach(p => {
+    let empFeitos = 0, nEmpFeitos = 0;
+    let empCorretos = 0, nEmpCorretos = 0;
+    let empPts = 0, nEmpPts = 0;
+    let exoticCount = 0;
+    let totalExoticBase = 0; 
+    
+    p.palpites.forEach(palp => {
+      if(palp.p1 === null) return;
+      let isEmpate = (palp.p1 === palp.p2);
+      
+      if(isEmpate) empFeitos++;
+      else nEmpFeitos++;
+      
+      let jInfo = JOGOS.find(x => x.n === palp.n);
+      if(jInfo && jInfo.g1 !== null && jInfo.g2 !== null) {
+        let vPalp = palp.p1 > palp.p2 ? 1 : (palp.p1 < palp.p2 ? 2 : 0);
+        let vReal = jInfo.g1 > jInfo.g2 ? 1 : (jInfo.g1 < jInfo.g2 ? 2 : 0);
+        let outcomeCorrect = (vPalp === vReal);
+        
+        let pts = calcularPontosPalpite(palp.p1, palp.p2, jInfo.g1, jInfo.g2);
+        
+        if (isEmpate) {
+           if (outcomeCorrect) empCorretos++;
+           empPts += pts;
+        } else {
+           if (outcomeCorrect) nEmpCorretos++;
+           nEmpPts += pts;
+        }
+      }
+      
+      // Ousadia (exótico = palpite escolhido por <= 20% da galera)
+      let js = jogosStats[palp.n];
+      if(js && js.total > 0) {
+        totalExoticBase++;
+        let palpOutcome = palp.p1 > palp.p2 ? 't1' : (palp.p1 < palp.p2 ? 't2' : 'emp');
+        let perc = js[palpOutcome] / js.total;
+        if(perc <= 0.20) exoticCount++;
+      }
+    });
+    
+    let totalFeitos = empFeitos + nEmpFeitos;
+    let pEmpD = totalFeitos > 0 ? Math.round((empFeitos/totalFeitos)*100) : 0;
+    let pNEmpD = totalFeitos > 0 ? Math.round((nEmpFeitos/totalFeitos)*100) : 0;
+    
+    let aEmp = empFeitos > 0 ? Math.round((empCorretos/empFeitos)*100) : 0;
+    let aNEmp = nEmpFeitos > 0 ? Math.round((nEmpCorretos/nEmpFeitos)*100) : 0;
+    
+    let rEmp = empFeitos > 0 ? (empPts/empFeitos).toFixed(1) : '0.0';
+    let rNEmp = nEmpFeitos > 0 ? (nEmpPts/nEmpFeitos).toFixed(1) : '0.0';
+    
+    let ousadia = totalExoticBase > 0 ? Math.round((exoticCount/totalExoticBase)*100) : 0;
+
+    let isIA_part = isIA(p.nome);
+    let ousadiaColor = ousadia >= 15 ? 'color:#C0392B; font-weight:700;' : 'color:var(--cinza-texto);';
+    
+    htmlParts += `
+      <tr style="${isIA_part ? 'background:#F0F4FF;' : ''}">
+        <td class="participant-name" style="white-space:nowrap;">${isIA_part ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)}</td>
+        <td style="text-align:center;">${pEmpD}%</td>
+        <td style="text-align:center;">${pNEmpD}%</td>
+        <td style="text-align:center; background:rgba(255,248,225,0.3);">${empCorretos}/${empFeitos} <span style="font-size:10px; color:var(--cinza-texto);">(${aEmp}%)</span></td>
+        <td style="text-align:center; background:rgba(255,248,225,0.3);">${nEmpCorretos}/${nEmpFeitos} <span style="font-size:10px; color:var(--cinza-texto);">(${aNEmp}%)</span></td>
+        <td style="text-align:center; background:rgba(253,232,240,0.3);">${rEmp}</td>
+        <td style="text-align:center; background:rgba(253,232,240,0.3);">${rNEmp}</td>
+        <td style="text-align:center; ${ousadiaColor}">${ousadia}%</td>
+      </tr>
+    `;
+  });
+  if(htmlParts === '') htmlParts = '<tr><td colspan="8" style="text-align:center;">Sem dados.</td></tr>';
+  container1.innerHTML = htmlParts;
+}
+
+function calcularPontosPalpite(p1, p2, g1, g2) {
+  if (p1 === null || g1 === null) return 0;
+  if (p1 === g1 && p2 === g2) return 50; 
+  
+  let vPalp = p1 > p2 ? 1 : (p1 < p2 ? 2 : 0);
+  let vReal = g1 > g2 ? 1 : (g1 < g2 ? 2 : 0);
+  
+  if (p1 === g2 && p2 === g1 && g1 !== g2) return -5; 
+  
+  if (vPalp === vReal) {
+    if (vPalp === 0) return 25; 
+    if (p1 === g1 || p2 === g2) return 30; 
+    if ((p1 - p2) === (g1 - g2)) return 25; 
+    return 20; 
+  } else {
+    if (p1 === g1 || p2 === g2) return 10; 
+  }
+  return 0;
+}
+
+function showStatTab(tab) {
+  var tPart = document.getElementById('stat-participantes');
+  var tJogos = document.getElementById('stat-jogos');
+  var btnPart = document.getElementById('tab-stat-participantes');
+  var btnJogos = document.getElementById('tab-stat-jogos');
+  
+  if (tab === 'participantes') {
+    tPart.style.display = 'block';
+    tJogos.style.display = 'none';
+    btnPart.style.borderBottomColor = 'var(--azul)';
+    btnPart.style.color = 'var(--azul)';
+    btnJogos.style.borderBottomColor = 'transparent';
+    btnJogos.style.color = 'var(--cinza-texto)';
+  } else {
+    tPart.style.display = 'none';
+    tJogos.style.display = 'block';
+    btnJogos.style.borderBottomColor = 'var(--azul)';
+    btnJogos.style.color = 'var(--azul)';
+    btnPart.style.borderBottomColor = 'transparent';
+    btnPart.style.color = 'var(--cinza-texto)';
+  }
+}
+
 async function inicializarDados() {
   // 1º Carrega os jogos reais primeiro para preencher o JOGOS.g1 e JOGOS.g2
   await carregarJogosDoGoogleSheets(); 
@@ -1946,6 +2203,7 @@ async function inicializarDados() {
 function showPageExtra(id) {
   showPage(id);
   if (id === 'palpites') carregarPalpites();
+  if (id === 'estatisticas') renderEstatisticas();
   if (id === 'bonus') carregarBonus();
   if (id === 'tesouraria') carregarTesouraria();
   if (id === 'jogos') carregarJogosDoGoogleSheets(); 
@@ -2026,7 +2284,7 @@ setInterval(function() {
   setInterval(atualizar, 1000);
 })();
 
-setInterval(inicializarDados, 5 * 60 * 1000);
+setInterval(inicializarDados, 60 * 1000);
 
 </script>
 </body>
