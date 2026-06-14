@@ -1554,6 +1554,15 @@ async function carregarClassificacao() {
     return;
   }
 
+  // NOVO: Vai buscar os palpites do JSON em segundo plano para o cálculo local de invertidos
+  var dadosGrupos = await carregarDadosGrupos();
+  var mapaPalpites = {};
+  if (dadosGrupos && dadosGrupos.participantes) {
+    dadosGrupos.participantes.forEach(function(p) {
+      mapaPalpites[p.nome] = p.palpites;
+    });
+  }
+
   document.getElementById('stat-participantes').textContent = dados.total;
   
   // Não usa o sortParticipants aqui para manter a ordem e rank originais das IAs
@@ -1572,7 +1581,31 @@ async function carregarClassificacao() {
     // Tratamento para esconder o erro #REF! do Excel caso ocorra novamente
     var pontosExibicao = (String(p.pts).includes('#REF')) ? '0' : p.pts;
     
-    var invertidosExibicao = (p.invertidos !== undefined) ? p.invertidos : '-';
+    // --- CÁLCULO LOCAL DE PLACARES INVERTIDOS ---
+    var countInvertidos = 0;
+    
+    // Procura os palpites deste participante (tenta nome exato ou nome abreviado caso haja diferenças)
+    var pPalpites = mapaPalpites[p.nome];
+    if (!pPalpites) {
+       let keyEncontrada = Object.keys(mapaPalpites).find(k => abrevNome(k) === nomeBase);
+       if (keyEncontrada) pPalpites = mapaPalpites[keyEncontrada];
+    }
+
+    if (pPalpites) {
+      JOGOS.forEach(function(j) {
+        if (j.g1 !== null && j.g2 !== null) {
+          var palp = pPalpites.find(x => x.n === j.n);
+          if (palp && palp.p1 !== null) {
+            var acertou = (palp.p1 === j.g1 && palp.p2 === j.g2);
+            var placarInvertido = !acertou && (palp.p1 === j.g2 && palp.p2 === j.g1 && j.g1 !== j.g2);
+            if (placarInvertido) countInvertidos++;
+          }
+        }
+      });
+    }
+    
+    var invertidosExibicao = countInvertidos > 0 ? countInvertidos : '-';
+    // ---------------------------------------------
 
     return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
       '<td><span class="pos-badge ' + badgeClass + '">' + rankDisplay + '</span></td>' +
