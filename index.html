@@ -1904,10 +1904,10 @@ function renderClassificadosParticipante() {
 }
 
 async function inicializarDados() {
-  await Promise.all([
-    carregarJogosDoGoogleSheets(), 
-    carregarClassificacao()
-  ]);
+  // 1º Carrega os jogos reais primeiro para preencher o JOGOS.g1 e JOGOS.g2
+  await carregarJogosDoGoogleSheets(); 
+  // 2º Carrega a classificação e faz o cruzamento local para Invertidos
+  await carregarClassificacao();
 }
 
 function showPageExtra(id) {
