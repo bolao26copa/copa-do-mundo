@@ -746,7 +746,7 @@ footer strong { color: #fff; font-weight: 600; }
     </div>
 
     <!-- Subaba 1: Jogos (Agora é a padrão) -->
-    <div id="stat-jogos">
+    <div id="tab-content-jogos">
        <div style="margin-bottom:12px; font-size:13px; color:var(--cinza-texto); background:#FFF3CD; padding:10px 14px; border-radius:8px; border-left:3px solid #856404;">
          <strong>Jogos Equilibrados:</strong> partidas onde nenhum dos três resultados (Vitória Casa, Empate ou Vitória Fora) obteve mais de 70% dos palpites da galera.
        </div>
@@ -770,7 +770,7 @@ footer strong { color: #fff; font-weight: 600; }
     </div>
 
     <!-- Subaba 2: Participantes (Oculta por padrão) -->
-    <div id="stat-participantes" style="display:none;">
+    <div id="tab-content-participantes" style="display:none;">
        <div class="card" style="overflow-x:auto;">
          <table class="rank-table" style="min-width:900px; font-size:12px;">
            <thead>
@@ -2030,6 +2030,8 @@ async function renderEstatisticas() {
   let jogosStats = {};
   _dadosPalpites.participantes.forEach(p => {
     if (isIA(p.nome)) return; // Excluímos as IAs do cálculo global (o "comportamento da galera")
+    if (!p.palpites) return;
+    
     p.palpites.forEach(palp => {
       if (palp.p1 === null) return;
       if (!jogosStats[palp.n]) jogosStats[palp.n] = { total: 0, t1: 0, emp: 0, t2: 0 };
@@ -2084,6 +2086,8 @@ async function renderEstatisticas() {
     let exoticCount = 0;
     let totalExoticBase = 0; 
     
+    if (!p.palpites) return;
+
     p.palpites.forEach(palp => {
       if(palp.p1 === null) return;
       let isEmpate = (palp.p1 === palp.p2);
@@ -2171,8 +2175,8 @@ function calcularPontosPalpite(p1, p2, g1, g2) {
 }
 
 function showStatTab(tab) {
-  var tPart = document.getElementById('stat-participantes');
-  var tJogos = document.getElementById('stat-jogos');
+  var tPart = document.getElementById('tab-content-participantes');
+  var tJogos = document.getElementById('tab-content-jogos');
   var btnPart = document.getElementById('tab-stat-participantes');
   var btnJogos = document.getElementById('tab-stat-jogos');
   
