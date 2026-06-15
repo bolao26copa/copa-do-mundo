@@ -279,7 +279,7 @@ nav a.active { color: var(--amarelo); }
   color: #fff; border-color: var(--azul);
 }
 
-/* ── APOSTAS ── */
+/* ── APOSTAS & FORMULÁRIOS ── */
 .apostas-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
   gap: 16px;
@@ -297,7 +297,7 @@ nav a.active { color: var(--amarelo); }
 .aposta-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
 .aposta-card p { font-size: 13px; color: var(--cinza-texto); line-height: 1.5; margin-bottom: 16px; }
 .aposta-btn {
-  display: block; width: 100%;
+  display: inline-block; width: 100%;
   padding: 10px;
   background: var(--azul); color: #fff;
   border: none; border-radius: 8px;
@@ -308,6 +308,7 @@ nav a.active { color: var(--amarelo); }
   text-decoration: none; transition: background 0.15s;
 }
 .aposta-btn:hover { background: #002370; }
+.aposta-btn:disabled { background: #CCC; cursor: not-allowed; }
 .aposta-btn.secondary {
   background: var(--cinza-card); color: var(--azul);
   border: 1px solid var(--azul);
@@ -322,6 +323,61 @@ nav a.active { color: var(--amarelo); }
 .status-aberto { background: var(--verde-claro); color: var(--verde-escuro); }
 .status-fechado { background: #F0EDE6; color: var(--cinza-texto); }
 .status-em-breve { background: #FFF3CD; color: #856404; }
+
+/* Remove setas de inputs number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Toggle Switch Styling Customizado */
+.toggle-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background: #FAFAF7;
+  padding: 16px;
+  border-radius: 8px;
+  border: 2px solid var(--cinza-borda);
+  transition: all 0.2s;
+}
+.toggle-switch-container:hover {
+  border-color: var(--amarelo-escuro);
+}
+.toggle-switch-container.checked {
+  background: #FFF8E1;
+  border-color: var(--amarelo);
+}
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background-color: #CCC;
+  border-radius: 24px;
+  transition: .3s;
+}
+.toggle-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+input:checked + .toggle-switch {
+  background-color: var(--amarelo-escuro);
+}
+input:checked + .toggle-switch::after {
+  transform: translateX(20px);
+}
 
 /* ── REGULAMENTO ── */
 .reg-section { margin-bottom: 28px; }
@@ -469,6 +525,38 @@ footer strong { color: #fff; font-weight: 600; }
       <div class="label">Jogos feitos</div>
     </div>
   </div>
+</div>
+
+<!-- MODAL DE ALERTA -->
+<div id="modal-alerta" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(3px);">
+   <div class="card" style="width:100%; max-width:320px; padding:24px; text-align:center;">
+      <div id="alerta-texto" style="font-size:15px; margin-bottom:20px; color:var(--texto); line-height: 1.5;"></div>
+      <button onclick="document.getElementById('modal-alerta').style.display='none';" class="aposta-btn">OK</button>
+   </div>
+</div>
+
+<!-- MODAL DE LOGIN (SENHA DO BOLÃO) -->
+<div id="modal-login" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:999; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(5px);">
+   <div class="card" style="width:100%; max-width:400px; padding:28px;">
+      <h3 style="font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--azul); margin-bottom:6px; letter-spacing: 1px;">Acesso ao Bolão</h3>
+      <p style="font-size:13px; color:var(--cinza-texto); margin-bottom:20px;">Selecione o seu nome e digite a sua senha para liberar os palpites.</p>
+      
+      <label style="display:block; font-size:12px; font-weight:600; color:var(--texto); margin-bottom:6px;">Seu Nome:</label>
+      <select id="login-nome" style="width:100%; font-family:'DM Sans',sans-serif; font-size:14px; padding:12px; border-radius:8px; border:1px solid var(--cinza-borda); background:#FAFAF7; margin-bottom:16px; outline:none;"></select>
+      
+      <label style="display:block; font-size:12px; font-weight:600; color:var(--texto); margin-bottom:6px;">Senha:</label>
+      <input type="password" id="login-senha" placeholder="Digite apenas seu 1º nome" style="width:100%; font-family:'DM Sans',sans-serif; font-size:14px; padding:12px; border-radius:8px; border:1px solid var(--cinza-borda); background:#FAFAF7; margin-bottom:20px; outline:none;">
+      
+      <div style="background:#FFF3CD; color:#856404; font-size:11px; padding:10px; border-radius:6px; margin-bottom:20px; border-left:3px solid #856404;">
+        <strong>Dica:</strong> A sua senha é o seu primeiro nome. Escreva com a primeira letra maiúscula e sem acentos (Ex: <strong>Felipe</strong>, <strong>Italo</strong>).
+      </div>
+
+      <div style="display:flex; gap:10px;">
+         <button onclick="fecharLogin()" class="aposta-btn secondary">Cancelar</button>
+         <button onclick="fazerLogin()" class="aposta-btn" id="btn-fazer-login">Entrar</button>
+      </div>
+      <div id="login-erro" style="color:#C0392B; font-size:13px; font-weight:500; margin-top:14px; display:none; text-align:center;">❌ Senha incorreta. Tente novamente.</div>
+   </div>
 </div>
 
 <!-- PÁGINA: INÍCIO -->
@@ -646,46 +734,53 @@ footer strong { color: #fff; font-weight: 600; }
     <p class="section-sub">Apostas liberadas progressivamente conforme a Copa avança</p>
 
     <div class="apostas-grid">
+      <!-- FASE 1: Grupos (Fechada) -->
       <div class="aposta-card" style="grid-column: 1 / -1; border-top: 3px solid var(--cinza-texto);">
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
           <div>
             <div class="aposta-status status-fechado" style="margin-bottom:6px">● Fechado</div>
-            <h3 style="font-size:18px; margin-bottom:4px">1ª aposta encerrada (Grupos + Bônus)</h3>
+            <h3 style="font-size:18px; margin-bottom:4px">Fase de Grupos + Bônus</h3>
             <p style="font-size:13px; color:var(--cinza-texto); margin:0">Apostas da primeira fase estão encerradas.</p>
           </div>
         </div>
-        <div style="background:#E8EEFF; padding:16px; border-radius:8px; border:1px solid var(--azul); color:var(--azul); font-size:13px; line-height: 1.6;">
-          <strong>📣 Próximos Palpites:</strong><br>
-          A abertura acontecerá entre o término do último jogo da fase de grupos (27/jun) e o minuto anterior ao início do primeiro jogo dos 16 avos (28/jun às 15h59).<br><br>
-          Para facilitar, a partir das fases de mata-mata (16 Avos em diante), <strong>os palpites serão realizados diretamente neste site</strong>.
-        </div>
       </div>
 
-      <div class="aposta-card" style="opacity:0.6">
-        <div class="aposta-icon" style="background:#F0EDE6">🔒</div>
+      <!-- FASE 2: 16 Avos (Parte 1) -->
+      <div class="aposta-card" id="card-aposta-16avos1" style="opacity:0.6; transition:all 0.3s;">
+        <div class="aposta-icon" style="background:#FFF3CD">⏳</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
-        <h3>Mata-Mata — 16 Avos</h3>
-        <p>16 jogos dos 16 avos de final + quais 16 seleções avançam para as oitavas.</p>
-        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 28/jun</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 28/jun no Site</button>
+        <h3>16 Avos — Parte 1</h3>
+        <p>Palpites para os primeiros 8 jogos da fase de 16 Avos (Jogos 73 a 80).</p>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 25/jun · Encerra: 28/jun</p>
+        <button id="btn-aposta-16avos1" class="aposta-btn secondary" onclick="abrirLogin('16avos-1')">Disponível em 25/jun</button>
+      </div>
+
+      <!-- FASE 3: 16 Avos (Parte 2) -->
+      <div class="aposta-card" style="opacity:0.6">
+        <div class="aposta-icon" style="background:#FFF3CD">⏳</div>
+        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+        <h3>16 Avos — Parte 2</h3>
+        <p>Palpites para os últimos 8 jogos da fase de 16 Avos (Jogos 81 a 88).</p>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 27/jun · Encerra: 01/jul</p>
+        <button class="aposta-btn secondary" disabled>Disponível em 27/jun no Site</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
         <div class="aposta-icon" style="background:#E8EEFF">🔒</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
         <h3>Mata-Mata — Oitavas</h3>
-        <p>8 jogos das oitavas de final + quais 8 avançam para as quartas.</p>
+        <p>8 jogos das oitavas de final.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 04/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 04/jul no Site</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 04/jul</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
         <div class="aposta-icon" style="background:#F3E8FF">🔒</div>
         <div class="aposta-status status-em-breve">⏳ Em breve</div>
         <h3>Mata-Mata — Quartas</h3>
-        <p>4 jogos das quartas de final + quais 4 avançam para as semis.</p>
+        <p>4 jogos das quartas de final.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 09/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 09/jul no Site</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 09/jul</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
@@ -694,7 +789,7 @@ footer strong { color: #fff; font-weight: 600; }
         <h3>Mata-Mata — Semifinais</h3>
         <p>Palpites dos 2 jogos das semifinais.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 14/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 14/jul no Site</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 14/jul</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
@@ -703,9 +798,60 @@ footer strong { color: #fff; font-weight: 600; }
         <h3>Mata-Mata — Final</h3>
         <p>Palpites do jogo do 3º lugar e da grande final.</p>
         <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 18/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 18/jul no Site</button>
+        <button class="aposta-btn secondary" disabled>Disponível em 18/jul</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- NOVA PÁGINA: FORMULÁRIO DE APOSTAS -->
+<div class="page" id="page-formulario">
+  <div class="container" style="max-width:700px;">
+    <button onclick="showPageExtra('apostas')" style="background:none; border:none; color:var(--azul); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; margin-bottom:16px; display:flex; align-items:center; gap:6px;">
+      ← Voltar para Apostas
+    </button>
+    <div class="section-title" id="form-titulo">Palpites: 16 Avos</div>
+    <p class="section-sub">
+      Preenchendo como: <strong id="form-usuario" style="color:var(--azul);"></strong>
+    </p>
+
+    <!-- NOVA OPÇÃO DE APOSTA BÔNUS INDEPENDENTE -->
+    <div style="margin-bottom: 24px;">
+       <label class="toggle-switch-container" id="label-toggle-bonus">
+          <input type="checkbox" id="toggle-bonus" onchange="toggleApostaBonus()" style="display:none;">
+          <div class="toggle-switch"></div>
+          <div style="flex:1;">
+             <div style="font-size:14px; font-weight:700; color:var(--texto); margin-bottom:2px;">Aposta Bônus Separada (Opção Extra)</div>
+             <div style="font-size:12px; color:var(--cinza-texto); line-height:1.4;">Marque esta opção se desejar escolher as seleções que avançam de forma <strong>independente</strong> dos placares que vai preencher abaixo.</div>
+          </div>
+       </label>
+    </div>
+
+    <div style="background:#E8EEFF; border:1px solid var(--azul); padding:14px; border-radius:8px; margin-bottom:20px; font-size:12px; line-height:1.6; color:var(--azul);">
+      <strong>Atenção ao Mata-Mata:</strong> O placar que conta é o resultado após os 90 minutos (+ prorrogação, se houver).<br>
+      Se achar que o jogo vai a pênaltis (ex: empate 1x1), preencha 1x1 e o site abrirá uma opção para escolher quem vence nos pênaltis!
+    </div>
+
+    <div id="form-jogos-container">
+       <!-- Os inputs de jogos entram aqui via JavaScript -->
+    </div>
+    
+    <!-- CONTAINER DA APOSTA BÔNUS DE QUEM AVANÇA (INVISÍVEL POR PADRÃO) -->
+    <div id="form-bonus-container" style="display:none; margin-top:32px; border-top:3px solid var(--amarelo); padding-top:24px;">
+       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+         <span style="font-size:24px;">🏆</span>
+         <h3 style="font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--azul); letter-spacing:1px;">Bônus: Quem Avança?</h3>
+       </div>
+       <p style="font-size:13px; color:var(--cinza-texto); margin-bottom:20px;">Como ativou a opção de aposta separada, <strong>selecione rigorosamente uma seleção de cada confronto</strong> para avançar para a próxima fase. Isto não afetará os pontos dos placares acima.</p>
+       
+       <div id="bonus-jogos-lista">
+          <!-- Os selects do bonus entram aqui via JS -->
+       </div>
+    </div>
+
+    <button id="btn-enviar-palpites" onclick="enviarPalpites()" class="aposta-btn" style="font-size:16px; padding:16px; margin-top:24px; box-shadow:0 4px 12px rgba(0,48,135,0.2);">
+      Salvar Meus Palpites
+    </button>
   </div>
 </div>
 
@@ -713,18 +859,41 @@ footer strong { color: #fff; font-weight: 600; }
 <div class="page" id="page-palpites">
   <div class="container">
     <div class="section-title">Palpites</div>
-    <p class="section-sub">Fase de Grupos · Revelados após o início de cada jogo</p>
-    <div style="margin-bottom:18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-      <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
-      <select id="filtro-participante" onchange="renderPalpitesParticipante()"
-        style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px;
-               border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; color:var(--texto); cursor:pointer;">
-        <option value="todos">Todos os participantes</option>
-      </select>
+    <p class="section-sub">Revelados no site apenas após o prazo limite de cada fase.</p>
+
+    <div style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid var(--cinza-borda); padding-bottom:0;">
+      <button id="tab-palpites-geral" onclick="showPalpitesTab('geral')"
+        style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid var(--azul); color:var(--azul); margin-bottom:-2px;">
+        📋 Todos os Palpites
+      </button>
+      <button id="tab-palpites-dia" onclick="showPalpitesTab('dia')"
+        style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:10px 20px; border:none; background:none; cursor:pointer; border-bottom:3px solid transparent; color:var(--cinza-texto); margin-bottom:-2px;">
+        📅 Desempenho por Dia
+      </button>
     </div>
-    <div id="palpites-container" style="overflow-x:auto;">
-      <div style="text-align:center;padding:48px;color:var(--cinza-texto);font-size:14px;">⏳ Carregando palpites…</div>
+
+    <!-- SUBABA 1: TODOS OS PALPITES -->
+    <div id="palpites-geral-content">
+      <div style="margin-bottom:18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
+        <select id="filtro-participante" onchange="renderPalpitesParticipante()"
+          style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px;
+                 border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; color:var(--texto); cursor:pointer;">
+          <option value="todos">Todos os participantes</option>
+        </select>
+      </div>
+      <div id="palpites-container" style="overflow-x:auto;">
+        <div style="text-align:center;padding:48px;color:var(--cinza-texto);font-size:14px;">⏳ Carregando palpites…</div>
+      </div>
     </div>
+
+    <!-- SUBABA 2: DESEMPENHO POR DIA -->
+    <div id="palpites-dia-content" style="display:none;">
+       <div id="palpites-dia-container">
+         <div style="text-align:center;padding:48px;color:var(--cinza-texto);font-size:14px;">⏳ Calculando desempenho diário…</div>
+       </div>
+    </div>
+
   </div>
 </div>
 
@@ -1088,7 +1257,19 @@ footer strong { color: #fff; font-weight: 600; }
 
 <script>
 // ================================================================
-// FUNÇÕES AUXILIARES: ORDENAÇÃO DE IAs E PADRONIZAÇÃO
+// FUNÇÕES DE UI GLOBAIS
+// ================================================================
+function mostrarAlerta(texto) {
+  document.getElementById('alerta-texto').innerHTML = texto;
+  document.getElementById('modal-alerta').style.display = 'flex';
+}
+
+function fecharAlerta() {
+  document.getElementById('modal-alerta').style.display = 'none';
+}
+
+// ================================================================
+// FUNÇÕES AUXILIARES: ORDENAÇÃO DE IAs E PADRONIZAÇÃO E PROTEÇÃO
 // ================================================================
 const LISTA_IAS = ['Chat GPT', 'Gemini', 'Claude', 'Claude AI', 'Google Gemini', 'Deepseek'];
 
@@ -1101,6 +1282,27 @@ function sortParticipants(arr) {
   const ias = [];
   arr.forEach(p => isIA(p.nome) ? ias.push(p) : humanos.push(p));
   return humanos.concat(ias);
+}
+
+// Função de Segurança: Oculta palpites de jogos antes do apito inicial
+function isJogoProtegido(n) {
+  if (n <= 72) return false; // Fase de grupos: palpites totalmente abertos e revelados
+
+  const agora = new Date();
+  
+  // Regra 16 Avos Parte 1: Escondidos até dia 28/jun às 16h (1º Jogo dos 16 Avos)
+  if (n >= 73 && n <= 80) return agora < getGameDate('28/jun', '16h');
+  
+  // Regra 16 Avos Parte 2: Escondidos até dia 01/jul às 17h (1º Jogo da Parte 2 cronologicamente)
+  if (n >= 81 && n <= 88) return agora < getGameDate('01/jul', '17h');
+  
+  // Regras para fases futuras
+  if (n >= 89 && n <= 96) return agora < getGameDate('04/jul', '14h'); // Oitavas
+  if (n >= 97 && n <= 100) return agora < getGameDate('09/jul', '17h'); // Quartas
+  if (n >= 101 && n <= 102) return agora < getGameDate('14/jul', '16h'); // Semis
+  if (n >= 103) return agora < getGameDate('18/jul', '18h'); // Finais
+  
+  return false;
 }
 
 const NOMES_ABREV = {
@@ -1303,6 +1505,279 @@ var _dadosGrupos = null;
 var _dadosPalpites = null;
 var _dadosBonus = null;
 var _dadosClassif = null;
+
+// Lógica de Login para Apostas
+let faseAtualAposta = '';
+let usuarioAtualAposta = '';
+
+function removerAcentos(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+async function abrirLogin(fase) {
+  const agora = new Date();
+  
+  // Barreira de segurança dupla caso alguém force o botão
+  if (fase === '16avos-1') {
+     if (agora < getGameDate('25/jun', '00h')) {
+        mostrarAlerta("⏳ Calma! Os palpites desta fase só serão liberados no dia 25 de junho.");
+        return;
+     }
+     if (agora >= getGameDate('28/jun', '16h')) {
+        mostrarAlerta("❌ O prazo para enviar palpites desta fase já encerrou.");
+        return;
+     }
+  }
+
+  faseAtualAposta = fase;
+  let sel = document.getElementById('login-nome');
+
+  // NOVO: Exibe o modal logo e busca os dados na hora caso ainda não existam
+  document.getElementById('login-senha').value = '';
+  document.getElementById('login-erro').style.display = 'none';
+  document.getElementById('modal-login').style.display = 'flex';
+
+  if (!_dadosPalpites) {
+    sel.innerHTML = '<option value="">⏳ A carregar a lista de participantes...</option>';
+    let dados = await carregarDadosGrupos();
+    if (dados) {
+      _dadosPalpites = { participantes: sortParticipants(dados.participantes), jogos: dados.jogos };
+    }
+  }
+
+  // Popula a lista se estiver vazia ou com a mensagem de carregamento
+  if (sel.options.length <= 1) {
+     sel.innerHTML = '<option value="">Selecione o seu nome...</option>';
+     
+     // Mostrar apenas nomes humanos e remover IAs da lista de apostas
+     let humanos = _dadosPalpites ? _dadosPalpites.participantes.filter(p => !isIA(p.nome)) : [];
+     humanos.sort((a, b) => a.nome.localeCompare(b.nome));
+     
+     humanos.forEach(p => {
+       let opt = document.createElement('option');
+       opt.value = p.nome;
+       opt.textContent = p.nome;
+       sel.appendChild(opt);
+     });
+  }
+}
+
+function fecharLogin() {
+  document.getElementById('modal-login').style.display = 'none';
+}
+
+function fazerLogin() {
+  let nomeCompleto = document.getElementById('login-nome').value;
+  let senhaDigitada = document.getElementById('login-senha').value.trim();
+  
+  if (!nomeCompleto) {
+     document.getElementById('login-erro').textContent = '❌ Selecione o seu nome na lista.';
+     document.getElementById('login-erro').style.display = 'block';
+     return;
+  }
+  if (!senhaDigitada) {
+     document.getElementById('login-erro').textContent = '❌ Digite a sua senha.';
+     document.getElementById('login-erro').style.display = 'block';
+     return;
+  }
+
+  // Gera a senha esperada (Primeiro nome, sem acento, Primeira Maiuscula)
+  let primeiroNome = removerAcentos(nomeCompleto.split(' ')[0]);
+  let senhaEsperada = primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase();
+
+  if (senhaDigitada === senhaEsperada) {
+     fecharLogin();
+     abrirFormularioApostas(faseAtualAposta, nomeCompleto);
+  } else {
+     document.getElementById('login-erro').textContent = '❌ Senha incorreta. Escreva apenas o seu 1º nome.';
+     document.getElementById('login-erro').style.display = 'block';
+  }
+}
+
+function abrirFormularioApostas(fase, nome) {
+  usuarioAtualAposta = nome;
+  document.getElementById('form-usuario').textContent = nome;
+
+  let range = [];
+  if (fase === '16avos-1') {
+     document.getElementById('form-titulo').textContent = '16 Avos — Parte 1';
+     range = [73, 80];
+  } else if (fase === '16avos-2') {
+     document.getElementById('form-titulo').textContent = '16 Avos — Parte 2';
+     range = [81, 88];
+  }
+
+  let htmlJogos = '';
+  let htmlBonus = '';
+  let jogosFase = JOGOS.filter(j => j.n >= range[0] && j.n <= range[1]);
+
+  jogosFase.forEach(j => {
+    // 1. Gera o input de placares (Normal)
+    htmlJogos += `
+    <div class="card" style="padding:16px; margin-bottom:12px;">
+       <div style="font-size:11px; color:var(--cinza-texto); margin-bottom:14px; text-align:center;">Jogo ${j.n} · ${j.d} às ${j.h}</div>
+       <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+          <div style="text-align:right; flex:1; font-weight:600; font-size:14px; line-height:1.2;">
+             ${j.t1}<br><span style="display:inline-block; margin-top:4px;">${flag(j.t1)}</span>
+          </div>
+          <input type="number" min="0" max="15" id="g1-${j.n}" oninput="checkEmpate(${j.n}, '${j.t1}', '${j.t2}')" style="width:52px; height:52px; text-align:center; font-size:22px; font-weight:700; color:var(--azul); border:2px solid var(--cinza-borda); border-radius:8px; background:#FAFAF7;">
+          <div style="color:var(--cinza-texto); font-weight:600; font-size:16px;">×</div>
+          <input type="number" min="0" max="15" id="g2-${j.n}" oninput="checkEmpate(${j.n}, '${j.t1}', '${j.t2}')" style="width:52px; height:52px; text-align:center; font-size:22px; font-weight:700; color:var(--azul); border:2px solid var(--cinza-borda); border-radius:8px; background:#FAFAF7;">
+          <div style="text-align:left; flex:1; font-weight:600; font-size:14px; line-height:1.2;">
+             ${j.t2}<br><span style="display:inline-block; margin-top:4px;">${flag(j.t2)}</span>
+          </div>
+       </div>
+       <div id="empate-${j.n}" style="display:none; margin-top:16px; background:#FFF8E1; padding:12px; border-radius:8px; text-align:center; border-left:3px solid var(--amarelo-escuro);">
+          <div style="font-size:12px; font-weight:600; color:#856404; margin-bottom:8px;">⚖️ Empate! Quem avança nos Pênaltis?</div>
+          <select id="pen-${j.n}" style="width:100%; padding:8px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:600; border-radius:6px; border:1px solid #CCC; color:var(--azul);">
+            <option value="">Selecione o vencedor...</option>
+            <option value="1">${j.t1}</option>
+            <option value="2">${j.t2}</option>
+          </select>
+       </div>
+    </div>`;
+
+    // 2. Gera os inputs para a aposta de quem avança de forma separada (Bônus)
+    htmlBonus += `
+    <div class="card" style="padding:16px; margin-bottom:12px; border-left:3px solid var(--amarelo);">
+       <div style="font-size:11px; color:var(--cinza-texto); margin-bottom:10px; text-align:center;">Jogo ${j.n}</div>
+       <div style="font-size:13px; font-weight:600; text-align:center; margin-bottom:12px; color:var(--azul);">Quem avança para a próxima fase?</div>
+       <select id="bonus-adv-${j.n}" style="width:100%; padding:10px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:600; border-radius:6px; border:1px solid var(--cinza-borda); color:var(--texto);">
+         <option value="">Obrigatório selecionar...</option>
+         <option value="1">${j.t1}</option>
+         <option value="2">${j.t2}</option>
+       </select>
+    </div>`;
+  });
+
+  // Insere na tela e reinicia o toggle para "Desligado"
+  document.getElementById('form-jogos-container').innerHTML = htmlJogos;
+  document.getElementById('bonus-jogos-lista').innerHTML = htmlBonus;
+  
+  let toggle = document.getElementById('toggle-bonus');
+  toggle.checked = false;
+  toggleApostaBonus(); // Força a esconder o painel se ele estivesse aberto de antes
+
+  showPageExtra('formulario');
+}
+
+function checkEmpate(n, t1, t2) {
+  let g1 = document.getElementById(`g1-${n}`).value;
+  let g2 = document.getElementById(`g2-${n}`).value;
+  let divEmpate = document.getElementById(`empate-${n}`);
+
+  if (g1 !== '' && g2 !== '' && g1 === g2) {
+     divEmpate.style.display = 'block';
+  } else {
+     divEmpate.style.display = 'none';
+     document.getElementById(`pen-${n}`).value = ''; // Limpa a selecao de penaltis se mudar o placar
+  }
+}
+
+// Controla a visibilidade da opção Bônus Extra
+function toggleApostaBonus() {
+  let checked = document.getElementById('toggle-bonus').checked;
+  let container = document.getElementById('label-toggle-bonus');
+  let painelAmarelo = document.getElementById('form-bonus-container');
+  
+  if (checked) {
+     container.classList.add('checked');
+     painelAmarelo.style.display = 'block';
+  } else {
+     container.classList.remove('checked');
+     painelAmarelo.style.display = 'none';
+  }
+}
+
+async function enviarPalpites() {
+  let btn = document.getElementById('btn-enviar-palpites');
+  btn.textContent = 'A gravar... aguarde ⏳';
+  btn.disabled = true;
+  btn.style.background = '#CCC';
+
+  let usaBonusSeparado = document.getElementById('toggle-bonus').checked;
+
+  let payload = {
+     tipo: 'salvar_palpites',
+     usuario: usuarioAtualAposta,
+     fase: faseAtualAposta,
+     apostaBonusIndependente: usaBonusSeparado, // Avisa o Backend se ele usou a funcionalidade
+     palpites: [],
+     palpitesBonus: [] // Array separado para os classificados
+  };
+
+  let range = faseAtualAposta === '16avos-1' ? [73, 80] : [81, 88];
+  let tudoPreenchido = true;
+  let bonusPreenchido = true;
+
+  for (let n = range[0]; n <= range[1]; n++) {
+     // Leitura dos Placares Normais
+     let g1 = document.getElementById(`g1-${n}`).value;
+     let g2 = document.getElementById(`g2-${n}`).value;
+
+     if (g1 === '' || g2 === '') { tudoPreenchido = false; break; }
+
+     let adv = 0; 
+     if (g1 === g2) {
+        let pen = document.getElementById(`pen-${n}`).value;
+        if (pen === '') { tudoPreenchido = false; break; }
+        adv = parseInt(pen);
+     }
+     payload.palpites.push({ n: n, p1: parseInt(g1), p2: parseInt(g2), adv: adv });
+
+     // Leitura do Bônus Extra (Se Ativado)
+     if (usaBonusSeparado) {
+        let selBonus = document.getElementById(`bonus-adv-${n}`).value;
+        if (selBonus === '') { bonusPreenchido = false; }
+        payload.palpitesBonus.push({ n: n, adv: selBonus ? parseInt(selBonus) : 0 });
+     }
+  }
+
+  // Validação 1: Placares
+  if (!tudoPreenchido) {
+     mostrarAlerta("❌ Por favor, preencha todos os 8 placares.<br><br>Se houver empate, não se esqueça de selecionar quem avança nos pênaltis!");
+     btn.textContent = 'Salvar Meus Palpites';
+     btn.disabled = false;
+     btn.style.background = 'var(--azul)';
+     return;
+  }
+
+  // Validação 2: Bônus (Se ativado)
+  if (usaBonusSeparado && !bonusPreenchido) {
+     mostrarAlerta("❌ Você ativou a Aposta Bônus Extra!<br><br>Por favor, desça até a seção amarela no final da página e selecione rigorosamente quem avança em <strong>TODOS</strong> os confrontos.");
+     btn.textContent = 'Salvar Meus Palpites';
+     btn.disabled = false;
+     btn.style.background = 'var(--azul)';
+     return;
+  }
+
+  try {
+     // Conexão real com o Google Apps Script ativada!
+     await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Evita bloqueios de segurança do navegador
+        headers: { 'Content-Type': 'text/plain' }, // text/plain funciona melhor com no-cors
+        body: JSON.stringify(payload)
+     });
+     
+     // Sucesso: Redireciona a tela após a gravação
+     setTimeout(() => {
+        mostrarAlerta("✅ Palpites gravados com sucesso!<br><br>Boa sorte, " + usuarioAtualAposta.split(' ')[0] + "!");
+        showPageExtra('apostas');
+        btn.textContent = 'Salvar Meus Palpites';
+        btn.disabled = false;
+        btn.style.background = 'var(--azul)';
+     }, 1000);
+
+  } catch(e) {
+     mostrarAlerta("⚠️ Ocorreu um erro ao gravar. Verifique a sua internet e tente novamente.");
+     btn.textContent = 'Salvar Meus Palpites';
+     btn.disabled = false;
+     btn.style.background = 'var(--azul)';
+  }
+}
+
+// ----------------------------------------------------------------
 
 function showPage(id) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
@@ -1788,6 +2263,32 @@ async function carregarDadosGrupos() {
   }
 }
 
+// ----------------------------------------------------------------
+// PÁGINA: PALPITES E DESEMPENHO DIÁRIO
+// ----------------------------------------------------------------
+function showPalpitesTab(tab) {
+  var cGeral = document.getElementById('palpites-geral-content');
+  var cDia = document.getElementById('palpites-dia-content');
+  var btnGeral = document.getElementById('tab-palpites-geral');
+  var btnDia = document.getElementById('tab-palpites-dia');
+  
+  if (tab === 'geral') {
+    cGeral.style.display = 'block';
+    cDia.style.display = 'none';
+    btnGeral.style.borderBottomColor = 'var(--azul)';
+    btnGeral.style.color = 'var(--azul)';
+    btnDia.style.borderBottomColor = 'transparent';
+    btnDia.style.color = 'var(--cinza-texto)';
+  } else {
+    cGeral.style.display = 'none';
+    cDia.style.display = 'block';
+    btnDia.style.borderBottomColor = 'var(--azul)';
+    btnDia.style.color = 'var(--azul)';
+    btnGeral.style.borderBottomColor = 'transparent';
+    btnGeral.style.color = 'var(--cinza-texto)';
+  }
+}
+
 async function carregarPalpites() {
   var container = document.getElementById('palpites-container');
   if (!container) return;
@@ -1816,6 +2317,7 @@ async function carregarPalpites() {
   }
 
   renderPalpitesParticipante();
+  renderDesempenhoPorDia(); // Já carrega a subaba do Desempenho Diário em plano de fundo
 }
 
 function renderPalpitesParticipante() {
@@ -1828,7 +2330,8 @@ function renderPalpitesParticipante() {
     ? _dadosPalpites.participantes
     : _dadosPalpites.participantes.filter(function(p) { return p.nome === filtro; });
 
-  var jogosLib = JOGOS.filter(j => j.n <= 72); 
+  // Aumentado para mostrar também as apostas dos 16 Avos
+  var jogosLib = JOGOS.filter(j => j.n <= 88); 
 
   var html = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:600px;">';
   html += '<thead><tr><th>Jogo</th><th>Partida</th><th style="text-align:center">Resultado</th>';
@@ -1845,6 +2348,12 @@ function renderPalpitesParticipante() {
     html += '<td style="text-align:center;font-weight:700;font-size:14px;">' + (j.g1 !== null ? (j.g1 + ' x ' + j.g2) : '—') + '</td>';
 
     parts.forEach(function(p) {
+      // PROTEÇÃO DE DADOS: Se o jogo ainda não atingiu o limite de horário, mostra Cadeado
+      if (isJogoProtegido(j.n)) {
+        html += '<td style="text-align:center;color:var(--cinza-texto);font-size:16px;background:#FAFAF7;" title="Oculto até o apito inicial">🔒</td>';
+        return;
+      }
+
       var palp = p.palpites.find(x => x.n === j.n);
       
       if (!palp || palp.p1 === null) {
@@ -1886,6 +2395,83 @@ function renderPalpitesParticipante() {
   html += '</tbody></table></div>';
   container.innerHTML = html;
 }
+
+function renderDesempenhoPorDia() {
+  var container = document.getElementById('palpites-dia-container');
+  if (!container || !_dadosPalpites) return;
+
+  var jogosRealizados = JOGOS.filter(j => j.g1 !== null && j.g2 !== null);
+  if (jogosRealizados.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:48px;color:var(--cinza-texto);">Nenhum jogo finalizado ainda.</div>';
+    return;
+  }
+
+  // Obter lista única de dias onde houveram jogos com resultado
+  var diasSet = new Set(jogosRealizados.map(j => j.d));
+  var diasUnicos = Array.from(diasSet).sort((a, b) => getGameDate(a, '00h') - getGameDate(b, '00h'));
+
+  var partesDesempenho = [];
+
+  _dadosPalpites.participantes.forEach(p => {
+    let pData = { nome: p.nome, total: 0, dias: {} };
+    diasUnicos.forEach(d => pData.dias[d] = 0);
+
+    if (p.palpites) {
+       p.palpites.forEach(palp => {
+          let jInfo = jogosRealizados.find(x => x.n === palp.n);
+          if (jInfo && palp.p1 !== null) {
+             let pts = calcularPontosPalpite(palp.p1, palp.p2, jInfo.g1, jInfo.g2);
+             pData.dias[jInfo.d] += pts;
+             pData.total += pts;
+          }
+       });
+    }
+    partesDesempenho.push(pData);
+  });
+
+  partesDesempenho.sort((a, b) => b.total - a.total);
+
+  // Encontrar a maior pontuação de cada dia (excluindo IAs)
+  let maxPorDia = {};
+  diasUnicos.forEach(d => {
+     maxPorDia[d] = Math.max(...partesDesempenho.filter(p => !isIA(p.nome)).map(p => p.dias[d]));
+  });
+
+  let html = '<div class="card" style="overflow-x:auto;"><table class="rank-table" style="min-width:600px;">';
+  html += '<thead><tr>';
+  html += '<th style="text-align:left; border-right:1px solid var(--cinza-borda); position:sticky; left:0; background:#FAFAF7; z-index:2; min-width:120px;">Participante</th>';
+  html += '<th style="text-align:center; border-right:2px solid var(--cinza-borda); background:#FAFAF7;" title="Pontos em Placares (Exclui Bônus)">Total Placares</th>';
+
+  diasUnicos.forEach(d => {
+    html += `<th style="text-align:center; font-size:10px;">${d}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  partesDesempenho.forEach(p => {
+    let isIA_part = isIA(p.nome);
+    let bgBase = isIA_part ? '#F0F4FF' : '#fff';
+    html += `<tr style="background:${bgBase};">`;
+    html += `<td class="participant-name" style="white-space:nowrap; border-right:1px solid var(--cinza-borda); position:sticky; left:0; background:${bgBase}; z-index:1;">${isIA_part ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)}</td>`;
+    html += `<td style="text-align:center; font-weight:700; color:var(--azul); border-right:2px solid var(--cinza-borda);">${p.total}</td>`;
+
+    diasUnicos.forEach(d => {
+       let pts = p.dias[d];
+       let isMax = (!isIA_part && pts === maxPorDia[d] && pts > 0);
+       let style = isMax ? 'background:#FFF8E1; font-weight:700; color:var(--amarelo-escuro);' : 'color:var(--texto);';
+       html += `<td style="text-align:center; ${style}">${pts > 0 ? pts : '-'}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  html += '<div style="margin-top:12px; font-size:11px; color:var(--cinza-texto); text-align:right;">* Destacados em <span style="color:var(--amarelo-escuro); font-weight:bold; background:#FFF8E1; padding:2px 4px; border-radius:3px;">amarelo</span> indicam a maior pontuação daquele dia. Total exclui bônus.</div>';
+  
+  container.innerHTML = html;
+}
+
+// ----------------------------------------------------------------
+// PÁGINA: BÔNUS
+// ----------------------------------------------------------------
 
 function showBonusTab(tab) {
   var fixos  = document.getElementById('bonus-fixos');
@@ -2034,6 +2620,10 @@ async function renderEstatisticas() {
     
     p.palpites.forEach(palp => {
       if (palp.p1 === null) return;
+      
+      // PROTEÇÃO: Ignorar completamente jogos futuros para não revelar tendências nas estatísticas
+      if (isJogoProtegido(palp.n)) return; 
+      
       if (!jogosStats[palp.n]) jogosStats[palp.n] = { total: 0, t1: 0, emp: 0, t2: 0 };
       jogosStats[palp.n].total++;
       if (palp.p1 > palp.p2) jogosStats[palp.n].t1++;
@@ -2044,10 +2634,10 @@ async function renderEstatisticas() {
 
   // Renderizar Subaba 2: Jogos
   let htmlJogos = '';
-  let jogosLib = JOGOS.filter(j => j.n <= 72); 
+  let jogosLib = JOGOS.filter(j => j.n <= 88); 
   jogosLib.forEach(j => {
     let js = jogosStats[j.n];
-    if (!js || js.total === 0) return;
+    if (!js || js.total === 0) return; // Se protegido, não há "js" e o jogo não aparece ainda na lista
     
     let pT1 = Math.round((js.t1 / js.total) * 100);
     let pEmp = Math.round((js.emp / js.total) * 100);
@@ -2090,6 +2680,8 @@ async function renderEstatisticas() {
 
     p.palpites.forEach(palp => {
       if(palp.p1 === null) return;
+      if (isJogoProtegido(palp.n)) return; // Ignorar jogos não revelados
+      
       let isEmpate = (palp.p1 === palp.p2);
       
       if(isEmpate) empFeitos++;
@@ -2281,6 +2873,33 @@ setInterval(function() {
           elMini.textContent = str;
         }
       }
+    }
+
+    // --- CONTROLE AUTOMÁTICO DAS APOSTAS ---
+    const btn16Avos1 = document.getElementById('btn-aposta-16avos1');
+    const card16Avos1 = document.getElementById('card-aposta-16avos1');
+    if (btn16Avos1 && card16Avos1) {
+        if (agora >= getGameDate('25/jun', '00h') && agora < getGameDate('28/jun', '16h')) {
+            card16Avos1.style.opacity = '1';
+            card16Avos1.style.borderTop = '3px solid var(--verde)';
+            card16Avos1.querySelector('.aposta-icon').style.background = 'var(--verde-claro)';
+            card16Avos1.querySelector('.aposta-icon').textContent = '⚽';
+            card16Avos1.querySelector('.aposta-status').className = 'aposta-status status-aberto';
+            card16Avos1.querySelector('.aposta-status').textContent = '● Aberto';
+            btn16Avos1.className = 'aposta-btn';
+            btn16Avos1.textContent = 'Fazer Palpites →';
+            btn16Avos1.disabled = false;
+        } else if (agora >= getGameDate('28/jun', '16h')) {
+            card16Avos1.style.opacity = '0.6';
+            card16Avos1.style.borderTop = '3px solid var(--cinza-texto)';
+            card16Avos1.querySelector('.aposta-icon').style.background = '#F0EDE6';
+            card16Avos1.querySelector('.aposta-icon').textContent = '🔒';
+            card16Avos1.querySelector('.aposta-status').className = 'aposta-status status-fechado';
+            card16Avos1.querySelector('.aposta-status').textContent = '● Fechado';
+            btn16Avos1.className = 'aposta-btn secondary';
+            btn16Avos1.textContent = 'Prazo Encerrado';
+            btn16Avos1.disabled = true;
+        }
     }
   }
 
