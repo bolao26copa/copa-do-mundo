@@ -874,14 +874,35 @@ footer strong { color: #fff; font-weight: 600; }
 
     <!-- SUBABA 1: TODOS OS PALPITES -->
     <div id="palpites-geral-content">
-      <div style="margin-bottom:18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <label style="font-size:13px; font-weight:600; color:var(--azul);">Ver palpites de:</label>
-        <select id="filtro-participante" onchange="renderPalpitesParticipante()"
-          style="font-family:'DM Sans',sans-serif; font-size:13px; padding:7px 12px;
-                 border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; color:var(--texto); cursor:pointer;">
-          <option value="todos">Todos os participantes</option>
-        </select>
+      
+      <!-- NOVO: BARRA DE FILTROS AVANÇADOS -->
+      <div style="margin-bottom:18px; background:#FAFAF7; border:1px solid var(--cinza-borda); border-radius:10px; padding:16px;">
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <!-- Filtro Jogo -->
+          <div style="flex:1; min-width:200px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:var(--cinza-texto); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Filtrar por Partida</label>
+            <select id="filtro-jogo" onchange="renderPalpitesParticipante()" style="width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 12px; border:1px solid var(--cinza-borda); border-radius:6px; background:#fff; color:var(--texto); outline:none;">
+              <option value="todos">⚽ Todas as Partidas</option>
+            </select>
+          </div>
+          <!-- Comparador Múltiplo -->
+          <div style="flex:2; min-width:280px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:var(--cinza-texto); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Comparar Participantes</label>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:8px;">
+              <select id="filtro-part-1" onchange="renderPalpitesParticipante()" style="width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 12px; border:1px solid var(--cinza-borda); border-radius:6px; background:#fff; color:var(--texto); outline:none;">
+                <option value="todos">👥 Todos</option>
+              </select>
+              <select id="filtro-part-2" onchange="renderPalpitesParticipante()" style="width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 12px; border:1px solid var(--cinza-borda); border-radius:6px; background:#fff; color:var(--texto); outline:none;" disabled>
+                <option value="">+ Participante 2</option>
+              </select>
+              <select id="filtro-part-3" onchange="renderPalpitesParticipante()" style="width:100%; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 12px; border:1px solid var(--cinza-borda); border-radius:6px; background:#fff; color:var(--texto); outline:none;" disabled>
+                <option value="">+ Participante 3</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div id="palpites-container" style="overflow-x:auto;">
         <div style="text-align:center;padding:48px;color:var(--cinza-texto);font-size:14px;">⏳ Carregando palpites…</div>
       </div>
@@ -1257,8 +1278,28 @@ footer strong { color: #fff; font-weight: 600; }
 
 <script>
 // ================================================================
-// FUNÇÕES DE UI GLOBAIS
+// FUNÇÕES DE UI GLOBAIS E LÓGICA DO JOGO
 // ================================================================
+window.calcularPontosPalpite = function(p1, p2, g1, g2) {
+  if (p1 === null || g1 === null) return 0;
+  if (p1 === g1 && p2 === g2) return 50; 
+  
+  let vPalp = p1 > p2 ? 1 : (p1 < p2 ? 2 : 0);
+  let vReal = g1 > g2 ? 1 : (g1 < g2 ? 2 : 0);
+  
+  if (p1 === g2 && p2 === g1 && g1 !== g2) return -5; 
+  
+  if (vPalp === vReal) {
+    if (vPalp === 0) return 25; 
+    if (p1 === g1 || p2 === g2) return 30; 
+    if ((p1 - p2) === (g1 - g2)) return 25; 
+    return 20; 
+  } else {
+    if (p1 === g1 || p2 === g2) return 10; 
+  }
+  return 0;
+};
+
 function mostrarAlerta(texto) {
   document.getElementById('alerta-texto').innerHTML = texto;
   document.getElementById('modal-alerta').style.display = 'flex';
@@ -1268,9 +1309,6 @@ function fecharAlerta() {
   document.getElementById('modal-alerta').style.display = 'none';
 }
 
-// ================================================================
-// FUNÇÕES AUXILIARES: ORDENAÇÃO DE IAs E PADRONIZAÇÃO E PROTEÇÃO
-// ================================================================
 const LISTA_IAS = ['Chat GPT', 'Gemini', 'Claude', 'Claude AI', 'Google Gemini', 'Deepseek'];
 
 function isIA(nome) {
@@ -1332,6 +1370,20 @@ function padronizarArtilheiro(nome) {
   if (n.includes('ronaldo')) return 'C. Ronaldo';
   if (n.includes('haaland')) return 'Haaland';
   return nome;
+}
+
+function getGameDate(d, h) {
+  const meses = {"jan":0,"fev":1,"mar":2,"abr":3,"mai":4,"jun":5,"jul":6,"ago":7,"set":8,"out":9,"nov":10,"dez":11};
+  const p = d.toLowerCase().split('/');
+  if (p.length !== 2) return new Date();
+  const dia = parseInt(p[0]);
+  const mes = meses[p[1].trim()];
+  
+  let [horaStr, minStr] = h.toLowerCase().replace('h', ':').split(':');
+  const hora = parseInt(horaStr) || 0;
+  const minuto = parseInt(minStr) || 0;
+  
+  return new Date(2026, mes, dia, hora, minuto, 0);
 }
 
 const FLAGS = {
@@ -1471,21 +1523,6 @@ const JOGOS = [
   {n:104,d:"19/jul", h:"16h",   f:"Final",     g:"",  t1:"Vencedor SF 101", t2:"Vencedor SF 102",  g1:null, g2:null},
 ];
 
-function getGameDate(d, h) {
-  const meses = {"jan":0,"fev":1,"mar":2,"abr":3,"mai":4,"jun":5,"jul":6,"ago":7,"set":8,"out":9,"nov":10,"dez":11};
-  const p = d.toLowerCase().split('/');
-  if (p.length !== 2) return new Date();
-  const dia = parseInt(p[0]);
-  const mes = meses[p[1].trim()];
-  
-  let [horaStr, minStr] = h.toLowerCase().replace('h', ':').split(':');
-  const hora = parseInt(horaStr) || 0;
-  const minuto = parseInt(minStr) || 0;
-  
-  return new Date(2026, mes, dia, hora, minuto, 0);
-}
-
-// Ordenar todos os jogos cronologicamente (do mais cedo para o mais tarde)
 JOGOS.sort((a, b) => getGameDate(a.d, a.h) - getGameDate(b.d, b.h));
 
 const FASE_TAG = {
@@ -1509,10 +1546,6 @@ var _dadosClassif = null;
 // Lógica de Login para Apostas
 let faseAtualAposta = '';
 let usuarioAtualAposta = '';
-
-function removerAcentos(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
 
 async function abrirLogin(fase) {
   const agora = new Date();
@@ -2306,13 +2339,24 @@ async function carregarPalpites() {
     return;
   }
 
-  var sel = document.getElementById('filtro-participante');
-  if (sel && sel.options.length === 1) {
+  // Popula os 3 selects de comparação e o select de jogos apenas se estiverem vazios
+  var sel1 = document.getElementById('filtro-part-1');
+  var sel2 = document.getElementById('filtro-part-2');
+  var sel3 = document.getElementById('filtro-part-3');
+  var selJogo = document.getElementById('filtro-jogo');
+
+  if (sel1 && sel1.options.length === 1) {
     _dadosPalpites.participantes.forEach(function(p) {
-      var opt = document.createElement('option');
-      opt.value = p.nome;
-      opt.textContent = isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome);
-      sel.appendChild(opt);
+      let label = isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome);
+      sel1.appendChild(new Option(label, p.nome));
+      sel2.appendChild(new Option(label, p.nome));
+      sel3.appendChild(new Option(label, p.nome));
+    });
+    
+    // Popula dropdown de jogos com todos os jogos até 16 avos
+    JOGOS.filter(j => j.n <= 88).forEach(function(j) {
+      let label = 'Jogo ' + j.n + ' · ' + j.t1 + ' × ' + j.t2;
+      selJogo.appendChild(new Option(label, j.n));
     });
   }
 
@@ -2322,23 +2366,55 @@ async function carregarPalpites() {
 
 function renderPalpitesParticipante() {
   var container = document.getElementById('palpites-container');
-  var sel       = document.getElementById('filtro-participante');
+  var sel1 = document.getElementById('filtro-part-1');
+  var sel2 = document.getElementById('filtro-part-2');
+  var sel3 = document.getElementById('filtro-part-3');
+  var selJogo = document.getElementById('filtro-jogo');
+
   if (!container || !_dadosPalpites) return;
 
-  var filtro = sel ? sel.value : 'todos';
-  var parts = filtro === 'todos'
-    ? _dadosPalpites.participantes
-    : _dadosPalpites.participantes.filter(function(p) { return p.nome === filtro; });
+  var val1 = sel1 ? sel1.value : 'todos';
+  var val2 = sel2 ? sel2.value : '';
+  var val3 = sel3 ? sel3.value : '';
+  var valJogo = selJogo ? selJogo.value : 'todos';
 
-  // Aumentado para mostrar também as apostas dos 16 Avos
+  // Lógica de Ativar/Desativar Caixas
+  if (val1 === 'todos') {
+    if(sel2) { sel2.disabled = true; sel2.value = ''; }
+    if(sel3) { sel3.disabled = true; sel3.value = ''; }
+  } else {
+    if(sel2) sel2.disabled = false;
+    if(sel3) sel3.disabled = false;
+  }
+
+  // Filtrar Participantes (mantendo a ordem que o usuário clicou)
+  var parts = [];
+  if (val1 === 'todos') {
+    parts = _dadosPalpites.participantes;
+  } else {
+    var nomesSelecionados = [val1, val2, val3].filter(function(n) { return n !== '' && n !== 'todos'; });
+    // Pegar o objeto correspondente a cada nome selecionado (removendo duplicados caso existam)
+    let nomesUnicos = [...new Set(nomesSelecionados)];
+    parts = nomesUnicos.map(nome => _dadosPalpites.participantes.find(p => p.nome === nome)).filter(p => p !== undefined);
+  }
+
+  // Filtrar Jogos
   var jogosLib = JOGOS.filter(j => j.n <= 88); 
+  if (valJogo !== 'todos') {
+    jogosLib = jogosLib.filter(j => j.n === parseInt(valJogo));
+  }
 
+  // Construir Tabela
   var html = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:600px;">';
   html += '<thead><tr><th>Jogo</th><th>Partida</th><th style="text-align:center">Resultado</th>';
   parts.forEach(function(p) {
     html += '<th style="text-align:center;font-size:11px;">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>';
   });
   html += '</tr></thead><tbody>';
+
+  if (jogosLib.length === 0) {
+     html += '<tr><td colspan="' + (3 + parts.length) + '" style="text-align:center;color:var(--cinza-texto);padding:24px;">Nenhum jogo encontrado para este filtro.</td></tr>';
+  }
 
   jogosLib.forEach(function(j) {
     html += '<tr>';
@@ -2420,7 +2496,7 @@ function renderDesempenhoPorDia() {
        p.palpites.forEach(palp => {
           let jInfo = jogosRealizados.find(x => x.n === palp.n);
           if (jInfo && palp.p1 !== null) {
-             let pts = calcularPontosPalpite(palp.p1, palp.p2, jInfo.g1, jInfo.g2);
+             let pts = window.calcularPontosPalpite(palp.p1, palp.p2, jInfo.g1, jInfo.g2);
              pData.dias[jInfo.d] += pts;
              pData.total += pts;
           }
@@ -2693,7 +2769,7 @@ async function renderEstatisticas() {
         let vReal = jInfo.g1 > jInfo.g2 ? 1 : (jInfo.g1 < jInfo.g2 ? 2 : 0);
         let outcomeCorrect = (vPalp === vReal);
         
-        let pts = calcularPontosPalpite(palp.p1, palp.p2, jInfo.g1, jInfo.g2);
+        let pts = window.calcularPontosPalpite(palp.p1, palp.p2, jInfo.g1, jInfo.g2);
         
         if (isEmpate) {
            if (outcomeCorrect) empCorretos++;
@@ -2744,26 +2820,6 @@ async function renderEstatisticas() {
   });
   if(htmlParts === '') htmlParts = '<tr><td colspan="8" style="text-align:center;">Sem dados.</td></tr>';
   container1.innerHTML = htmlParts;
-}
-
-function calcularPontosPalpite(p1, p2, g1, g2) {
-  if (p1 === null || g1 === null) return 0;
-  if (p1 === g1 && p2 === g2) return 50; 
-  
-  let vPalp = p1 > p2 ? 1 : (p1 < p2 ? 2 : 0);
-  let vReal = g1 > g2 ? 1 : (g1 < g2 ? 2 : 0);
-  
-  if (p1 === g2 && p2 === g1 && g1 !== g2) return -5; 
-  
-  if (vPalp === vReal) {
-    if (vPalp === 0) return 25; 
-    if (p1 === g1 || p2 === g2) return 30; 
-    if ((p1 - p2) === (g1 - g2)) return 25; 
-    return 20; 
-  } else {
-    if (p1 === g1 || p2 === g2) return 10; 
-  }
-  return 0;
 }
 
 function showStatTab(tab) {
