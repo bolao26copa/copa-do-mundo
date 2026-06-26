@@ -221,57 +221,57 @@ nav a.active { color: var(--amarelo); }
 .bk-match-num {
   font-size: 10px; font-weight: 600; color: var(--cinza-texto); margin-bottom: 2px;
   border-bottom: 1px solid #f0f0f0; padding-bottom: 4px; display: flex; justify-content: space-between;
+input[type=number] {
+  -moz-appearance: textfield;
 }
-.bk-team { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 2px 0; }
-.bk-team-name {
-  display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 105px;
-}
-.bk-team-score { font-weight: 700; background: #FAFAF7; padding: 2px 6px; border-radius: 4px; font-size: 11px; color: var(--azul); }
-.bracket-center { display: flex; flex-direction: column; justify-content: center; gap: 20px; min-width: 160px; margin: 0 10px; }
-.bk-final-match { border: 2px solid var(--amarelo); background: #FFFdf0; }
 
-.apostas-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 16px;
+/* ── TOGGLE SWITCH BÔNUS ── */
+.toggle-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background: #FAFAF7;
+  padding: 16px;
+  border-radius: 8px;
+  border: 2px solid var(--cinza-borda);
+  transition: all 0.2s;
 }
-.aposta-card {
-  border: 1px solid var(--cinza-borda); border-radius: 12px;
-  padding: 20px; background: var(--cinza-card);
+.toggle-switch-container:hover {
+  border-color: var(--amarelo-escuro);
 }
-.aposta-icon {
-  width: 44px; height: 44px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px;
+.toggle-switch-container.checked {
+  background: #FFF8E1;
+  border-color: var(--amarelo);
 }
-.aposta-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-.aposta-card p { font-size: 13px; color: var(--cinza-texto); line-height: 1.5; margin-bottom: 16px; }
-.aposta-btn {
-  display: inline-block; width: 100%; padding: 10px;
-  background: var(--azul); color: #fff; border: none; border-radius: 8px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
-  cursor: pointer; text-align: center; text-decoration: none; transition: background 0.15s;
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background-color: #CCC;
+  border-radius: 24px;
+  transition: .3s;
+  flex-shrink: 0;
 }
-.aposta-btn:hover:not(:disabled) { background: #002370; }
-.aposta-btn:disabled { background: #CCC; cursor: not-allowed; }
-.aposta-btn.secondary {
-  background: var(--cinza-card); color: var(--azul); border: 1px solid var(--azul);
+.toggle-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
 }
-.aposta-btn.secondary:hover:not(:disabled) { background: var(--azul-claro); }
-.aposta-status {
-  display: inline-flex; align-items: center; gap: 5px; font-size: 11px;
-  font-weight: 700; margin-bottom: 12px; padding: 3px 8px; border-radius: 4px;
+input:checked + .toggle-switch {
+  background-color: var(--amarelo-escuro);
 }
-.status-aberto { background: var(--verde-claro); color: var(--verde-escuro); }
-.status-fechado { background: #F0EDE6; color: var(--cinza-texto); }
-.status-em-breve { background: #FFF3CD; color: #856404; }
+input:checked + .toggle-switch::after {
+  transform: translateX(20px);
+}
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type=number] { -moz-appearance: textfield; }
-
-.cd-bloco { display: flex; flex-direction: column; align-items: center; }
-.cd-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; color: var(--amarelo); }
-.cd-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); margin-top: 2px; }
-.cd-sep { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: rgba(255,255,255,0.3); margin: 0 4px; }
-
+/* ── REGULAMENTO ── */
 .reg-section { margin-bottom: 28px; }
 .reg-section h3 {
   font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1.5px; color: var(--azul);
