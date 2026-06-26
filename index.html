@@ -1176,8 +1176,8 @@ function abrirFormularioApostas(fase, nome) {
        <div style="font-size:13px; font-weight:700; text-align:center; margin-bottom:12px; color:var(--azul);">Quem avança para a próxima fase?</div>
        <select id="bonus-adv-${j.n}" style="width:100%; padding:10px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:600; border-radius:6px; border:1px solid var(--cinza-borda); color:var(--texto);">
          <option value="">Obrigatório selecionar...</option>
-         <option value="1">${j.t1}</option>
-         <option value="2">${j.t2}</option>
+         <option value="${j.t1}">${j.t1}</option>
+         <option value="${j.t2}">${j.t2}</option>
        </select>
     </div>`;
   });
@@ -1246,7 +1246,7 @@ async function enviarPalpites() {
      if (usaBonusSeparado) {
         let selBonus = document.getElementById(`bonus-adv-${n}`).value;
         if (selBonus === '') { bonusPreenchido = false; }
-        payload.palpitesBonus.push({ n: n, adv: selBonus ? parseInt(selBonus) : 0 });
+        payload.palpitesBonus.push({ n: n, adv: selBonus });
      }
   }
 
@@ -1264,8 +1264,7 @@ async function enviarPalpites() {
      if (usaBonusSeparado) {
         txtComprovante += `\n*Avançam (Bônus Independente):*\n`;
         payload.palpitesBonus.forEach(b => {
-           let jInfo = JOGOS.find(x => x.n === b.n);
-           txtComprovante += `Jogo ${b.n}: ${b.adv === 1 ? jInfo.t1 : (b.adv === 2 ? jInfo.t2 : 'Erro')}\n`;
+           txtComprovante += `Jogo ${b.n}: ${b.adv || 'Erro'}\n`;
         });
      }
 
