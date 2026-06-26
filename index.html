@@ -1698,12 +1698,13 @@ function checkEmpate(n, t1, t2) {
   let g1 = document.getElementById(`g1-${n}`).value;
   let g2 = document.getElementById(`g2-${n}`).value;
   let divEmpate = document.getElementById(`empate-${n}`);
+  let usaBonusSeparado = document.getElementById('toggle-bonus').checked;
 
-  if (g1 !== '' && g2 !== '' && g1 === g2) {
+  if (g1 !== '' && g2 !== '' && g1 === g2 && !usaBonusSeparado) {
      divEmpate.style.display = 'block';
   } else {
      divEmpate.style.display = 'none';
-     document.getElementById(`pen-${n}`).value = ''; // Limpa a selecao de penaltis se mudar o placar
+     document.getElementById(`pen-${n}`).value = ''; // Limpa a seleção se mudar o placar ou ativar o bônus
   }
 }
 
@@ -1720,8 +1721,16 @@ function toggleApostaBonus() {
      container.classList.remove('checked');
      painelAmarelo.style.display = 'none';
   }
-}
 
+  // Percorre os jogos da fase atual para mostrar ou esconder as caixas de pênaltis dinamicamente
+  let range = faseAtualAposta === '16avos-1' ? [73, 80] : [81, 88];
+  for (let n = range[0]; n <= range[1]; n++) {
+     let g1 = document.getElementById(`g1-${n}`);
+     if (g1) {
+         checkEmpate(n, null, null);
+     }
+  }
+}
 async function enviarPalpites() {
   let btn = document.getElementById('btn-enviar-palpites');
   btn.textContent = 'A gravar... aguarde ⏳';
@@ -2135,7 +2144,6 @@ async function carregarClassificacao() {
     return;
   }
 
-  // NOVO: Vai buscar os palpites do JSON em segundo plano para o cálculo local de invertidos
   var dadosGrupos = await carregarDadosGrupos();
   var mapaPalpites = {};
   if (dadosGrupos && dadosGrupos.participantes) {
@@ -2146,26 +2154,38 @@ async function carregarClassificacao() {
 
   document.getElementById('stat-participantes').textContent = dados.total;
   
-  // Não usa o sortParticipants aqui para manter a ordem e rank originais das IAs
-  var parts = dados.participantes;
+  // 1. Separar Humanos e IAs
+  var humanos = dados.participantes.filter(p => !isIA(p.nome));
+  var ias = dados.participantes.filter(p => isIA(p.nome));
+  
+  // 2. Recalcular as posições reais apenas para os humanos (Garante o pódio correto)
+  var posReal = 1;
+  for (var i = 0; i < humanos.length; i++) {
+    // Se não for o primeiro da lista e tiver menos pontos que o anterior, a posição cai
+    if (i > 0 && Number(humanos[i].pts) < Number(humanos[i-1].pts)) {
+       posReal = i + 1;
+    }
+    humanos[i].posFormatada = posReal;
+  }
+  
+  // 3. IAs recebem um traço como posição
+  ias.forEach(ia => ia.posFormatada = '-');
+  
+  // 4. Junta tudo (Humanos primeiro, IAs depois)
+  var parts = humanos.concat(ias);
 
   tbody.innerHTML = parts.map(function(p) {
-    var posClass = p.pos === 1 ? 'pos-1' : p.pos === 2 ? 'pos-2' : p.pos === 3 ? 'pos-3' : 'pos-other';
     var isIA_part = isIA(p.nome);
     var nomeBase = abrevNome(p.nome);
     var nomeDisplay = isIA_part ? nomeBase + ' 🤖' : nomeBase;
     
-    // IAs mantêm o ranking visual e a medalha
-    var rankDisplay = p.pos + 'º';
-    var badgeClass = posClass;
+    // Tratamento da exibição do Ranking
+    var rankDisplay = p.posFormatada !== '-' ? p.posFormatada + 'º' : '🤖';
+    var posClass = p.posFormatada === 1 ? 'pos-1' : p.posFormatada === 2 ? 'pos-2' : p.posFormatada === 3 ? 'pos-3' : 'pos-other';
     
-    // Tratamento para esconder o erro #REF! do Excel caso ocorra novamente
     var pontosExibicao = (String(p.pts).includes('#REF')) ? '0' : p.pts;
     
-    // --- CÁLCULO LOCAL DE PLACARES INVERTIDOS ---
     var countInvertidos = 0;
-    
-    // Procura os palpites deste participante (tenta nome exato ou nome abreviado caso haja diferenças)
     var pPalpites = mapaPalpites[p.nome];
     if (!pPalpites) {
        let keyEncontrada = Object.keys(mapaPalpites).find(k => abrevNome(k) === nomeBase);
@@ -2186,19 +2206,17 @@ async function carregarClassificacao() {
     }
     
     var invertidosExibicao = countInvertidos > 0 ? countInvertidos : '-';
-    // ---------------------------------------------
 
     return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
-      '<td><span class="pos-badge ' + badgeClass + '">' + rankDisplay + '</span></td>' +
+      '<td><span class="pos-badge ' + posClass + '">' + rankDisplay + '</span></td>' +
       '<td class="participant-name">' + nomeDisplay + '</td>' +
-      '<td class="pts' + (p.pos <= 3 ? ' pts-destaque' : '') + '">' + pontosExibicao + '</td>' +
+      '<td class="pts' + (p.posFormatada <= 3 && !isIA_part ? ' pts-destaque' : '') + '">' + pontosExibicao + '</td>' +
       '<td style="text-align:center">' + p.cravadas + '</td>' +
       '<td style="text-align:center">' + p.palpites + '</td>' +
       '<td style="text-align:center; color:#C0392B; font-weight:600;">' + invertidosExibicao + '</td>' +
       '</tr>';
   }).join('');
 }
-
 async function carregarTesouraria() {
   var tbody     = document.getElementById('tesouraria-tbody');
   var tPagos    = document.getElementById('t-pagos');
