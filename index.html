@@ -2158,20 +2158,33 @@ async function carregarClassificacao() {
   var humanos = dados.participantes.filter(p => !isIA(p.nome));
   var ias = dados.participantes.filter(p => isIA(p.nome));
   
-  // 2. Recalcular as posições reais apenas para os humanos (Garante o pódio correto)
+  // 2. Ordenar explícitamente usando os Critérios de Desempate (Pts > Cravadas > Palpites)
+  humanos.sort(function(a, b) {
+     if (Number(b.pts) !== Number(a.pts)) return Number(b.pts) - Number(a.pts);
+     if (Number(b.cravadas) !== Number(a.cravadas)) return Number(b.cravadas) - Number(a.cravadas);
+     return Number(b.palpites) - Number(a.palpites);
+  });
+  
+  // 3. Recalcular as posições reais apenas para os humanos (Garante o pódio e desempates)
   var posReal = 1;
   for (var i = 0; i < humanos.length; i++) {
-    // Se não for o primeiro da lista e tiver menos pontos que o anterior, a posição cai
-    if (i > 0 && Number(humanos[i].pts) < Number(humanos[i-1].pts)) {
-       posReal = i + 1;
+    if (i > 0) {
+       var prev = humanos[i-1];
+       var curr = humanos[i];
+       // A posição só cai se houver derrota em QUALQUER um dos 3 critérios
+       if (Number(curr.pts) < Number(prev.pts) || 
+           Number(curr.cravadas) < Number(prev.cravadas) || 
+           Number(curr.palpites) < Number(prev.palpites)) {
+           posReal = i + 1;
+       }
     }
     humanos[i].posFormatada = posReal;
   }
   
-  // 3. IAs recebem um traço como posição
+  // 4. IAs recebem um traço como posição
   ias.forEach(ia => ia.posFormatada = '-');
   
-  // 4. Junta tudo (Humanos primeiro, IAs depois)
+  // 5. Junta tudo (Humanos primeiro, IAs depois)
   var parts = humanos.concat(ias);
 
   tbody.innerHTML = parts.map(function(p) {
@@ -2185,6 +2198,7 @@ async function carregarClassificacao() {
     
     var pontosExibicao = (String(p.pts).includes('#REF')) ? '0' : p.pts;
     
+    // --- LÓGICA DE INVERTIDOS ---
     var countInvertidos = 0;
     var pPalpites = mapaPalpites[p.nome];
     if (!pPalpites) {
@@ -2206,6 +2220,7 @@ async function carregarClassificacao() {
     }
     
     var invertidosExibicao = countInvertidos > 0 ? countInvertidos : '-';
+    // ---------------------------------------------
 
     return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
       '<td><span class="pos-badge ' + posClass + '">' + rankDisplay + '</span></td>' +
