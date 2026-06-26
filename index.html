@@ -360,6 +360,7 @@ footer strong { color: #fff; font-weight: 600; }
   nav a { font-size: 10px; padding: 5px 7px; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -431,9 +432,15 @@ footer strong { color: #fff; font-weight: 600; }
           <button class="aposta-btn" style="background:var(--amarelo); color:var(--azul); margin-top:16px; max-width: 200px;" onclick="showPage('apostas')">Ir para Apostas →</button>
         </div>
 
-        <div class="section-title">Classificação</div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+          <div class="section-title" style="margin-bottom:0">Classificação</div>
+          <button onclick="downloadClassificacao()" title="Baixar como imagem"
+            style="display:flex;align-items:center;gap:5px;padding:5px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">
+            📷 Baixar
+          </button>
+        </div>
         <p class="section-sub">Atualizada após cada rodada de jogos</p>
-        <div class="card" style="overflow-x: auto; margin-bottom: 24px;">
+        <div class="card" id="card-classificacao" style="overflow-x: auto; margin-bottom: 24px;">
           <table class="rank-table" style="min-width: 480px;">
             <thead>
               <tr>
@@ -1176,8 +1183,8 @@ function abrirFormularioApostas(fase, nome) {
        <div style="font-size:13px; font-weight:700; text-align:center; margin-bottom:12px; color:var(--azul);">Quem avança para a próxima fase?</div>
        <select id="bonus-adv-${j.n}" style="width:100%; padding:10px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:600; border-radius:6px; border:1px solid var(--cinza-borda); color:var(--texto);">
          <option value="">Obrigatório selecionar...</option>
-         <option value="${j.t1}">${j.t1}</option>
-         <option value="${j.t2}">${j.t2}</option>
+         <option value="1">${j.t1}</option>
+         <option value="2">${j.t2}</option>
        </select>
     </div>`;
   });
@@ -1246,7 +1253,7 @@ async function enviarPalpites() {
      if (usaBonusSeparado) {
         let selBonus = document.getElementById(`bonus-adv-${n}`).value;
         if (selBonus === '') { bonusPreenchido = false; }
-        payload.palpitesBonus.push({ n: n, adv: selBonus });
+        payload.palpitesBonus.push({ n: n, adv: selBonus ? parseInt(selBonus) : 0 });
      }
   }
 
@@ -1264,7 +1271,8 @@ async function enviarPalpites() {
      if (usaBonusSeparado) {
         txtComprovante += `\n*Avançam (Bônus Independente):*\n`;
         payload.palpitesBonus.forEach(b => {
-           txtComprovante += `Jogo ${b.n}: ${b.adv || 'Erro'}\n`;
+           let jInfo = JOGOS.find(x => x.n === b.n);
+           txtComprovante += `Jogo ${b.n}: ${b.adv === 1 ? jInfo.t1 : (b.adv === 2 ? jInfo.t2 : 'Erro')}\n`;
         });
      }
 
@@ -2160,6 +2168,52 @@ setInterval(function() {
   }
   atualizar(); setInterval(atualizar, 1000);
 })();
+
+// ── Download classificação como JPEG ──────────────────────────
+function downloadClassificacao() {
+  var btn = document.querySelector('[onclick="downloadClassificacao()"]');
+  var card = document.getElementById('card-classificacao');
+  if (!card) return;
+
+  // Temporarily hide button during capture
+  if (btn) btn.style.display = 'none';
+
+  // Wrap card in a styled container for the screenshot
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'background:#F4F3EF;padding:20px;display:inline-block;min-width:500px;';
+
+  // Add header
+  var header = document.createElement('div');
+  header.style.cssText = 'text-align:center;margin-bottom:14px;';
+  header.innerHTML = '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#003087;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+    '<div style="font-size:12px;color:#6B6860;margin-top:2px;">🏆 Classificação · ' + new Date().toLocaleDateString("pt-BR") + '</div>';
+
+  var clone = card.cloneNode(true);
+  clone.style.overflow = 'visible';
+  clone.style.marginBottom = '0';
+
+  wrapper.appendChild(header);
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
+  html2canvas(wrapper, {
+    scale: 2,
+    backgroundColor: '#F4F3EF',
+    useCORS: true,
+    logging: false
+  }).then(function(canvas) {
+    var link = document.createElement('a');
+    link.download = 'classificacao-bolao-' + new Date().toISOString().slice(0,10) + '.jpg';
+    link.href = canvas.toDataURL('image/jpeg', 0.95);
+    link.click();
+    document.body.removeChild(wrapper);
+    if (btn) btn.style.display = 'flex';
+  }).catch(function() {
+    document.body.removeChild(wrapper);
+    if (btn) btn.style.display = 'flex';
+  });
+}
+
 </script>
 </body>
 </html>
