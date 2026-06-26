@@ -43,6 +43,7 @@ body {
   min-height: 100vh;
 }
 
+/* */
 header {
   background: var(--azul);
   position: sticky; top: 0; z-index: 100;
@@ -202,6 +203,7 @@ nav a.active { color: var(--amarelo); }
 .submenu-content { display: none; }
 .submenu-content.active { display: block; }
 
+/* */
 .bracket-wrapper {
   display: flex; justify-content: flex-start; align-items: center; gap: 16px;
   overflow-x: auto; padding: 10px 0 20px; scrollbar-width: thin;
@@ -221,55 +223,76 @@ nav a.active { color: var(--amarelo); }
 .bk-match-num {
   font-size: 10px; font-weight: 600; color: var(--cinza-texto); margin-bottom: 2px;
   border-bottom: 1px solid #f0f0f0; padding-bottom: 4px; display: flex; justify-content: space-between;
-input[type=number] {
-  -moz-appearance: textfield;
 }
+.bk-team { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 2px 0; }
+.bk-team-name {
+  display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 105px;
+}
+.bk-team-score { font-weight: 700; background: #FAFAF7; padding: 2px 6px; border-radius: 4px; font-size: 11px; color: var(--azul); }
+.bracket-center { display: flex; flex-direction: column; justify-content: center; gap: 20px; min-width: 160px; margin: 0 10px; }
+.bk-final-match { border: 2px solid var(--amarelo); background: #FFFdf0; }
+
+.apostas-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 16px;
+}
+.aposta-card {
+  border: 1px solid var(--cinza-borda); border-radius: 12px;
+  padding: 20px; background: var(--cinza-card);
+}
+.aposta-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px;
+}
+.aposta-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.aposta-card p { font-size: 13px; color: var(--cinza-texto); line-height: 1.5; margin-bottom: 16px; }
+.aposta-btn {
+  display: inline-block; width: 100%; padding: 10px;
+  background: var(--azul); color: #fff; border: none; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; text-align: center; text-decoration: none; transition: background 0.15s;
+}
+.aposta-btn:hover:not(:disabled) { background: #002370; }
+.aposta-btn:disabled { background: #CCC; cursor: not-allowed; }
+.aposta-btn.secondary {
+  background: var(--cinza-card); color: var(--azul); border: 1px solid var(--azul);
+}
+.aposta-btn.secondary:hover:not(:disabled) { background: var(--azul-claro); }
+.aposta-status {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 11px;
+  font-weight: 700; margin-bottom: 12px; padding: 3px 8px; border-radius: 4px;
+}
+.status-aberto { background: var(--verde-claro); color: var(--verde-escuro); }
+.status-fechado { background: #F0EDE6; color: var(--cinza-texto); }
+.status-em-breve { background: #FFF3CD; color: #856404; }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* ── COUNTDOWN ── */
+.cd-bloco { display: flex; flex-direction: column; align-items: center; }
+.cd-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; color: var(--amarelo); }
+.cd-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.cd-sep { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: rgba(255,255,255,0.3); margin: 0 4px; }
 
 /* ── TOGGLE SWITCH BÔNUS ── */
 .toggle-switch-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  background: #FAFAF7;
-  padding: 16px;
-  border-radius: 8px;
-  border: 2px solid var(--cinza-borda);
-  transition: all 0.2s;
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+  background: #FAFAF7; padding: 16px; border-radius: 8px;
+  border: 2px solid var(--cinza-borda); transition: all 0.2s;
 }
-.toggle-switch-container:hover {
-  border-color: var(--amarelo-escuro);
-}
-.toggle-switch-container.checked {
-  background: #FFF8E1;
-  border-color: var(--amarelo);
-}
+.toggle-switch-container:hover { border-color: var(--amarelo-escuro); }
+.toggle-switch-container.checked { background: #FFF8E1; border-color: var(--amarelo); }
 .toggle-switch {
-  position: relative;
-  width: 44px;
-  height: 24px;
-  background-color: #CCC;
-  border-radius: 24px;
-  transition: .3s;
-  flex-shrink: 0;
+  position: relative; width: 44px; height: 24px;
+  background-color: #CCC; border-radius: 24px; transition: .3s; flex-shrink: 0;
 }
 .toggle-switch::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  background-color: white;
-  border-radius: 50%;
-  transition: .3s;
+  content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+  background-color: white; border-radius: 50%; transition: .3s;
 }
-input:checked + .toggle-switch {
-  background-color: var(--amarelo-escuro);
-}
-input:checked + .toggle-switch::after {
-  transform: translateX(20px);
-}
+input:checked + .toggle-switch { background-color: var(--amarelo-escuro); }
+input:checked + .toggle-switch::after { transform: translateX(20px); }
 
 /* ── REGULAMENTO ── */
 .reg-section { margin-bottom: 28px; }
@@ -299,6 +322,7 @@ footer {
 }
 footer strong { color: #fff; font-weight: 600; }
 
+/* */
 @media (max-width: 900px) {
   .container { padding: 28px 20px; }
   .jogos-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
@@ -359,7 +383,7 @@ footer strong { color: #fff; font-weight: 600; }
 <div id="modal-alerta" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(3px);">
    <div class="card" style="width:100%; max-width:320px; padding:24px; text-align:center;">
       <div id="alerta-texto" style="font-size:15px; margin-bottom:20px; color:var(--texto); line-height: 1.5;"></div>
-      <button onclick="document.getElementById('modal-alerta').style.display='none';" class="aposta-btn">OK</button>
+      <button onclick="fecharAlerta()" class="aposta-btn">OK</button>
    </div>
 </div>
 
@@ -862,6 +886,7 @@ function padronizarArtilheiro(nome) {
   return nome;
 }
 
+/* */
 function getGameDate(d, h) {
   const meses = {"jan":0,"fev":1,"mar":2,"abr":3,"mai":4,"jun":5,"jul":6,"ago":7,"set":8,"out":9,"nov":10,"dez":11};
   const p = d.toLowerCase().split('/');
@@ -1015,6 +1040,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyI7NIIAttmJyFZ
 var _dadosGrupos = null, _dadosPalpites = null, _dadosBonus = null, _dadosClassif = null;
 let faseAtualAposta = '', usuarioAtualAposta = '';
 
+/* */
 function showPage(id) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
@@ -1107,6 +1133,7 @@ function fazerLogin() {
 
 function fecharLogin() { document.getElementById('modal-login').style.display = 'none'; }
 
+/* */
 function abrirFormularioApostas(fase, nome) {
   usuarioAtualAposta = nome;
   document.getElementById('form-usuario').textContent = nome;
@@ -1243,12 +1270,13 @@ async function enviarPalpites() {
      }
 
      setTimeout(() => {
-        let htmlComprovante = `✅ <strong>Palpites Salvos com Sucesso!</strong><br><br><textarea id="txt-comprovante" style="width:100%; height:150px; font-size:12px; font-family:monospace; padding:8px; margin-bottom:12px;" readonly>${txtComprovante}</textarea><button onclick="navigator.clipboard.writeText(document.getElementById('txt-comprovante').value).then(()=>alert('Copiado para o WhatsApp!'))" class="aposta-btn secondary" style="margin-bottom:10px;">📋 Copiar Comprovante</button>`;
+        let htmlComprovante = `✅ <strong>Palpites Salvos com Sucesso!</strong><br><br><textarea id="txt-comprovante" style="width:100%; height:150px; font-size:12px; font-family:monospace; padding:8px; margin-bottom:12px;" readonly>${txtComprovante}</textarea><button onclick="navigator.clipboard.writeText(document.getElementById('txt-comprovante').value).then(()=> { this.innerText = '✅ Copiado!'; setTimeout(() => this.innerText = '📋 Copiar Comprovante', 2000); })" class="aposta-btn secondary" style="margin-bottom:10px;">📋 Copiar Comprovante</button>`;
         mostrarAlerta(htmlComprovante); showPage('apostas'); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
      }, 1000);
   } catch(e) { mostrarAlerta("⚠️ Erro ao gravar. Verifique a sua internet e tente novamente."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; }
 }
 
+/* */
 async function fetchAPI(tipo) {
   try {
     const res = await fetch(APPS_SCRIPT_URL + '?tipo=' + tipo + '&_t=' + new Date().getTime(), { cache: 'no-store' });
@@ -1327,7 +1355,6 @@ async function carregarArtilhariaDoGoogleSheets() {
 
         html += `<tr><td style="text-align:center; color:var(--cinza-texto); font-size:12px;">${count+1}</td><td style="font-weight:600;">${jogador}</td><td style="text-align:center; font-size:13px;">${flag(selecaoStr)} ${selecaoStr}</td><td style="text-align:center; font-weight:700; color:var(--verde-escuro);">${gols}</td></tr>`;
         
-        // Populate Top 5 sidebar
         if (count < 5) {
            top5Html += `
              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f0f0f0;">
@@ -1428,6 +1455,7 @@ async function carregarClassificacao() {
   }).join('');
 }
 
+/* */
 function renderJogos(filtro) {
   const grid = document.getElementById('jogos-grid');
   if(!grid) return;
@@ -1676,6 +1704,7 @@ function renderGrupos() {
   container.innerHTML = html;
 }
 
+/* */
 function showPalpitesTab(tab) {
   var cGeral = document.getElementById('palpites-geral-content'), cDia = document.getElementById('palpites-dia-content');
   var btnGeral = document.getElementById('tab-palpites-geral'), btnDia = document.getElementById('tab-palpites-dia');
@@ -1857,7 +1886,6 @@ async function carregarTesouraria() {
   tPagos.textContent = pagos; tPend.textContent = pendentes;
   var totalPagantes = pagos + parciais;
   var arrecadado = totalPagantes * 50;
-  var p1 = Math.floor(arrecadado * 0.70), p2 = Math.floor(arrecadado * 0.20), p3 = arrecadado - p1 - p2;
   function fmt(v) { return 'R$ ' + v.toLocaleString('pt-BR'); }
   if (document.getElementById('t-total')) document.getElementById('t-total').textContent = fmt(arrecadado);
 }
@@ -1930,6 +1958,102 @@ async function renderEstatisticas() {
     htmlParts += `<tr style="${isIA_part ? 'background:#F0F4FF;' : ''}"><td class="participant-name" style="white-space:nowrap;">${isIA_part ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)}</td><td style="text-align:center;">${pEmpD}%</td><td style="text-align:center;">${pNEmpD}%</td><td style="text-align:center; background:rgba(255,248,225,0.3);">${empCorretos}/${empFeitos} <span style="font-size:10px; color:var(--cinza-texto);">(${aEmp}%)</span></td><td style="text-align:center; background:rgba(255,248,225,0.3);">${nEmpCorretos}/${nEmpFeitos} <span style="font-size:10px; color:var(--cinza-texto);">(${aNEmp}%)</span></td><td style="text-align:center; background:rgba(253,232,240,0.3);">${rEmp}</td><td style="text-align:center; background:rgba(253,232,240,0.3);">${rNEmp}</td><td style="text-align:center; ${ousadiaColor}">${ousadia}%</td></tr>`;
   });
   container1.innerHTML = htmlParts === '' ? '<tr><td colspan="8" style="text-align:center;">Sem dados.</td></tr>' : htmlParts;
+}
+
+async function carregarDadosGrupos() {
+  if (_dadosGrupos) return _dadosGrupos;
+  try {
+    const res = await fetch("https://bolao26copa.github.io/copa-do-mundo/dados_grupos.json?_t=" + new Date().getTime(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    _dadosGrupos = await res.json();
+    if (_dadosGrupos && _dadosGrupos.classificados) {
+      _dadosGrupos.classificados.forEach(p => {
+        if (p.classificados && Array.isArray(p.classificados)) {
+          let arr = [];
+          for (let i = 0; i < p.classificados.length; i++) {
+            let t = p.classificados[i] ? p.classificados[i].trim() : '';
+            if (t === "Congo" && i + 1 < p.classificados.length && p.classificados[i+1] && p.classificados[i+1].trim() === "RD") {
+              arr.push("RD Congo"); i++; 
+            } else if (t === "RD" && arr.length > 0 && arr[arr.length - 1] === "Congo") {
+              arr[arr.length - 1] = "RD Congo";
+            } else { arr.push(t); }
+          }
+          p.classificados = arr;
+        }
+      });
+    }
+    return _dadosGrupos;
+  } catch(e) { return null; }
+}
+
+async function carregarBonus() {
+  if (!_dadosBonus) {
+    var dados = await carregarDadosGrupos();
+    if (dados) _dadosBonus = { bonus: sortParticipants(dados.bonus) };
+  }
+  if (!_dadosBonus || !_dadosBonus.bonus) return;
+  var tbody = document.getElementById('bonus-fixos-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = _dadosBonus.bonus.map(function(p) {
+    var isIA_part = isIA(p.nome);
+    return `<tr ${isIA_part ? 'style="background:#F0F4FF"' : ''}><td class="participant-name">${isIA_part ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)}</td><td style="text-align:center">${p.campeao}</td><td style="text-align:center">${p.vice}</td><td style="text-align:center">${p.terceiro}</td><td style="text-align:center">${padronizarArtilheiro(p.artilheiro)}</td></tr>`;
+  }).join('');
+}
+
+async function carregarClassificadosBonus() {
+  if (!_dadosClassif) {
+    var dados = await carregarDadosGrupos();
+    if (dados) _dadosClassif = { classificados: sortParticipants(dados.classificados) };
+  }
+  if (!_dadosClassif || !_dadosClassif.classificados) return;
+  var sel = document.getElementById('filtro-bonus-part');
+  if (sel && sel.options.length === 1) {
+    _dadosClassif.classificados.forEach(function(p) { sel.appendChild(new Option(isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome), p.nome)); });
+  }
+  renderClassificadosParticipante();
+}
+
+function renderClassificadosParticipante() {
+  var container = document.getElementById('bonus-classificados-container'), sel = document.getElementById('filtro-bonus-part');
+  if (!container || !_dadosClassif) return;
+  var filtro = sel ? sel.value : 'todos', lista = filtro === 'todos' ? _dadosClassif.classificados : _dadosClassif.classificados.filter(p => p.nome === filtro);
+
+  if (filtro === 'todos') {
+    var maxLen = Math.max.apply(null, lista.map(p => p.classificados.length));
+    var tbl = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:500px;"><thead><tr><th>#</th>';
+    lista.forEach(p => { tbl += '<th style="font-size:11px;text-align:center">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>'; });
+    tbl += '</tr></thead><tbody>';
+    for (var i = 0; i < maxLen; i++) {
+      tbl += `<tr><td style="color:var(--cinza-texto);font-size:12px">${i+1}</td>`;
+      lista.forEach(p => {
+        let selecaoStr = p.classificados[i] || '—', sLower = selecaoStr.toLowerCase();
+        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
+        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
+        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
+        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
+        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
+        else if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) selecaoStr = 'Curaçao';
+        let cellContent = selecaoStr === '—' ? '—' : `<div style="display:flex;align-items:center;justify-content:center;gap:4px;">${flag(selecaoStr)}<span>${selecaoStr}</span></div>`;
+        tbl += `<td style="text-align:center;font-size:12px;${isIA(p.nome) ? 'background:#F0F4FF;' : ''}">${cellContent}</td>`;
+      });
+      tbl += '</tr>';
+    }
+    container.innerHTML = tbl + '</tbody></table></div>';
+  } else {
+    var p = lista[0];
+    if (!p) { container.innerHTML = '<p style="color:var(--cinza-texto)">Sem dados.</p>'; return; }
+    container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + ' — ' + p.classificados.length + ' seleções apostadas</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+      p.classificados.map((s, i) => {
+        let selecaoStr = s, sLower = selecaoStr.toLowerCase();
+        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
+        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
+        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
+        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
+        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
+        else if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) selecaoStr = 'Curaçao';
+        return `<span style="font-size:12px;padding:4px 10px;background:#F4F3EF;border-radius:6px;border:1px solid var(--cinza-borda);display:inline-flex;align-items:center;gap:4px;"><strong>${i+1}.</strong> ${flag(selecaoStr)}${selecaoStr}</span>`;
+      }).join('') + '</div>';
+  }
 }
 
 async function inicializarDados() {
@@ -2005,7 +2129,7 @@ setInterval(function() {
 
     const btn16Avos1 = document.getElementById('btn-aposta-16avos1'), card16Avos1 = document.getElementById('card-aposta-16avos1');
     if (btn16Avos1 && card16Avos1) {
-        if (agora < getGameDate('28/jun', '16h00')) {
+        if (agora < getGameDate('28/jun', '15h59')) {
             card16Avos1.style.opacity = '1'; card16Avos1.style.borderTop = '3px solid var(--verde)';
             card16Avos1.querySelector('.aposta-icon').style.background = 'var(--verde-claro)'; card16Avos1.querySelector('.aposta-icon').textContent = '⚽';
             card16Avos1.querySelector('.aposta-status').className = 'aposta-status status-aberto'; card16Avos1.querySelector('.aposta-status').textContent = '● Aberto';
@@ -2020,12 +2144,12 @@ setInterval(function() {
 
     const btn16Avos2 = document.getElementById('btn-aposta-16avos2'), card16Avos2 = document.getElementById('card-aposta-16avos2');
     if (btn16Avos2 && card16Avos2) {
-        if (agora >= getGameDate('28/jun', '01h00') && agora < getGameDate('30/jun', '14h00')) {
+        if (agora >= getGameDate('28/jun', '01h00') && agora < getGameDate('30/jun', '13h59')) {
             card16Avos2.style.opacity = '1'; card16Avos2.style.borderTop = '3px solid var(--verde)';
             card16Avos2.querySelector('.aposta-icon').style.background = 'var(--verde-claro)'; card16Avos2.querySelector('.aposta-icon').textContent = '⚽';
             card16Avos2.querySelector('.aposta-status').className = 'aposta-status status-aberto'; card16Avos2.querySelector('.aposta-status').textContent = '● Aberto';
             btn16Avos2.className = 'aposta-btn'; btn16Avos2.textContent = 'Fazer Palpites →'; btn16Avos2.disabled = false;
-        } else if (agora >= getGameDate('30/jun', '14h00')) {
+        } else if (agora >= getGameDate('30/jun', '13h59')) {
             card16Avos2.style.opacity = '0.6'; card16Avos2.style.borderTop = '3px solid var(--cinza-texto)';
             card16Avos2.querySelector('.aposta-icon').style.background = '#F0EDE6'; card16Avos2.querySelector('.aposta-icon').textContent = '🔒';
             card16Avos2.querySelector('.aposta-status').className = 'aposta-status status-fechado'; card16Avos2.querySelector('.aposta-status').textContent = '● Encerrado';
