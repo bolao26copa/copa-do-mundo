@@ -432,15 +432,9 @@ footer strong { color: #fff; font-weight: 600; }
           <button class="aposta-btn" style="background:var(--amarelo); color:var(--azul); margin-top:16px; max-width: 200px;" onclick="showPage('apostas')">Ir para Apostas →</button>
         </div>
 
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
-          <div class="section-title" style="margin-bottom:0">Classificação</div>
-          <button onclick="downloadClassificacao()" title="Baixar como imagem"
-            style="display:flex;align-items:center;gap:5px;padding:5px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">
-            📷 Baixar
-          </button>
-        </div>
+        <div class="section-title">Classificação</div>
         <p class="section-sub">Atualizada após cada rodada de jogos</p>
-        <div class="card" id="card-classificacao" style="overflow-x: auto; margin-bottom: 24px;">
+        <div class="card" style="overflow-x: auto; margin-bottom: 24px;">
           <table class="rank-table" style="min-width: 480px;">
             <thead>
               <tr>
@@ -1171,8 +1165,8 @@ function abrirFormularioApostas(fase, nome) {
           <div style="font-size:12px; font-weight:700; color:#856404; margin-bottom:8px;">⚖️ Empate! Quem avança nos Pênaltis?</div>
           <select id="pen-${j.n}" style="width:100%; padding:8px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:600; border-radius:6px; border:1px solid #CCC; color:var(--azul);">
             <option value="">Selecione o vencedor...</option>
-            <option value="1">${j.t1}</option>
-            <option value="2">${j.t2}</option>
+            <option value="${j.t1}">${j.t1}</option>
+            <option value="${j.t2}">${j.t2}</option>
           </select>
        </div>
     </div>`;
@@ -1183,8 +1177,8 @@ function abrirFormularioApostas(fase, nome) {
        <div style="font-size:13px; font-weight:700; text-align:center; margin-bottom:12px; color:var(--azul);">Quem avança para a próxima fase?</div>
        <select id="bonus-adv-${j.n}" style="width:100%; padding:10px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:600; border-radius:6px; border:1px solid var(--cinza-borda); color:var(--texto);">
          <option value="">Obrigatório selecionar...</option>
-         <option value="1">${j.t1}</option>
-         <option value="2">${j.t2}</option>
+         <option value="${j.t1}">${j.t1}</option>
+         <option value="${j.t2}">${j.t2}</option>
        </select>
     </div>`;
   });
@@ -1247,13 +1241,13 @@ async function enviarPalpites() {
      if (g1 === g2) {
         let pen = document.getElementById(`pen-${n}`).value;
         if (pen === '' && !usaBonusSeparado) { tudoPreenchido = false; break; }
-        adv = parseInt(pen) || 0;
+        adv = pen || '';
      }
      payload.palpites.push({ n: n, p1: parseInt(g1), p2: parseInt(g2), adv: adv });
      if (usaBonusSeparado) {
         let selBonus = document.getElementById(`bonus-adv-${n}`).value;
         if (selBonus === '') { bonusPreenchido = false; }
-        payload.palpitesBonus.push({ n: n, adv: selBonus ? parseInt(selBonus) : 0 });
+        payload.palpitesBonus.push({ n: n, adv: selBonus || '' });
      }
   }
 
@@ -1262,7 +1256,7 @@ async function enviarPalpites() {
 
   try {
      await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
-     
+
      let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*\n👤 *${usuarioAtualAposta}*\n🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' : '16 Avos (Parte 2)'}*\n\n`;
      payload.palpites.forEach(p => {
         let adv = p.adv === 1 ? ' (Pênaltis: Casa)' : (p.adv === 2 ? ' (Pênaltis: Fora)' : '');
@@ -1271,14 +1265,14 @@ async function enviarPalpites() {
      if (usaBonusSeparado) {
         txtComprovante += `\n*Avançam (Bônus Independente):*\n`;
         payload.palpitesBonus.forEach(b => {
-           let jInfo = JOGOS.find(x => x.n === b.n);
-           txtComprovante += `Jogo ${b.n}: ${b.adv === 1 ? jInfo.t1 : (b.adv === 2 ? jInfo.t2 : 'Erro')}\n`;
+           txtComprovante += `Jogo ${b.n}: ${b.adv || 'Erro'}\n`;
         });
      }
 
      setTimeout(() => {
-        let htmlComprovante = `✅ <strong>Palpites Salvos com Sucesso!</strong><br><br><textarea id="txt-comprovante" style="width:100%; height:150px; font-size:12px; font-family:monospace; padding:8px; margin-bottom:12px;" readonly>${txtComprovante}</textarea><button onclick="navigator.clipboard.writeText(document.getElementById('txt-comprovante').value).then(()=> { this.innerText = '✅ Copiado!'; setTimeout(() => this.innerText = '📋 Copiar Comprovante', 2000); })" class="aposta-btn secondary" style="margin-bottom:10px;">📋 Copiar Comprovante</button>`;
-        mostrarAlerta(htmlComprovante); showPage('apostas'); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
+        // Gera extrato JPEG para o apostador
+        gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado);
+        showPage('apostas'); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
      }, 1000);
   } catch(e) { mostrarAlerta("⚠️ Erro ao gravar. Verifique a sua internet e tente novamente."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; }
 }
@@ -2169,48 +2163,111 @@ setInterval(function() {
   atualizar(); setInterval(atualizar, 1000);
 })();
 
-// ── Download classificação como JPEG ──────────────────────────
-function downloadClassificacao() {
-  var btn = document.querySelector('[onclick="downloadClassificacao()"]');
-  var card = document.getElementById('card-classificacao');
-  if (!card) return;
+// ── Gera extrato JPEG após aposta ─────────────────────────────
+function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
+  // Monta HTML do extrato
+  var faseLabel = payload.fase === '16avos-1' ? '16 Avos — Parte 1' :
+                  payload.fase === '16avos-2' ? '16 Avos — Parte 2' :
+                  payload.fase === 'oitavas'  ? 'Oitavas de Final' :
+                  payload.fase === 'quartas'  ? 'Quartas de Final' :
+                  payload.fase === 'semis'    ? 'Semifinais' : payload.fase;
 
-  // Temporarily hide button during capture
-  if (btn) btn.style.display = 'none';
+  var linhasPalpites = '';
+  payload.palpites.forEach(function(p) {
+    var jogo = JOGOS.find(function(x) { return x.n === p.n; });
+    var t1 = jogo ? jogo.t1 : 'Time 1';
+    var t2 = jogo ? jogo.t2 : 'Time 2';
+    var advTxt = '';
+    if (!usaBonusSeparado && p.adv) {
+      advTxt = '<span style="font-size:10px;color:#888;margin-left:6px;">Pêns: ' + p.adv + '</span>';
+    }
+    linhasPalpites += '<tr>' +
+      '<td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + p.n + '</td>' +
+      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t1 + '</td>' +
+      '<td style="padding:6px 10px;font-size:15px;font-weight:700;color:#003087;text-align:center">' + p.p1 + ' × ' + p.p2 + '</td>' +
+      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t2 + '</td>' +
+      '<td style="padding:6px 10px;font-size:12px;text-align:center">' + advTxt + '</td>' +
+    '</tr>';
+  });
 
-  // Wrap card in a styled container for the screenshot
-  var wrapper = document.createElement('div');
-  wrapper.style.cssText = 'background:#F4F3EF;padding:20px;display:inline-block;min-width:500px;';
+  var linhasBonus = '';
+  if (usaBonusSeparado && payload.palpitesBonus && payload.palpitesBonus.length > 0) {
+    linhasBonus = '<tr><td colspan="5" style="padding:8px 10px;background:#FFF8E1;font-size:12px;font-weight:700;color:#856404;border-top:2px solid #FFE082">🌟 BÔNUS INDEPENDENTE — Quem avança</td></tr>';
+    payload.palpitesBonus.forEach(function(b) {
+      var jogo = JOGOS.find(function(x) { return x.n === b.n; });
+      var t1 = jogo ? jogo.t1 : 'Time 1';
+      var t2 = jogo ? jogo.t2 : 'Time 2';
+      linhasBonus += '<tr style="background:#FFFDE7">' +
+        '<td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + b.n + '</td>' +
+        '<td colspan="3" style="padding:6px 10px;font-size:13px;color:#003087">' + t1 + ' × ' + t2 + '</td>' +
+        '<td style="padding:6px 10px;font-size:13px;font-weight:700;color:#856404;text-align:right">→ ' + (b.adv || '—') + '</td>' +
+      '</tr>';
+    });
+  }
 
-  // Add header
-  var header = document.createElement('div');
-  header.style.cssText = 'text-align:center;margin-bottom:14px;';
-  header.innerHTML = '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#003087;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-    '<div style="font-size:12px;color:#6B6860;margin-top:2px;">🏆 Classificação · ' + new Date().toLocaleDateString("pt-BR") + '</div>';
+  var agora = new Date();
+  var dataFmt = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
 
-  var clone = card.cloneNode(true);
-  clone.style.overflow = 'visible';
-  clone.style.marginBottom = '0';
+  var extratoHTML = '<div id="extrato-aposta" style="background:#fff;padding:0;width:480px;font-family:DM Sans,sans-serif;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);">' +
+    // Header
+    '<div style="background:#003087;padding:20px 24px 16px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">Extrato de Aposta</div>' +
+    '</div>' +
+    // Info participante
+    '<div style="background:#F0F4FF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;">' +
+      '<div>' +
+        '<div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Apostador</div>' +
+        '<div style="font-size:16px;font-weight:700;color:#003087">' + payload.usuario + '</div>' +
+      '</div>' +
+      '<div style="text-align:right">' +
+        '<div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Fase</div>' +
+        '<div style="font-size:14px;font-weight:700;color:#003087">' + faseLabel + '</div>' +
+      '</div>' +
+    '</div>' +
+    // Tabela palpites
+    '<table style="width:100%;border-collapse:collapse;">' +
+      '<thead>' +
+        '<tr style="background:#F4F3EF;">' +
+          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:left">JOGO</th>' +
+          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:left">CASA</th>' +
+          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:center">PLACAR</th>' +
+          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:left">FORA</th>' +
+          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600"></th>' +
+        '</tr>' +
+      '</thead>' +
+      '<tbody>' + linhasPalpites + linhasBonus + '</tbody>' +
+    '</table>' +
+    // Footer
+    '<div style="padding:12px 24px;background:#F4F3EF;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E8E6DF;">' +
+      '<div style="font-size:10px;color:#aaa;">italopsilva-law.github.io/bolao-copa-2026</div>' +
+      '<div style="font-size:10px;color:#aaa;">' + dataFmt + '</div>' +
+    '</div>' +
+  '</div>';
 
-  wrapper.appendChild(header);
-  wrapper.appendChild(clone);
-  document.body.appendChild(wrapper);
+  // Render off-screen
+  var container = document.createElement('div');
+  container.style.cssText = 'position:fixed;left:-9999px;top:0;';
+  container.innerHTML = extratoHTML;
+  document.body.appendChild(container);
 
-  html2canvas(wrapper, {
+  html2canvas(container.firstChild, {
     scale: 2,
-    backgroundColor: '#F4F3EF',
+    backgroundColor: '#ffffff',
     useCORS: true,
     logging: false
   }).then(function(canvas) {
     var link = document.createElement('a');
-    link.download = 'classificacao-bolao-' + new Date().toISOString().slice(0,10) + '.jpg';
+    link.download = 'extrato-' + payload.usuario.split(' ')[0].toLowerCase() + '-' + payload.fase + '.jpg';
     link.href = canvas.toDataURL('image/jpeg', 0.95);
     link.click();
-    document.body.removeChild(wrapper);
-    if (btn) btn.style.display = 'flex';
+    document.body.removeChild(container);
+
+    // Show simple success alert
+    mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong><br><br>📄 Seu extrato foi baixado automaticamente.<br><br><span style="font-size:12px;color:#888">Guarde o arquivo como comprovante da sua aposta.</span>');
   }).catch(function() {
-    document.body.removeChild(wrapper);
-    if (btn) btn.style.display = 'flex';
+    document.body.removeChild(container);
+    mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong>');
   });
 }
 
