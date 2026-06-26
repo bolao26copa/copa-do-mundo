@@ -2057,6 +2057,8 @@ function renderClassificadosParticipante() {
 }
 
 async function inicializarDados() {
+  // Adicionamos a linha abaixo para carregar os artilheiros logo na abertura do site
+  await carregarArtilhariaDoGoogleSheets(); 
   await carregarJogosDoGoogleSheets(); 
   await carregarClassificacao();
 }
