@@ -1237,11 +1237,18 @@ async function enviarPalpites() {
   for (let n = range[0]; n <= range[1]; n++) {
      let g1 = document.getElementById(`g1-${n}`).value, g2 = document.getElementById(`g2-${n}`).value;
      if (g1 === '' || g2 === '') { tudoPreenchido = false; break; }
-     let adv = 0; 
+     let adv = '';
+     let jogo = JOGOS.find(x => x.n === n);
      if (g1 === g2) {
+        // Empate: quem avança é definido pelos pênaltis
         let pen = document.getElementById(`pen-${n}`).value;
         if (pen === '' && !usaBonusSeparado) { tudoPreenchido = false; break; }
-        adv = pen || '';
+        adv = pen || ''; // já é nome do time (ex: "Paraguai")
+     } else {
+        // Resultado definido: quem marcou mais passa automaticamente
+        adv = parseInt(g1) > parseInt(g2)
+          ? (jogo ? jogo.t1 : '')
+          : (jogo ? jogo.t2 : '');
      }
      payload.palpites.push({ n: n, p1: parseInt(g1), p2: parseInt(g2), adv: adv });
      if (usaBonusSeparado) {
@@ -1259,7 +1266,7 @@ async function enviarPalpites() {
 
      let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*\n👤 *${usuarioAtualAposta}*\n🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' : '16 Avos (Parte 2)'}*\n\n`;
      payload.palpites.forEach(p => {
-        let adv = p.adv === 1 ? ' (Pênaltis: Casa)' : (p.adv === 2 ? ' (Pênaltis: Fora)' : '');
+        let adv = p.adv ? ' → ' + p.adv : '';
         txtComprovante += `Jogo ${p.n}: ${p.p1} x ${p.p2}${!usaBonusSeparado ? adv : ''}\n`;
      });
      if (usaBonusSeparado) {
@@ -2179,7 +2186,9 @@ function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
     var t2 = jogo ? jogo.t2 : 'Time 2';
     var advTxt = '';
     if (!usaBonusSeparado && p.adv) {
-      advTxt = '<span style="font-size:10px;color:#888;margin-left:6px;">Pêns: ' + p.adv + '</span>';
+      var isEmpate = p.p1 === p.p2;
+      var label = isEmpate ? 'Pêns' : 'Avança';
+      advTxt = '<span style="font-size:10px;background:#E8F5E9;color:#2E7D32;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:600;">' + label + ': ' + p.adv + '</span>';
     }
     linhasPalpites += '<tr>' +
       '<td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + p.n + '</td>' +
