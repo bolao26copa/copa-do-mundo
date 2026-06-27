@@ -485,6 +485,27 @@ footer strong { color: #fff; font-weight: 600; }
              <div style="text-align:center; padding:16px; color:var(--cinza-texto); font-size:13px;">⏳ Carregando...</div>
           </div>
         </div>
+
+        <!-- Card: Status apostas 16 avos parte 1 -->
+        <div class="card" id="card-status-16avos" style="padding:20px; margin-top:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:var(--azul);">
+              📋 Status 16 Avos — Parte 1
+            </div>
+            <button onclick="downloadStatusCard()" title="Baixar como imagem"
+              style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">
+              📷
+            </button>
+          </div>
+          <div id="status-16avos-lista" style="display:flex; flex-direction:column; gap:5px;">
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
+            <span id="status-16avos-contador" style="font-weight:700;color:var(--azul)">—/27</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -535,26 +556,6 @@ footer strong { color: #fff; font-weight: 600; }
             <h3 style="font-size:18px; margin-bottom:4px">Fase de Grupos + Bônus</h3>
             <p style="font-size:13px; color:var(--cinza-texto); margin:0">Apostas da primeira fase estão encerradas.</p>
           </div>
-        </div>
-      </div>
-
-      <!-- Card: Status apostas 16 avos parte 1 -->
-      <div class="card" id="card-status-16avos" style="padding:20px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-          <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul);">
-            📋 Status 16 Avos — Parte 1
-          </div>
-          <button onclick="downloadStatusCard()" title="Baixar como imagem"
-            style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">
-            📷
-          </button>
-        </div>
-        <div id="status-16avos-lista" style="display:flex; flex-direction:column; gap:6px;">
-          <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
-        </div>
-        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
-          <span style="color:var(--cinza-texto)">✅ = apostou · ⏳ = aguardando</span>
-          <span id="status-16avos-contador" style="font-weight:700;color:var(--azul)">—/27</span>
         </div>
       </div>
 
@@ -770,13 +771,7 @@ footer strong { color: #fff; font-weight: 600; }
         <button id="tab-classificados" onclick="showBonusInternalTab('classificados')" class="submenu-btn">🎯 Classificados da Fase de Grupos</button>
       </div>
       <div id="bonus-fixos">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
-          <button onclick="downloadBonusFixos()" title="Baixar como imagem"
-            style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
-            📷 Baixar
-          </button>
-        </div>
-        <div class="card" style="overflow-x:auto;" id="bonus-fixos-card">
+        <div class="card" style="overflow-x:auto;">
           <table class="rank-table" id="bonus-fixos-table">
             <thead><tr><th>Participante</th><th style="text-align:center">🥇 Campeão</th><th style="text-align:center">🥈 Vice</th><th style="text-align:center">🥉 3º Lugar</th><th style="text-align:center">⚽ Artilheiro</th></tr></thead>
             <tbody id="bonus-fixos-tbody"><tr><td colspan="5" style="text-align:center;padding:32px;color:var(--cinza-texto);">⏳ Carregando…</td></tr></tbody>
@@ -787,10 +782,6 @@ footer strong { color: #fff; font-weight: 600; }
         <div style="margin-bottom:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <label style="font-size:13px; font-weight:700; color:var(--azul);">Ver palpites de:</label>
           <select id="filtro-bonus-part" onchange="renderClassificadosParticipante()" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:7px 12px; border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; cursor:pointer;"><option value="todos">Todos</option></select>
-          <button onclick="downloadClassificadosBonus()" title="Baixar como imagem"
-            style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">
-            📷 Baixar
-          </button>
         </div>
         <div id="bonus-classificados-container" class="card" style="padding:20px; min-height:100px;">
           <div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Carregando…</div>
@@ -1270,15 +1261,11 @@ async function enviarPalpites() {
      let adv = '';
      let jogo = JOGOS.find(x => x.n === n);
      if (g1 === g2) {
-        // Empate: quem avança é definido pelos pênaltis
         let pen = document.getElementById(`pen-${n}`).value;
         if (pen === '' && !usaBonusSeparado) { tudoPreenchido = false; break; }
-        adv = pen || ''; // já é nome do time (ex: "Paraguai")
+        adv = pen || '';
      } else {
-        // Resultado definido: quem marcou mais passa automaticamente
-        adv = parseInt(g1) > parseInt(g2)
-          ? (jogo ? jogo.t1 : '')
-          : (jogo ? jogo.t2 : '');
+        adv = parseInt(g1) > parseInt(g2) ? (jogo ? jogo.t1 : '') : (jogo ? jogo.t2 : '');
      }
      payload.palpites.push({ n: n, p1: parseInt(g1), p2: parseInt(g2), adv: adv });
      if (usaBonusSeparado) {
@@ -1293,23 +1280,23 @@ async function enviarPalpites() {
 
   try {
      await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
-
+     
      let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*\n👤 *${usuarioAtualAposta}*\n🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' : '16 Avos (Parte 2)'}*\n\n`;
      payload.palpites.forEach(p => {
-        let adv = p.adv ? ' → ' + p.adv : '';
+        let adv = p.adv === 1 ? ' (Pênaltis: Casa)' : (p.adv === 2 ? ' (Pênaltis: Fora)' : '');
         txtComprovante += `Jogo ${p.n}: ${p.p1} x ${p.p2}${!usaBonusSeparado ? adv : ''}\n`;
      });
      if (usaBonusSeparado) {
         txtComprovante += `\n*Avançam (Bônus Independente):*\n`;
         payload.palpitesBonus.forEach(b => {
-           txtComprovante += `Jogo ${b.n}: ${b.adv || 'Erro'}\n`;
+           let jInfo = JOGOS.find(x => x.n === b.n);
+           txtComprovante += `Jogo ${b.n}: ${b.adv === 1 ? jInfo.t1 : (b.adv === 2 ? jInfo.t2 : 'Erro')}\n`;
         });
      }
 
      setTimeout(() => {
-        // Gera extrato JPEG para o apostador
-        gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado);
-        showPage('apostas'); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
+        let htmlComprovante = `✅ <strong>Palpites Salvos com Sucesso!</strong><br><br><textarea id="txt-comprovante" style="width:100%; height:150px; font-size:12px; font-family:monospace; padding:8px; margin-bottom:12px;" readonly>${txtComprovante}</textarea><button onclick="navigator.clipboard.writeText(document.getElementById('txt-comprovante').value).then(()=> { this.innerText = '✅ Copiado!'; setTimeout(() => this.innerText = '📋 Copiar Comprovante', 2000); })" class="aposta-btn secondary" style="margin-bottom:10px;">📋 Copiar Comprovante</button>`;
+        mostrarAlerta(htmlComprovante); showPage('apostas'); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
      }, 1000);
   } catch(e) { mostrarAlerta("⚠️ Erro ao gravar. Verifique a sua internet e tente novamente."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; }
 }
@@ -2051,58 +2038,28 @@ async function carregarClassificadosBonus() {
   renderClassificadosParticipante();
 }
 
-// Lista de eliminados da fase de grupos
-var ELIMINADOS_GRUPOS = [
-  'Tchéquia','Catar','Haiti','Turquia','Curaçao','Tunísia',
-  'Nova Zelândia','Uruguai','Arábia Saudita','Iraque','Jordânia','Panamá'
-];
-
-function normalizarSelecao(s) {
-  var sLower = s.toLowerCase();
-  if (sLower.includes('tcheca') || sLower.includes('czech')) return 'Tchéquia';
-  if (sLower.includes('bosnia') || sLower.includes('bósnia')) return 'Bósnia-Herz.';
-  if (sLower === 'usa' || sLower.includes('united states')) return 'Estados Unidos';
-  if (sLower.includes('korea')) return 'Coreia do Sul';
-  if (sLower === 'congo, rd' || sLower === 'congo rd') return 'RD Congo';
-  if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) return 'Curaçao';
-  return s;
-}
-
-function isEliminado(selecao) {
-  return ELIMINADOS_GRUPOS.some(function(e) {
-    return e.toLowerCase() === selecao.toLowerCase();
-  });
-}
-
 function renderClassificadosParticipante() {
-  var container = document.getElementById('bonus-classificados-container');
-  var sel = document.getElementById('filtro-bonus-part');
+  var container = document.getElementById('bonus-classificados-container'), sel = document.getElementById('filtro-bonus-part');
   if (!container || !_dadosClassif) return;
-  var filtro = sel ? sel.value : 'todos';
-  var lista = filtro === 'todos'
-    ? _dadosClassif.classificados
-    : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
+  var filtro = sel ? sel.value : 'todos', lista = filtro === 'todos' ? _dadosClassif.classificados : _dadosClassif.classificados.filter(p => p.nome === filtro);
 
   if (filtro === 'todos') {
-    var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
+    var maxLen = Math.max.apply(null, lista.map(p => p.classificados.length));
     var tbl = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:500px;"><thead><tr><th>#</th>';
-    lista.forEach(function(p) {
-      tbl += '<th style="font-size:11px;text-align:center">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>';
-    });
+    lista.forEach(p => { tbl += '<th style="font-size:11px;text-align:center">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>'; });
     tbl += '</tr></thead><tbody>';
     for (var i = 0; i < maxLen; i++) {
-      tbl += '<tr><td style="color:var(--cinza-texto);font-size:12px">' + (i+1) + '</td>';
-      lista.forEach(function(p) {
-        var selecaoStr = normalizarSelecao(p.classificados[i] || '—');
-        var eliminado  = selecaoStr !== '—' && isEliminado(selecaoStr);
-        var bgCell     = eliminado ? 'background:#FFEBEE;' : (isIA(p.nome) ? 'background:#F0F4FF;' : '');
-        var cellContent = selecaoStr === '—' ? '—'
-          : '<div style="display:flex;align-items:center;justify-content:center;gap:4px;' +
-            (eliminado ? 'opacity:0.6;text-decoration:line-through;' : '') + '">' +
-            flag(selecaoStr) + '<span>' + selecaoStr + '</span>' +
-            (eliminado ? '<span title="Eliminado" style="font-size:10px;">❌</span>' : '') +
-            '</div>';
-        tbl += '<td style="text-align:center;font-size:12px;' + bgCell + '">' + cellContent + '</td>';
+      tbl += `<tr><td style="color:var(--cinza-texto);font-size:12px">${i+1}</td>`;
+      lista.forEach(p => {
+        let selecaoStr = p.classificados[i] || '—', sLower = selecaoStr.toLowerCase();
+        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
+        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
+        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
+        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
+        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
+        else if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) selecaoStr = 'Curaçao';
+        let cellContent = selecaoStr === '—' ? '—' : `<div style="display:flex;align-items:center;justify-content:center;gap:4px;">${flag(selecaoStr)}<span>${selecaoStr}</span></div>`;
+        tbl += `<td style="text-align:center;font-size:12px;${isIA(p.nome) ? 'background:#F0F4FF;' : ''}">${cellContent}</td>`;
       });
       tbl += '</tr>';
     }
@@ -2110,19 +2067,17 @@ function renderClassificadosParticipante() {
   } else {
     var p = lista[0];
     if (!p) { container.innerHTML = '<p style="color:var(--cinza-texto)">Sem dados.</p>'; return; }
-    var chips = p.classificados.map(function(s, i) {
-      var selecaoStr = normalizarSelecao(s);
-      var eliminado  = isEliminado(selecaoStr);
-      var bg  = eliminado ? 'background:#FFEBEE;border-color:#FFCDD2;' : 'background:#F4F3EF;border:1px solid var(--cinza-borda);';
-      var txt = eliminado ? 'text-decoration:line-through;opacity:0.7;' : '';
-      return '<span style="font-size:12px;padding:4px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;' + bg + txt + '">' +
-        '<strong>' + (i+1) + '.</strong>' + flag(selecaoStr) + selecaoStr +
-        (eliminado ? ' ❌' : '') + '</span>';
-    }).join('');
-    container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' +
-      (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) +
-      ' — ' + p.classificados.length + ' seleções apostadas</div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + chips + '</div>';
+    container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + ' — ' + p.classificados.length + ' seleções apostadas</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+      p.classificados.map((s, i) => {
+        let selecaoStr = s, sLower = selecaoStr.toLowerCase();
+        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
+        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
+        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
+        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
+        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
+        else if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) selecaoStr = 'Curaçao';
+        return `<span style="font-size:12px;padding:4px 10px;background:#F4F3EF;border-radius:6px;border:1px solid var(--cinza-borda);display:inline-flex;align-items:center;gap:4px;"><strong>${i+1}.</strong> ${flag(selecaoStr)}${selecaoStr}</span>`;
+      }).join('') + '</div>';
   }
 }
 
@@ -2233,324 +2188,78 @@ setInterval(function() {
   atualizar(); setInterval(atualizar, 1000);
 })();
 
-// ── Gera extrato JPEG após aposta ─────────────────────────────
-function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
-  // Monta HTML do extrato
-  var faseLabel = payload.fase === '16avos-1' ? '16 Avos — Parte 1' :
-                  payload.fase === '16avos-2' ? '16 Avos — Parte 2' :
-                  payload.fase === 'oitavas'  ? 'Oitavas de Final' :
-                  payload.fase === 'quartas'  ? 'Quartas de Final' :
-                  payload.fase === 'semis'    ? 'Semifinais' : payload.fase;
+// ── Lista eliminados fase de grupos ──────────────────────────────
+var ELIMINADOS_GRUPOS = [
+  'Tchéquia','Catar','Haiti','Turquia','Curaçao','Tunísia',
+  'Nova Zelândia','Uruguai','Arábia Saudita','Iraque','Jordânia','Panamá'
+];
+var IAS_NOMES = ['Chat GPT','Claude AI','Google Gemini','Deepseek'];
 
-  var linhasPalpites = '';
-  payload.palpites.forEach(function(p) {
-    var jogo = JOGOS.find(function(x) { return x.n === p.n; });
-    var t1 = jogo ? jogo.t1 : 'Time 1';
-    var t2 = jogo ? jogo.t2 : 'Time 2';
-    var advTxt = '';
-    if (!usaBonusSeparado && p.adv) {
-      var isEmpate = p.p1 === p.p2;
-      var label = isEmpate ? 'Pêns' : 'Avança';
-      advTxt = '<span style="font-size:10px;background:#E8F5E9;color:#2E7D32;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:600;">' + label + ': ' + p.adv + '</span>';
-    }
-    linhasPalpites += '<tr>' +
-      '<td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + p.n + '</td>' +
-      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t1 + '</td>' +
-      '<td style="padding:6px 10px;font-size:15px;font-weight:700;color:#003087;text-align:center">' + p.p1 + ' × ' + p.p2 + '</td>' +
-      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t2 + '</td>' +
-      '<td style="padding:6px 10px;font-size:12px;text-align:center">' + advTxt + '</td>' +
-    '</tr>';
-  });
-
-  var linhasBonus = '';
-  if (usaBonusSeparado && payload.palpitesBonus && payload.palpitesBonus.length > 0) {
-    linhasBonus = '<tr><td colspan="5" style="padding:8px 10px;background:#FFF8E1;font-size:12px;font-weight:700;color:#856404;border-top:2px solid #FFE082">🌟 BÔNUS INDEPENDENTE — Quem avança</td></tr>';
-    payload.palpitesBonus.forEach(function(b) {
-      var jogo = JOGOS.find(function(x) { return x.n === b.n; });
-      var t1 = jogo ? jogo.t1 : 'Time 1';
-      var t2 = jogo ? jogo.t2 : 'Time 2';
-      linhasBonus += '<tr style="background:#FFFDE7">' +
-        '<td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + b.n + '</td>' +
-        '<td colspan="3" style="padding:6px 10px;font-size:13px;color:#003087">' + t1 + ' × ' + t2 + '</td>' +
-        '<td style="padding:6px 10px;font-size:13px;font-weight:700;color:#856404;text-align:right">→ ' + (b.adv || '—') + '</td>' +
-      '</tr>';
-    });
-  }
-
-  var agora = new Date();
-  var dataFmt = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
-
-  var extratoHTML = '<div id="extrato-aposta" style="background:#fff;padding:0;width:480px;font-family:DM Sans,sans-serif;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);">' +
-    // Header
-    '<div style="background:#003087;padding:20px 24px 16px;">' +
-      '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">Extrato de Aposta</div>' +
-    '</div>' +
-    // Info participante
-    '<div style="background:#F0F4FF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;">' +
-      '<div>' +
-        '<div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Apostador</div>' +
-        '<div style="font-size:16px;font-weight:700;color:#003087">' + payload.usuario + '</div>' +
-      '</div>' +
-      '<div style="text-align:right">' +
-        '<div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Fase</div>' +
-        '<div style="font-size:14px;font-weight:700;color:#003087">' + faseLabel + '</div>' +
-      '</div>' +
-    '</div>' +
-    // Tabela palpites
-    '<table style="width:100%;border-collapse:collapse;">' +
-      '<thead>' +
-        '<tr style="background:#F4F3EF;">' +
-          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:left">JOGO</th>' +
-          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:left">CASA</th>' +
-          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:center">PLACAR</th>' +
-          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600;text-align:left">FORA</th>' +
-          '<th style="padding:8px 10px;font-size:11px;color:#888;font-weight:600"></th>' +
-        '</tr>' +
-      '</thead>' +
-      '<tbody>' + linhasPalpites + linhasBonus + '</tbody>' +
-    '</table>' +
-    // Footer
-    '<div style="padding:12px 24px;background:#F4F3EF;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E8E6DF;">' +
-      '<div style="font-size:10px;color:#aaa;">italopsilva-law.github.io/bolao-copa-2026</div>' +
-      '<div style="font-size:10px;color:#aaa;">' + dataFmt + '</div>' +
-    '</div>' +
-  '</div>';
-
-  // Render off-screen
-  var container = document.createElement('div');
-  container.style.cssText = 'position:fixed;left:-9999px;top:0;';
-  container.innerHTML = extratoHTML;
-  document.body.appendChild(container);
-
-  html2canvas(container.firstChild, {
-    scale: 2,
-    backgroundColor: '#ffffff',
-    useCORS: true,
-    logging: false
-  }).then(function(canvas) {
-    var link = document.createElement('a');
-    link.download = 'extrato-' + payload.usuario.split(' ')[0].toLowerCase() + '-' + payload.fase + '.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
-    link.click();
-    document.body.removeChild(container);
-
-    // Show simple success alert
-    mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong><br><br>📄 Seu extrato foi baixado automaticamente.<br><br><span style="font-size:12px;color:#888">Guarde o arquivo como comprovante da sua aposta.</span>');
-  }).catch(function() {
-    document.body.removeChild(container);
-    mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong>');
-  });
+function normalizarSelecao(s) {
+  var sLower = s.toLowerCase();
+  if (sLower.includes('tcheca') || sLower.includes('czech')) return 'Tchéquia';
+  if (sLower.includes('bosnia') || sLower.includes('bósnia')) return 'Bósnia-Herz.';
+  if (sLower === 'usa' || sLower.includes('united states')) return 'Estados Unidos';
+  if (sLower.includes('korea')) return 'Coreia do Sul';
+  if (sLower === 'congo, rd' || sLower === 'congo rd') return 'RD Congo';
+  if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) return 'Curaçao';
+  return s;
 }
 
-
-
-// ── Download Campeão/Artilheiro como JPEG ──────────────────────
-function downloadBonusFixos() {
-  if (!_dadosBonus || !_dadosBonus.bonus) {
-    alert('Aguarde o carregamento dos dados.');
-    return;
-  }
-
-  // Build FULL table off-screen (not limited by scroll)
-  var rows = _dadosBonus.bonus.map(function(b) {
-    var nomeDisp = isIA(b.nome) ? abrevNome(b.nome) + ' 🤖' : abrevNome(b.nome);
-    var ia = isIA(b.nome);
-    return '<tr style="' + (ia ? 'background:#F0F4FF;' : '') + '">' +
-      '<td style="padding:8px 12px;font-size:13px;font-weight:600;white-space:nowrap">' + nomeDisp + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.campeao||'—') + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.vice||'—') + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.terceiro||'—') + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.artilheiro||'—') + '</td>' +
-    '</tr>';
-  }).join('');
-
-  var tabelaHTML =
-    '<table style="border-collapse:collapse;width:100%;font-family:DM Sans,sans-serif;">' +
-      '<thead>' +
-        '<tr style="background:#003087;color:#fff;">' +
-          '<th style="padding:10px 12px;text-align:left;font-size:12px;">PARTICIPANTE</th>' +
-          '<th style="padding:10px 12px;text-align:center;font-size:12px;">🥇 CAMPEÃO</th>' +
-          '<th style="padding:10px 12px;text-align:center;font-size:12px;">🥈 VICE</th>' +
-          '<th style="padding:10px 12px;text-align:center;font-size:12px;">🥉 3º LUGAR</th>' +
-          '<th style="padding:10px 12px;text-align:center;font-size:12px;">⚽ ARTILHEIRO</th>' +
-        '</tr>' +
-      '</thead>' +
-      '<tbody>' + rows + '</tbody>' +
-    '</table>';
-
-  var wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;min-width:600px;';
-  wrapper.innerHTML =
-    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
-      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🏆 Apostas Bônus — Campeão, Vice, 3º Lugar e Artilheiro</div>' +
-    '</div>' +
-    '<div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">' +
-      tabelaHTML +
-    '</div>' +
-    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' +
-      new Date().toLocaleDateString('pt-BR') + ' · italopsilva-law.github.io/bolao-copa-2026' +
-    '</div>';
-  document.body.appendChild(wrapper);
-
-  html2canvas(wrapper, { scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false })
-    .then(function(canvas) {
-      var link = document.createElement('a');
-      link.download = 'bonus-campeao-artilheiro-' + new Date().toISOString().slice(0,10) + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.click();
-      document.body.removeChild(wrapper);
-    }).catch(function() { document.body.removeChild(wrapper); });
+function isEliminado(selecao) {
+  return ELIMINADOS_GRUPOS.some(function(e) { return e.toLowerCase() === selecao.toLowerCase(); });
 }
-
-// ── Download Classificados Bônus como JPEG (tabela completa) ───
-function downloadClassificadosBonus() {
-  if (!_dadosClassif || !_dadosClassif.classificados) {
-    alert('Aguarde o carregamento dos dados.');
-    return;
-  }
-  var sel    = document.getElementById('filtro-bonus-part');
-  var filtro = sel ? sel.value : 'todos';
-  var lista  = filtro === 'todos'
-    ? _dadosClassif.classificados
-    : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
-
-  var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
-
-  // Build full table
-  var heads = '<tr style="background:#003087;color:#fff;"><th style="padding:8px 10px;font-size:11px;text-align:left">#</th>';
-  lista.forEach(function(p) {
-    heads += '<th style="padding:8px 10px;font-size:11px;text-align:center">' +
-      (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>';
-  });
-  heads += '</tr>';
-
-  var bodyRows = '';
-  for (var i = 0; i < maxLen; i++) {
-    bodyRows += '<tr style="' + (i%2===0 ? 'background:#fff;' : 'background:#FAFAF7;') + '">';
-    bodyRows += '<td style="padding:6px 10px;font-size:11px;color:#888;text-align:center">' + (i+1) + '</td>';
-    lista.forEach(function(p) {
-      var selecaoStr = normalizarSelecao(p.classificados[i] || '—');
-      var eliminado  = selecaoStr !== '—' && isEliminado(selecaoStr);
-      var bg  = eliminado ? 'background:#FFEBEE;' : (isIA(p.nome) ? 'background:#F0F4FF;' : '');
-      var txt = eliminado ? 'text-decoration:line-through;opacity:0.6;' : '';
-      var content = selecaoStr === '—' ? '<span style="color:#ccc">—</span>'
-        : '<span style="' + txt + '">' + selecaoStr + (eliminado ? ' ❌' : '') + '</span>';
-      bodyRows += '<td style="padding:6px 10px;font-size:11px;text-align:center;' + bg + '">' + content + '</td>';
-    });
-    bodyRows += '</tr>';
-  }
-
-  var filtroLabel = filtro === 'todos' ? 'Todos os participantes' : abrevNome(filtro);
-
-  var wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;';
-  wrapper.innerHTML =
-    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
-      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🎯 Classificados para os 16 Avos · ' + filtroLabel + '</div>' +
-    '</div>' +
-    '<div style="background:#FFEBEE;border-radius:6px;padding:7px 12px;margin-bottom:12px;font-size:11px;color:#C62828;">' +
-      '❌ Fundo vermelho = seleção eliminada na fase de grupos' +
-    '</div>' +
-    '<div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">' +
-      '<table style="border-collapse:collapse;width:100%;">' +
-        '<thead>' + heads + '</thead>' +
-        '<tbody>' + bodyRows + '</tbody>' +
-      '</table>' +
-    '</div>' +
-    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' +
-      new Date().toLocaleDateString('pt-BR') + ' · italopsilva-law.github.io/bolao-copa-2026' +
-    '</div>';
-  document.body.appendChild(wrapper);
-
-  html2canvas(wrapper, { scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false })
-    .then(function(canvas) {
-      var link = document.createElement('a');
-      var nomeArq = filtro === 'todos' ? 'todos' : filtro.split(' ')[0].toLowerCase();
-      link.download = 'classificados-bonus-' + nomeArq + '-' + new Date().toISOString().slice(0,10) + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.click();
-      document.body.removeChild(wrapper);
-    }).catch(function() { document.body.removeChild(wrapper); });
-}
-
-
 
 // ── Status apostas 16 avos parte 1 ───────────────────────────────
-var IAS_NOMES = ['Chat GPT', 'Claude AI', 'Google Gemini', 'Deepseek'];
-
 async function carregarStatus16avos() {
   var lista    = document.getElementById('status-16avos-lista');
   var contador = document.getElementById('status-16avos-contador');
   if (!lista) return;
-
   var dados = await fetchAPI('status16avos');
   if (!dados || !dados.status) {
     lista.innerHTML = '<div style="color:var(--cinza-texto);font-size:13px;text-align:center">Não foi possível carregar.</div>';
     return;
   }
-
   var prontos = 0;
   lista.innerHTML = dados.status.map(function(p) {
     var ia       = IAS_NOMES.indexOf(p.nome) >= 0;
     var nomeDisp = abrevNome(p.nome) + (ia ? ' 🤖' : '');
     var emoji    = p.apostou ? '✅' : '⏳';
-    var bgColor  = p.apostou ? '#F1F8F4' : '#FAFAF7';
-    var txtColor = p.apostou ? '#276749' : '#888';
+    var bg       = p.apostou ? '#F1F8F4' : '#FAFAF7';
+    var fw       = p.apostou ? '600' : '400';
+    var cor      = p.apostou ? '#276749' : '#888';
     if (p.apostou) prontos++;
-    return '<div style="display:flex;justify-content:space-between;align-items:center;' +
-      'padding:6px 10px;border-radius:6px;background:' + bgColor + ';' +
-      (ia ? 'border-left:3px solid #C5CAE9;' : '') + '">' +
-      '<span style="font-size:13px;font-weight:' + (p.apostou ? '600' : '400') + ';color:' + txtColor + '">' +
-        nomeDisp + '</span>' +
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:' + bg + ';' + (ia ? 'border-left:3px solid #C5CAE9;' : '') + '">' +
+      '<span style="font-size:13px;font-weight:' + fw + ';color:' + cor + '">' + nomeDisp + '</span>' +
       '<span style="font-size:16px">' + emoji + '</span>' +
     '</div>';
   }).join('');
-
   if (contador) contador.textContent = prontos + '/' + dados.total;
-
-  // Refresh a cada 2 minutos enquanto não estiver completo
-  if (prontos < dados.total) {
-    setTimeout(carregarStatus16avos, 2 * 60 * 1000);
-  }
+  if (prontos < dados.total) setTimeout(carregarStatus16avos, 2 * 60 * 1000);
 }
 
 // ── Download status card como JPEG ───────────────────────────────
 function downloadStatusCard() {
   var lista    = document.getElementById('status-16avos-lista');
   var contador = document.getElementById('status-16avos-contador');
-  if (!lista || !lista.children.length) {
-    alert('Aguarde o carregamento dos dados.');
-    return;
-  }
-
+  if (!lista || !lista.children.length) { alert('Aguarde o carregamento.'); return; }
   var hoje = new Date().toLocaleDateString('pt-BR') + ' ' +
-    new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
-
+    new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
   var wrapper = document.createElement('div');
   wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;width:340px;';
-
-  // Rebuild full list from dados if available to ensure complete
   wrapper.innerHTML =
     '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
       '<div style="font-family:Bebas Neue,sans-serif;font-size:24px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
       '<div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;">📋 Status Apostas — 16 Avos Parte 1 (Jogos 73-76)</div>' +
     '</div>' +
-    '<div style="display:flex;flex-direction:column;gap:5px;">' +
-      lista.innerHTML +
-    '</div>' +
-    '<div style="margin-top:14px;padding-top:10px;border-top:1px solid #ddd;' +
-      'display:flex;justify-content:space-between;font-size:11px;">' +
+    '<div style="display:flex;flex-direction:column;gap:5px;">' + lista.innerHTML + '</div>' +
+    '<div style="margin-top:14px;padding-top:10px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;">' +
       '<span style="color:#888">✅ apostou · ⏳ aguardando</span>' +
       '<span style="font-weight:700;color:#003087">' + (contador ? contador.textContent : '') + '</span>' +
     '</div>' +
     '<div style="font-size:10px;color:#aaa;margin-top:8px;text-align:right;">' + hoje + '</div>';
-
   document.body.appendChild(wrapper);
-
-  html2canvas(wrapper, { scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false })
+  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
     .then(function(canvas) {
       var link = document.createElement('a');
       link.download = 'status-16avos-' + new Date().toISOString().slice(0,10) + '.jpg';
@@ -2558,6 +2267,203 @@ function downloadStatusCard() {
       link.click();
       document.body.removeChild(wrapper);
     }).catch(function() { document.body.removeChild(wrapper); });
+}
+
+// ── Download classificação como JPEG ────────────────────────────
+function downloadClassificacao() {
+  var card = document.getElementById('card-classificacao');
+  var btn  = document.querySelector('[onclick="downloadClassificacao()"]');
+  if (!card) return;
+  if (btn) btn.style.display = 'none';
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:20px;font-family:DM Sans,sans-serif;';
+  var header = '<div style="text-align:center;margin-bottom:14px;"><div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#003087;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+    '<div style="font-size:12px;color:#6B6860;margin-top:2px;">🏆 Classificação · ' + new Date().toLocaleDateString("pt-BR") + '</div></div>';
+  var clone = card.cloneNode(true);
+  clone.style.overflow = 'visible'; clone.style.marginBottom = '0';
+  wrapper.innerHTML = header;
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'classificacao-bolao-' + new Date().toISOString().slice(0,10) + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(wrapper);
+      if (btn) btn.style.display = 'flex';
+    }).catch(function() { document.body.removeChild(wrapper); if (btn) btn.style.display = 'flex'; });
+}
+
+// ── Download Campeão/Artilheiro como JPEG ───────────────────────
+function downloadBonusFixos() {
+  if (!_dadosBonus || !_dadosBonus.bonus) { alert('Aguarde o carregamento.'); return; }
+  var rows = _dadosBonus.bonus.map(function(b) {
+    var ia = IAS_NOMES.indexOf(b.nome) >= 0;
+    return '<tr style="' + (ia ? 'background:#F0F4FF;' : '') + '">' +
+      '<td style="padding:8px 12px;font-size:13px;font-weight:600">' + (ia ? abrevNome(b.nome) + ' 🤖' : abrevNome(b.nome)) + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.campeao||'—') + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.vice||'—') + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.terceiro||'—') + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.artilheiro||'—') + '</td>' +
+    '</tr>';
+  }).join('');
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;min-width:600px;';
+  wrapper.innerHTML =
+    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🏆 Apostas Bônus — Campeão, Vice, 3º Lugar e Artilheiro</div>' +
+    '</div>' +
+    '<div style="background:#fff;border-radius:8px;overflow:hidden;">' +
+      '<table style="border-collapse:collapse;width:100%;">' +
+        '<thead><tr style="background:#003087;color:#fff;">' +
+          '<th style="padding:10px 12px;font-size:12px;text-align:left">PARTICIPANTE</th>' +
+          '<th style="padding:10px 12px;font-size:12px;text-align:center">🥇 CAMPEÃO</th>' +
+          '<th style="padding:10px 12px;font-size:12px;text-align:center">🥈 VICE</th>' +
+          '<th style="padding:10px 12px;font-size:12px;text-align:center">🥉 3º LUGAR</th>' +
+          '<th style="padding:10px 12px;font-size:12px;text-align:center">⚽ ARTILHEIRO</th>' +
+        '</tr></thead><tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>' +
+    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' + new Date().toLocaleDateString('pt-BR') + '</div>';
+  document.body.appendChild(wrapper);
+  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'bonus-campeao-' + new Date().toISOString().slice(0,10) + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(wrapper);
+    }).catch(function() { document.body.removeChild(wrapper); });
+}
+
+// ── Download Classificados Bônus como JPEG ───────────────────────
+function downloadClassificadosBonus() {
+  if (!_dadosClassif || !_dadosClassif.classificados) { alert('Aguarde o carregamento.'); return; }
+  var sel    = document.getElementById('filtro-bonus-part');
+  var filtro = sel ? sel.value : 'todos';
+  var lista  = filtro === 'todos' ? _dadosClassif.classificados
+    : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
+  var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
+  var heads  = '<tr style="background:#003087;color:#fff;"><th style="padding:8px 10px;font-size:11px">#</th>';
+  lista.forEach(function(p) {
+    var ia = IAS_NOMES.indexOf(p.nome) >= 0;
+    heads += '<th style="padding:8px 10px;font-size:11px;text-align:center">' + (ia ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>';
+  });
+  heads += '</tr>';
+  var bodyRows = '';
+  for (var i = 0; i < maxLen; i++) {
+    bodyRows += '<tr style="' + (i%2===0 ? 'background:#fff;' : 'background:#FAFAF7;') + '">';
+    bodyRows += '<td style="padding:6px 10px;font-size:11px;color:#888;text-align:center">' + (i+1) + '</td>';
+    lista.forEach(function(p) {
+      var ia  = IAS_NOMES.indexOf(p.nome) >= 0;
+      var sel = normalizarSelecao(p.classificados[i] || '—');
+      var eli = sel !== '—' && isEliminado(sel);
+      var bg  = eli ? 'background:#FFEBEE;' : (ia ? 'background:#F0F4FF;' : '');
+      var txt = eli ? 'text-decoration:line-through;opacity:0.6;' : '';
+      bodyRows += '<td style="padding:6px 10px;font-size:11px;text-align:center;' + bg + '">' +
+        '<span style="' + txt + '">' + sel + (eli ? ' ❌' : '') + '</span></td>';
+    });
+    bodyRows += '</tr>';
+  }
+  var filtroLabel = filtro === 'todos' ? 'Todos' : abrevNome(filtro);
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;';
+  wrapper.innerHTML =
+    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:12px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🎯 Classificados para os 16 Avos · ' + filtroLabel + '</div>' +
+    '</div>' +
+    '<div style="background:#FFEBEE;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:11px;color:#C62828;">❌ Fundo vermelho = eliminado na fase de grupos</div>' +
+    '<div style="background:#fff;border-radius:8px;overflow:hidden;">' +
+      '<table style="border-collapse:collapse;width:100%;"><thead>' + heads + '</thead><tbody>' + bodyRows + '</tbody></table>' +
+    '</div>' +
+    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' + new Date().toLocaleDateString('pt-BR') + '</div>';
+  document.body.appendChild(wrapper);
+  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'classificados-bonus-' + filtro.split(' ')[0].toLowerCase() + '-' + new Date().toISOString().slice(0,10) + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(wrapper);
+    }).catch(function() { document.body.removeChild(wrapper); });
+}
+
+// ── Extrato JPEG após aposta ──────────────────────────────────────
+function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
+  var faseLabel = payload.fase === '16avos-1' ? '16 Avos — Parte 1' :
+                  payload.fase === '16avos-2' ? '16 Avos — Parte 2' :
+                  payload.fase === 'oitavas'  ? 'Oitavas de Final' :
+                  payload.fase === 'quartas'  ? 'Quartas de Final' :
+                  payload.fase === 'semis'    ? 'Semifinais' : payload.fase;
+  var linhasPalpites = '';
+  payload.palpites.forEach(function(p) {
+    var jogo = JOGOS.find(function(x) { return x.n === p.n; });
+    var t1 = jogo ? jogo.t1 : 'Time 1', t2 = jogo ? jogo.t2 : 'Time 2';
+    var advTxt = '';
+    if (!usaBonusSeparado && p.adv) {
+      var isEmpate = p.p1 === p.p2;
+      advTxt = '<span style="font-size:10px;background:#E8F5E9;color:#2E7D32;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:600;">' +
+        (isEmpate ? 'Pêns' : 'Avança') + ': ' + p.adv + '</span>';
+    }
+    linhasPalpites += '<tr><td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + p.n + '</td>' +
+      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t1 + '</td>' +
+      '<td style="padding:6px 10px;font-size:15px;font-weight:700;color:#003087;text-align:center">' + p.p1 + ' × ' + p.p2 + '</td>' +
+      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t2 + '</td>' +
+      '<td style="padding:6px 10px;font-size:12px;text-align:center">' + advTxt + '</td></tr>';
+  });
+  var linhasBonus = '';
+  if (usaBonusSeparado && payload.palpitesBonus && payload.palpitesBonus.length > 0) {
+    linhasBonus = '<tr><td colspan="5" style="padding:8px 10px;background:#FFF8E1;font-size:12px;font-weight:700;color:#856404;border-top:2px solid #FFE082">🌟 BÔNUS INDEPENDENTE — Quem avança</td></tr>';
+    payload.palpitesBonus.forEach(function(b) {
+      var jogo = JOGOS.find(function(x) { return x.n === b.n; });
+      linhasBonus += '<tr style="background:#FFFDE7"><td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + b.n + '</td>' +
+        '<td colspan="3" style="padding:6px 10px;font-size:13px;color:#003087">' + (jogo ? jogo.t1 + ' × ' + jogo.t2 : '') + '</td>' +
+        '<td style="padding:6px 10px;font-size:13px;font-weight:700;color:#856404;text-align:right">→ ' + (b.adv||'—') + '</td></tr>';
+    });
+  }
+  var dataFmt = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var container = document.createElement('div');
+  container.style.cssText = 'position:fixed;left:-9999px;top:0;';
+  container.innerHTML = '<div style="background:#fff;padding:0;width:480px;font-family:DM Sans,sans-serif;border-radius:12px;overflow:hidden;">' +
+    '<div style="background:#003087;padding:20px 24px 16px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">Extrato de Aposta</div>' +
+    '</div>' +
+    '<div style="background:#F0F4FF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;">' +
+      '<div><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Apostador</div>' +
+      '<div style="font-size:16px;font-weight:700;color:#003087">' + payload.usuario + '</div></div>' +
+      '<div style="text-align:right"><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Fase</div>' +
+      '<div style="font-size:14px;font-weight:700;color:#003087">' + faseLabel + '</div></div>' +
+    '</div>' +
+    '<table style="width:100%;border-collapse:collapse;">' +
+      '<thead><tr style="background:#F4F3EF;">' +
+        '<th style="padding:8px 10px;font-size:11px;color:#888;text-align:left">JOGO</th>' +
+        '<th style="padding:8px 10px;font-size:11px;color:#888;text-align:left">CASA</th>' +
+        '<th style="padding:8px 10px;font-size:11px;color:#888;text-align:center">PLACAR</th>' +
+        '<th style="padding:8px 10px;font-size:11px;color:#888;text-align:left">FORA</th>' +
+        '<th style="padding:8px 10px;font-size:11px;color:#888"></th>' +
+      '</tr></thead>' +
+      '<tbody>' + linhasPalpites + linhasBonus + '</tbody>' +
+    '</table>' +
+    '<div style="padding:12px 24px;background:#F4F3EF;display:flex;justify-content:space-between;font-size:10px;color:#aaa;">' +
+      '<div>italopsilva-law.github.io/bolao-copa-2026</div><div>' + dataFmt + '</div>' +
+    '</div></div>';
+  document.body.appendChild(container);
+  html2canvas(container.firstChild, {scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false})
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'extrato-' + payload.usuario.split(' ')[0].toLowerCase() + '-' + payload.fase + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(container);
+      mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong><br><br>📄 Seu extrato foi baixado automaticamente.<br><br><span style="font-size:12px;color:#888">Guarde o arquivo como comprovante da sua aposta.</span>');
+    }).catch(function() {
+      document.body.removeChild(container);
+      mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong>');
+    });
 }
 
 </script>
