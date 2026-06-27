@@ -750,7 +750,13 @@ footer strong { color: #fff; font-weight: 600; }
         <button id="tab-classificados" onclick="showBonusInternalTab('classificados')" class="submenu-btn">🎯 Classificados da Fase de Grupos</button>
       </div>
       <div id="bonus-fixos">
-        <div class="card" style="overflow-x:auto;">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+          <button onclick="downloadBonusFixos()" title="Baixar como imagem"
+            style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
+            📷 Baixar
+          </button>
+        </div>
+        <div class="card" style="overflow-x:auto;" id="bonus-fixos-card">
           <table class="rank-table" id="bonus-fixos-table">
             <thead><tr><th>Participante</th><th style="text-align:center">🥇 Campeão</th><th style="text-align:center">🥈 Vice</th><th style="text-align:center">🥉 3º Lugar</th><th style="text-align:center">⚽ Artilheiro</th></tr></thead>
             <tbody id="bonus-fixos-tbody"><tr><td colspan="5" style="text-align:center;padding:32px;color:var(--cinza-texto);">⏳ Carregando…</td></tr></tbody>
@@ -761,8 +767,6 @@ footer strong { color: #fff; font-weight: 600; }
         <div style="margin-bottom:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <label style="font-size:13px; font-weight:700; color:var(--azul);">Ver palpites de:</label>
           <select id="filtro-bonus-part" onchange="renderClassificadosParticipante()" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:7px 12px; border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; cursor:pointer;"><option value="todos">Todos</option></select>
-        </select>
-          </div>
           <button onclick="downloadClassificadosBonus()" title="Baixar como imagem"
             style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">
             📷 Baixar
@@ -2319,60 +2323,138 @@ function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
 }
 
 
-// ── Download classificados bônus como JPEG ─────────────────────
-function downloadClassificadosBonus() {
-  var container = document.getElementById('bonus-classificados-container');
-  var sel       = document.getElementById('filtro-bonus-part');
-  if (!container) return;
 
-  var filtro     = sel ? sel.value : 'todos';
-  var filtroLabel = filtro === 'todos' ? 'Todos os participantes'
-    : abrevNome(filtro);
-
-  var wrapper = document.createElement('div');
-  wrapper.style.cssText = 'background:#F4F3EF;padding:24px;display:inline-block;min-width:520px;max-width:900px;font-family:DM Sans,sans-serif;border-radius:12px;';
-
-  var hoje = new Date().toLocaleDateString('pt-BR');
-  var eliminadosCount = ELIMINADOS_GRUPOS.length;
-
-  wrapper.innerHTML =
-    '<div style="background:#003087;padding:18px 24px;border-radius:8px;margin-bottom:16px;">' +
-      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🎯 Classificados para os 16 Avos — Fase de Grupos</div>' +
-    '</div>' +
-    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">' +
-      '<div style="font-size:13px;font-weight:700;color:#003087;">' + filtroLabel + '</div>' +
-      '<div style="font-size:11px;color:#888;">' + hoje + ' · ' + eliminadosCount + ' eliminados destacados</div>' +
-    '</div>' +
-    '<div style="background:#FFEBEE;border-radius:6px;padding:8px 12px;margin-bottom:14px;font-size:11px;color:#C62828;">' +
-      '❌ Fundo vermelho = seleção eliminada na fase de grupos' +
-    '</div>' +
-    container.innerHTML;
-
-  document.body.appendChild(wrapper);
-
-  if (typeof html2canvas === 'undefined') {
-    document.body.removeChild(wrapper);
-    alert('Aguarde o carregamento completo da página e tente novamente.');
+// ── Download Campeão/Artilheiro como JPEG ──────────────────────
+function downloadBonusFixos() {
+  if (!_dadosBonus || !_dadosBonus.bonus) {
+    alert('Aguarde o carregamento dos dados.');
     return;
   }
 
-  html2canvas(wrapper, {
-    scale: 2,
-    backgroundColor: '#F4F3EF',
-    useCORS: true,
-    logging: false
-  }).then(function(canvas) {
-    var link = document.createElement('a');
-    var nomeArq = filtro === 'todos' ? 'todos' : filtro.split(' ')[0].toLowerCase();
-    link.download = 'classificados-bonus-' + nomeArq + '-' + new Date().toISOString().slice(0,10) + '.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
-    link.click();
-    document.body.removeChild(wrapper);
-  }).catch(function() {
-    document.body.removeChild(wrapper);
-  });
+  // Build FULL table off-screen (not limited by scroll)
+  var rows = _dadosBonus.bonus.map(function(b) {
+    var nomeDisp = isIA(b.nome) ? abrevNome(b.nome) + ' 🤖' : abrevNome(b.nome);
+    var ia = isIA(b.nome);
+    return '<tr style="' + (ia ? 'background:#F0F4FF;' : '') + '">' +
+      '<td style="padding:8px 12px;font-size:13px;font-weight:600;white-space:nowrap">' + nomeDisp + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.campeao||'—') + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.vice||'—') + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.terceiro||'—') + '</td>' +
+      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.artilheiro||'—') + '</td>' +
+    '</tr>';
+  }).join('');
+
+  var tabelaHTML =
+    '<table style="border-collapse:collapse;width:100%;font-family:DM Sans,sans-serif;">' +
+      '<thead>' +
+        '<tr style="background:#003087;color:#fff;">' +
+          '<th style="padding:10px 12px;text-align:left;font-size:12px;">PARTICIPANTE</th>' +
+          '<th style="padding:10px 12px;text-align:center;font-size:12px;">🥇 CAMPEÃO</th>' +
+          '<th style="padding:10px 12px;text-align:center;font-size:12px;">🥈 VICE</th>' +
+          '<th style="padding:10px 12px;text-align:center;font-size:12px;">🥉 3º LUGAR</th>' +
+          '<th style="padding:10px 12px;text-align:center;font-size:12px;">⚽ ARTILHEIRO</th>' +
+        '</tr>' +
+      '</thead>' +
+      '<tbody>' + rows + '</tbody>' +
+    '</table>';
+
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;min-width:600px;';
+  wrapper.innerHTML =
+    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🏆 Apostas Bônus — Campeão, Vice, 3º Lugar e Artilheiro</div>' +
+    '</div>' +
+    '<div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">' +
+      tabelaHTML +
+    '</div>' +
+    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' +
+      new Date().toLocaleDateString('pt-BR') + ' · italopsilva-law.github.io/bolao-copa-2026' +
+    '</div>';
+  document.body.appendChild(wrapper);
+
+  html2canvas(wrapper, { scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false })
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'bonus-campeao-artilheiro-' + new Date().toISOString().slice(0,10) + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(wrapper);
+    }).catch(function() { document.body.removeChild(wrapper); });
 }
+
+// ── Download Classificados Bônus como JPEG (tabela completa) ───
+function downloadClassificadosBonus() {
+  if (!_dadosClassif || !_dadosClassif.classificados) {
+    alert('Aguarde o carregamento dos dados.');
+    return;
+  }
+  var sel    = document.getElementById('filtro-bonus-part');
+  var filtro = sel ? sel.value : 'todos';
+  var lista  = filtro === 'todos'
+    ? _dadosClassif.classificados
+    : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
+
+  var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
+
+  // Build full table
+  var heads = '<tr style="background:#003087;color:#fff;"><th style="padding:8px 10px;font-size:11px;text-align:left">#</th>';
+  lista.forEach(function(p) {
+    heads += '<th style="padding:8px 10px;font-size:11px;text-align:center">' +
+      (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>';
+  });
+  heads += '</tr>';
+
+  var bodyRows = '';
+  for (var i = 0; i < maxLen; i++) {
+    bodyRows += '<tr style="' + (i%2===0 ? 'background:#fff;' : 'background:#FAFAF7;') + '">';
+    bodyRows += '<td style="padding:6px 10px;font-size:11px;color:#888;text-align:center">' + (i+1) + '</td>';
+    lista.forEach(function(p) {
+      var selecaoStr = normalizarSelecao(p.classificados[i] || '—');
+      var eliminado  = selecaoStr !== '—' && isEliminado(selecaoStr);
+      var bg  = eliminado ? 'background:#FFEBEE;' : (isIA(p.nome) ? 'background:#F0F4FF;' : '');
+      var txt = eliminado ? 'text-decoration:line-through;opacity:0.6;' : '';
+      var content = selecaoStr === '—' ? '<span style="color:#ccc">—</span>'
+        : '<span style="' + txt + '">' + selecaoStr + (eliminado ? ' ❌' : '') + '</span>';
+      bodyRows += '<td style="padding:6px 10px;font-size:11px;text-align:center;' + bg + '">' + content + '</td>';
+    });
+    bodyRows += '</tr>';
+  }
+
+  var filtroLabel = filtro === 'todos' ? 'Todos os participantes' : abrevNome(filtro);
+
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;';
+  wrapper.innerHTML =
+    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🎯 Classificados para os 16 Avos · ' + filtroLabel + '</div>' +
+    '</div>' +
+    '<div style="background:#FFEBEE;border-radius:6px;padding:7px 12px;margin-bottom:12px;font-size:11px;color:#C62828;">' +
+      '❌ Fundo vermelho = seleção eliminada na fase de grupos' +
+    '</div>' +
+    '<div style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">' +
+      '<table style="border-collapse:collapse;width:100%;">' +
+        '<thead>' + heads + '</thead>' +
+        '<tbody>' + bodyRows + '</tbody>' +
+      '</table>' +
+    '</div>' +
+    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' +
+      new Date().toLocaleDateString('pt-BR') + ' · italopsilva-law.github.io/bolao-copa-2026' +
+    '</div>';
+  document.body.appendChild(wrapper);
+
+  html2canvas(wrapper, { scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false })
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      var nomeArq = filtro === 'todos' ? 'todos' : filtro.split(' ')[0].toLowerCase();
+      link.download = 'classificados-bonus-' + nomeArq + '-' + new Date().toISOString().slice(0,10) + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(wrapper);
+    }).catch(function() { document.body.removeChild(wrapper); });
+}
+
 
 </script>
 </body>
