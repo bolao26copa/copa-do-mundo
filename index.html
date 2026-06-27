@@ -747,7 +747,7 @@ footer strong { color: #fff; font-weight: 600; }
     <div class="submenu-content" id="sub-bonus">
       <div style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid var(--cinza-borda); padding-bottom:0;">
         <button id="tab-fixos" onclick="showBonusInternalTab('fixos')" class="submenu-btn active" style="color:var(--azul); border-bottom-color:var(--azul);">🏆 Campeão / Artilheiro</button>
-        <button id="tab-classificados" onclick="showBonusInternalTab('classificados')" class="submenu-btn">🎯 Classificados</button>
+        <button id="tab-classificados" onclick="showBonusInternalTab('classificados')" class="submenu-btn">🎯 Classificados da Fase de Grupos</button>
       </div>
       <div id="bonus-fixos">
         <div class="card" style="overflow-x:auto;">
@@ -761,6 +761,12 @@ footer strong { color: #fff; font-weight: 600; }
         <div style="margin-bottom:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <label style="font-size:13px; font-weight:700; color:var(--azul);">Ver palpites de:</label>
           <select id="filtro-bonus-part" onchange="renderClassificadosParticipante()" style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:7px 12px; border:1px solid var(--cinza-borda); border-radius:8px; background:#fff; cursor:pointer;"><option value="todos">Todos</option></select>
+        </select>
+          </div>
+          <button onclick="downloadClassificadosBonus()" title="Baixar como imagem"
+            style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">
+            📷 Baixar
+          </button>
         </div>
         <div id="bonus-classificados-container" class="card" style="padding:20px; min-height:100px;">
           <div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Carregando…</div>
@@ -2021,28 +2027,58 @@ async function carregarClassificadosBonus() {
   renderClassificadosParticipante();
 }
 
+// Lista de eliminados da fase de grupos
+var ELIMINADOS_GRUPOS = [
+  'Tchéquia','Catar','Haiti','Turquia','Curaçao','Tunísia',
+  'Nova Zelândia','Uruguai','Arábia Saudita','Iraque','Jordânia','Panamá'
+];
+
+function normalizarSelecao(s) {
+  var sLower = s.toLowerCase();
+  if (sLower.includes('tcheca') || sLower.includes('czech')) return 'Tchéquia';
+  if (sLower.includes('bosnia') || sLower.includes('bósnia')) return 'Bósnia-Herz.';
+  if (sLower === 'usa' || sLower.includes('united states')) return 'Estados Unidos';
+  if (sLower.includes('korea')) return 'Coreia do Sul';
+  if (sLower === 'congo, rd' || sLower === 'congo rd') return 'RD Congo';
+  if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) return 'Curaçao';
+  return s;
+}
+
+function isEliminado(selecao) {
+  return ELIMINADOS_GRUPOS.some(function(e) {
+    return e.toLowerCase() === selecao.toLowerCase();
+  });
+}
+
 function renderClassificadosParticipante() {
-  var container = document.getElementById('bonus-classificados-container'), sel = document.getElementById('filtro-bonus-part');
+  var container = document.getElementById('bonus-classificados-container');
+  var sel = document.getElementById('filtro-bonus-part');
   if (!container || !_dadosClassif) return;
-  var filtro = sel ? sel.value : 'todos', lista = filtro === 'todos' ? _dadosClassif.classificados : _dadosClassif.classificados.filter(p => p.nome === filtro);
+  var filtro = sel ? sel.value : 'todos';
+  var lista = filtro === 'todos'
+    ? _dadosClassif.classificados
+    : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
 
   if (filtro === 'todos') {
-    var maxLen = Math.max.apply(null, lista.map(p => p.classificados.length));
+    var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
     var tbl = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:500px;"><thead><tr><th>#</th>';
-    lista.forEach(p => { tbl += '<th style="font-size:11px;text-align:center">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>'; });
+    lista.forEach(function(p) {
+      tbl += '<th style="font-size:11px;text-align:center">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>';
+    });
     tbl += '</tr></thead><tbody>';
     for (var i = 0; i < maxLen; i++) {
-      tbl += `<tr><td style="color:var(--cinza-texto);font-size:12px">${i+1}</td>`;
-      lista.forEach(p => {
-        let selecaoStr = p.classificados[i] || '—', sLower = selecaoStr.toLowerCase();
-        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
-        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
-        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
-        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
-        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
-        else if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) selecaoStr = 'Curaçao';
-        let cellContent = selecaoStr === '—' ? '—' : `<div style="display:flex;align-items:center;justify-content:center;gap:4px;">${flag(selecaoStr)}<span>${selecaoStr}</span></div>`;
-        tbl += `<td style="text-align:center;font-size:12px;${isIA(p.nome) ? 'background:#F0F4FF;' : ''}">${cellContent}</td>`;
+      tbl += '<tr><td style="color:var(--cinza-texto);font-size:12px">' + (i+1) + '</td>';
+      lista.forEach(function(p) {
+        var selecaoStr = normalizarSelecao(p.classificados[i] || '—');
+        var eliminado  = selecaoStr !== '—' && isEliminado(selecaoStr);
+        var bgCell     = eliminado ? 'background:#FFEBEE;' : (isIA(p.nome) ? 'background:#F0F4FF;' : '');
+        var cellContent = selecaoStr === '—' ? '—'
+          : '<div style="display:flex;align-items:center;justify-content:center;gap:4px;' +
+            (eliminado ? 'opacity:0.6;text-decoration:line-through;' : '') + '">' +
+            flag(selecaoStr) + '<span>' + selecaoStr + '</span>' +
+            (eliminado ? '<span title="Eliminado" style="font-size:10px;">❌</span>' : '') +
+            '</div>';
+        tbl += '<td style="text-align:center;font-size:12px;' + bgCell + '">' + cellContent + '</td>';
       });
       tbl += '</tr>';
     }
@@ -2050,17 +2086,19 @@ function renderClassificadosParticipante() {
   } else {
     var p = lista[0];
     if (!p) { container.innerHTML = '<p style="color:var(--cinza-texto)">Sem dados.</p>'; return; }
-    container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' + (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + ' — ' + p.classificados.length + ' seleções apostadas</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' +
-      p.classificados.map((s, i) => {
-        let selecaoStr = s, sLower = selecaoStr.toLowerCase();
-        if (sLower.includes('tcheca') || sLower.includes('czech')) selecaoStr = 'Tchéquia';
-        else if (sLower.includes('bosnia') || sLower.includes('bósnia')) selecaoStr = 'Bósnia-Herz.';
-        else if (sLower === 'usa' || sLower.includes('united states')) selecaoStr = 'Estados Unidos';
-        else if (sLower.includes('korea')) selecaoStr = 'Coreia do Sul';
-        else if (sLower === 'congo, rd' || sLower === 'congo rd') selecaoStr = 'RD Congo';
-        else if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) selecaoStr = 'Curaçao';
-        return `<span style="font-size:12px;padding:4px 10px;background:#F4F3EF;border-radius:6px;border:1px solid var(--cinza-borda);display:inline-flex;align-items:center;gap:4px;"><strong>${i+1}.</strong> ${flag(selecaoStr)}${selecaoStr}</span>`;
-      }).join('') + '</div>';
+    var chips = p.classificados.map(function(s, i) {
+      var selecaoStr = normalizarSelecao(s);
+      var eliminado  = isEliminado(selecaoStr);
+      var bg  = eliminado ? 'background:#FFEBEE;border-color:#FFCDD2;' : 'background:#F4F3EF;border:1px solid var(--cinza-borda);';
+      var txt = eliminado ? 'text-decoration:line-through;opacity:0.7;' : '';
+      return '<span style="font-size:12px;padding:4px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;' + bg + txt + '">' +
+        '<strong>' + (i+1) + '.</strong>' + flag(selecaoStr) + selecaoStr +
+        (eliminado ? ' ❌' : '') + '</span>';
+    }).join('');
+    container.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:12px;">' +
+      (isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) +
+      ' — ' + p.classificados.length + ' seleções apostadas</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + chips + '</div>';
   }
 }
 
@@ -2277,6 +2315,62 @@ function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
   }).catch(function() {
     document.body.removeChild(container);
     mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong>');
+  });
+}
+
+
+// ── Download classificados bônus como JPEG ─────────────────────
+function downloadClassificadosBonus() {
+  var container = document.getElementById('bonus-classificados-container');
+  var sel       = document.getElementById('filtro-bonus-part');
+  if (!container) return;
+
+  var filtro     = sel ? sel.value : 'todos';
+  var filtroLabel = filtro === 'todos' ? 'Todos os participantes'
+    : abrevNome(filtro);
+
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'background:#F4F3EF;padding:24px;display:inline-block;min-width:520px;max-width:900px;font-family:DM Sans,sans-serif;border-radius:12px;';
+
+  var hoje = new Date().toLocaleDateString('pt-BR');
+  var eliminadosCount = ELIMINADOS_GRUPOS.length;
+
+  wrapper.innerHTML =
+    '<div style="background:#003087;padding:18px 24px;border-radius:8px;margin-bottom:16px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🎯 Classificados para os 16 Avos — Fase de Grupos</div>' +
+    '</div>' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">' +
+      '<div style="font-size:13px;font-weight:700;color:#003087;">' + filtroLabel + '</div>' +
+      '<div style="font-size:11px;color:#888;">' + hoje + ' · ' + eliminadosCount + ' eliminados destacados</div>' +
+    '</div>' +
+    '<div style="background:#FFEBEE;border-radius:6px;padding:8px 12px;margin-bottom:14px;font-size:11px;color:#C62828;">' +
+      '❌ Fundo vermelho = seleção eliminada na fase de grupos' +
+    '</div>' +
+    container.innerHTML;
+
+  document.body.appendChild(wrapper);
+
+  if (typeof html2canvas === 'undefined') {
+    document.body.removeChild(wrapper);
+    alert('Aguarde o carregamento completo da página e tente novamente.');
+    return;
+  }
+
+  html2canvas(wrapper, {
+    scale: 2,
+    backgroundColor: '#F4F3EF',
+    useCORS: true,
+    logging: false
+  }).then(function(canvas) {
+    var link = document.createElement('a');
+    var nomeArq = filtro === 'todos' ? 'todos' : filtro.split(' ')[0].toLowerCase();
+    link.download = 'classificados-bonus-' + nomeArq + '-' + new Date().toISOString().slice(0,10) + '.jpg';
+    link.href = canvas.toDataURL('image/jpeg', 0.95);
+    link.click();
+    document.body.removeChild(wrapper);
+  }).catch(function() {
+    document.body.removeChild(wrapper);
   });
 }
 
