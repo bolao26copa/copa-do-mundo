@@ -538,6 +538,26 @@ footer strong { color: #fff; font-weight: 600; }
         </div>
       </div>
 
+      <!-- Card: Status apostas 16 avos parte 1 -->
+      <div class="card" id="card-status-16avos" style="padding:20px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1.5px; color:var(--azul);">
+            📋 Status 16 Avos — Parte 1
+          </div>
+          <button onclick="downloadStatusCard()" title="Baixar como imagem"
+            style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">
+            📷
+          </button>
+        </div>
+        <div id="status-16avos-lista" style="display:flex; flex-direction:column; gap:6px;">
+          <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+        </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:var(--cinza-texto)">✅ = apostou · ⏳ = aguardando</span>
+          <span id="status-16avos-contador" style="font-weight:700;color:var(--azul)">—/27</span>
+        </div>
+      </div>
+
       <div class="aposta-card" id="card-aposta-16avos1" style="border-top: 3px solid var(--verde);">
         <div class="aposta-icon" style="background:var(--verde-claro)">⚽</div>
         <div class="aposta-status status-aberto">● Aberto</div>
@@ -2111,6 +2131,7 @@ async function inicializarDados() {
   await carregarArtilhariaDoGoogleSheets(); 
   await carregarJogosDoGoogleSheets(); 
   await carregarClassificacao();
+  carregarStatus16avos();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2455,6 +2476,89 @@ function downloadClassificadosBonus() {
     }).catch(function() { document.body.removeChild(wrapper); });
 }
 
+
+
+// ── Status apostas 16 avos parte 1 ───────────────────────────────
+var IAS_NOMES = ['Chat GPT', 'Claude AI', 'Google Gemini', 'Deepseek'];
+
+async function carregarStatus16avos() {
+  var lista    = document.getElementById('status-16avos-lista');
+  var contador = document.getElementById('status-16avos-contador');
+  if (!lista) return;
+
+  var dados = await fetchAPI('status16avos');
+  if (!dados || !dados.status) {
+    lista.innerHTML = '<div style="color:var(--cinza-texto);font-size:13px;text-align:center">Não foi possível carregar.</div>';
+    return;
+  }
+
+  var prontos = 0;
+  lista.innerHTML = dados.status.map(function(p) {
+    var ia       = IAS_NOMES.indexOf(p.nome) >= 0;
+    var nomeDisp = abrevNome(p.nome) + (ia ? ' 🤖' : '');
+    var emoji    = p.apostou ? '✅' : '⏳';
+    var bgColor  = p.apostou ? '#F1F8F4' : '#FAFAF7';
+    var txtColor = p.apostou ? '#276749' : '#888';
+    if (p.apostou) prontos++;
+    return '<div style="display:flex;justify-content:space-between;align-items:center;' +
+      'padding:6px 10px;border-radius:6px;background:' + bgColor + ';' +
+      (ia ? 'border-left:3px solid #C5CAE9;' : '') + '">' +
+      '<span style="font-size:13px;font-weight:' + (p.apostou ? '600' : '400') + ';color:' + txtColor + '">' +
+        nomeDisp + '</span>' +
+      '<span style="font-size:16px">' + emoji + '</span>' +
+    '</div>';
+  }).join('');
+
+  if (contador) contador.textContent = prontos + '/' + dados.total;
+
+  // Refresh a cada 2 minutos enquanto não estiver completo
+  if (prontos < dados.total) {
+    setTimeout(carregarStatus16avos, 2 * 60 * 1000);
+  }
+}
+
+// ── Download status card como JPEG ───────────────────────────────
+function downloadStatusCard() {
+  var lista    = document.getElementById('status-16avos-lista');
+  var contador = document.getElementById('status-16avos-contador');
+  if (!lista || !lista.children.length) {
+    alert('Aguarde o carregamento dos dados.');
+    return;
+  }
+
+  var hoje = new Date().toLocaleDateString('pt-BR') + ' ' +
+    new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;width:340px;';
+
+  // Rebuild full list from dados if available to ensure complete
+  wrapper.innerHTML =
+    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:24px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
+      '<div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;">📋 Status Apostas — 16 Avos Parte 1 (Jogos 73-76)</div>' +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:5px;">' +
+      lista.innerHTML +
+    '</div>' +
+    '<div style="margin-top:14px;padding-top:10px;border-top:1px solid #ddd;' +
+      'display:flex;justify-content:space-between;font-size:11px;">' +
+      '<span style="color:#888">✅ apostou · ⏳ aguardando</span>' +
+      '<span style="font-weight:700;color:#003087">' + (contador ? contador.textContent : '') + '</span>' +
+    '</div>' +
+    '<div style="font-size:10px;color:#aaa;margin-top:8px;text-align:right;">' + hoje + '</div>';
+
+  document.body.appendChild(wrapper);
+
+  html2canvas(wrapper, { scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false })
+    .then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'status-16avos-' + new Date().toISOString().slice(0,10) + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(wrapper);
+    }).catch(function() { document.body.removeChild(wrapper); });
+}
 
 </script>
 </body>
