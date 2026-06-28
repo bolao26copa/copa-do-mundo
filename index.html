@@ -1335,15 +1335,24 @@ async function enviarPalpites() {
   gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado);
   showPage('apostas');
 
-  // Envia ao servidor em background — sem bloquear UI
-  setTimeout(function() {
-    fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
-    }).catch(function(e) { console.warn('Envio falhou:', e); });
-  }, 0);
+  // Envia ao servidor — sendBeacon garante entrega mesmo se fechar o navegador
+  // Se sendBeacon não disponível (raro), cai para fetch como fallback
+  var payloadStr = JSON.stringify(payload);
+  var enviado = false;
+  if (navigator.sendBeacon) {
+    var blob = new Blob([payloadStr], { type: 'text/plain' });
+    enviado = navigator.sendBeacon(APPS_SCRIPT_URL, blob);
+  }
+  if (!enviado) {
+    // fallback: fetch no-cors
+    setTimeout(function() {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: payloadStr
+      }).catch(function(e) { console.warn('Envio falhou:', e); });
+    }, 0);
+  }
 }
 
 /* */
