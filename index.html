@@ -1318,7 +1318,7 @@ async function enviarPalpites() {
   if (usaBonusSeparado && !bonusPreenchido) { mostrarAlerta("❌ Você ativou a Aposta Bônus Extra! Preencha TODOS os confrontos na seção amarela."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; return; }
 
   try {
-     await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+     fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) }).catch(function(){}); // fire-and-forget
      
      let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*\n👤 *${usuarioAtualAposta}*\n🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' : '16 Avos (Parte 2)'}*\n\n`;
      payload.palpites.forEach(p => {
@@ -1337,7 +1337,7 @@ async function enviarPalpites() {
         btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
         gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado);
         showPage('apostas');
-     }, 1000);
+     }, 200);
   } catch(e) { mostrarAlerta("⚠️ Erro ao gravar. Verifique a sua internet e tente novamente."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; }
 }
 
