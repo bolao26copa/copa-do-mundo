@@ -429,7 +429,7 @@ footer strong { color: #fff; font-weight: 600; }
           <div style="margin-top:12px; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6);" id="prazo-desc">
             16 Avos - Parte 1 (Jogos 73 a 76)
           </div>
-          <button class="aposta-btn" style="background:var(--amarelo); color:var(--azul); margin-top:16px; max-width: 200px;" onclick="showPage('apostas')">Ir para Apostas →</button>
+          <button class="aposta-btn" style="background:var(--amarelo); color:var(--azul); margin-top:16px; max-width: 200px;" onclick="abrirLogin('16avos-1')">Apostar Parte 1 →</button>
         </div>
 
         <!-- Countdown Parte 2 -->
@@ -447,36 +447,6 @@ footer strong { color: #fff; font-weight: 600; }
             16 Avos - Parte 2 (Jogos 77 a 88)
           </div>
           <button class="aposta-btn" style="background:#F39C12; color:#fff; margin-top:16px; max-width:220px;" onclick="abrirLogin('16avos-2')">⚡ Apostar Parte 2 →</button>
-        </div>
-
-        <!-- Status Parte 1 -->
-        <div class="card" id="card-status-16avos" style="padding:20px; margin-bottom:16px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:var(--azul);">📋 Status 16 Avos — Parte 1</div>
-            <button onclick="downloadStatusCard('p1')" title="Baixar" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
-          </div>
-          <div id="status-16avos-lista" style="display:flex; flex-direction:column; gap:5px;">
-            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
-          </div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
-            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
-            <span id="status-16avos-contador" style="font-weight:700;color:var(--azul)">—/27</span>
-          </div>
-        </div>
-
-        <!-- Status Parte 2 -->
-        <div class="card" id="card-status-16avos2" style="padding:20px; margin-bottom:16px; border-left:4px solid #1A6B3C;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:#1A6B3C;">⚡ Status 16 Avos — Parte 2</div>
-            <button onclick="downloadStatusCard('p2')" title="Baixar" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#1A6B3C;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
-          </div>
-          <div id="status-16avos2-lista" style="display:flex; flex-direction:column; gap:5px;">
-            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
-          </div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
-            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
-            <span id="status-16avos2-contador" style="font-weight:700;color:#1A6B3C">—/27</span>
-          </div>
         </div>
 
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
@@ -536,6 +506,36 @@ footer strong { color: #fff; font-weight: 600; }
           </div>
           <div id="top-artilheiros-lateral">
              <div style="text-align:center; padding:16px; color:var(--cinza-texto); font-size:13px;">⏳ Carregando...</div>
+          </div>
+        </div>
+
+        <!-- Status Parte 1 -->
+        <div class="card" id="card-status-16avos" style="padding:20px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:var(--azul);">📋 Status 16 Avos — Parte 1</div>
+            <button onclick="downloadStatusCard('p1')" title="Baixar" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
+          </div>
+          <div id="status-16avos-lista" style="display:flex; flex-direction:column; gap:5px;">
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
+            <span id="status-16avos-contador" style="font-weight:700;color:var(--azul)">—/27</span>
+          </div>
+        </div>
+
+        <!-- Status Parte 2 -->
+        <div class="card" id="card-status-16avos2" style="padding:20px; margin-bottom:16px; border-left:4px solid #1A6B3C;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:#1A6B3C;">⚡ Status 16 Avos — Parte 2</div>
+            <button onclick="downloadStatusCard('p2')" title="Baixar" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#1A6B3C;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
+          </div>
+          <div id="status-16avos2-lista" style="display:flex; flex-direction:column; gap:5px;">
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
+            <span id="status-16avos2-contador" style="font-weight:700;color:#1A6B3C">—/27</span>
           </div>
         </div>
       </div>
@@ -600,13 +600,13 @@ footer strong { color: #fff; font-weight: 600; }
         <button id="btn-aposta-16avos1" class="aposta-btn" onclick="abrirLogin('16avos-1')">Fazer Palpites →</button>
       </div>
 
-      <div class="aposta-card" id="card-aposta-16avos2" style="border-top: 3px solid var(--amarelo); opacity: 0.6;">
-        <div class="aposta-icon" style="background:#FFF3CD">⏳</div>
-        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+      <div class="aposta-card" id="card-aposta-16avos2" style="border-top: 3px solid #E67E22;">
+        <div class="aposta-icon" style="background:#FEF0E7">⚡</div>
+        <div class="aposta-status status-aberto" id="status-16avos2-card">● Aberto</div>
         <h3>16 Avos — Parte 2</h3>
-        <p>Palpites para os outros 12 jogos (77 a 88).</p>
-        <p style="font-size:12px; font-weight:600; color:var(--amarelo-escuro); margin-bottom:12px;">🗓 Libera: 28/jun à 01h00</p>
-        <button id="btn-aposta-16avos2" class="aposta-btn secondary" disabled>Disponível em 28/jun</button>
+        <p>Palpites para os 12 jogos restantes (77 a 88).</p>
+        <p style="font-size:12px; font-weight:600; color:#E67E22; margin-bottom:12px;">🗓 Encerra: 30/jun às 13:59</p>
+        <button id="btn-aposta-16avos2" class="aposta-btn" onclick="abrirLogin('16avos-2')">Fazer Palpites →</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
@@ -1334,8 +1334,9 @@ async function enviarPalpites() {
      }
 
      setTimeout(() => {
-        let htmlComprovante = `✅ <strong>Palpites Salvos com Sucesso!</strong><br><br><textarea id="txt-comprovante" style="width:100%; height:150px; font-size:12px; font-family:monospace; padding:8px; margin-bottom:12px;" readonly>${txtComprovante}</textarea><button onclick="navigator.clipboard.writeText(document.getElementById('txt-comprovante').value).then(()=> { this.innerText = '✅ Copiado!'; setTimeout(() => this.innerText = '📋 Copiar Comprovante', 2000); })" class="aposta-btn secondary" style="margin-bottom:10px;">📋 Copiar Comprovante</button>`;
-        mostrarAlerta(htmlComprovante); showPage('apostas'); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
+        btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
+        gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado);
+        showPage('apostas');
      }, 1000);
   } catch(e) { mostrarAlerta("⚠️ Erro ao gravar. Verifique a sua internet e tente novamente."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; }
 }
