@@ -2328,12 +2328,29 @@ function renderStatusCard(dados, listaId, contId, j1, j2) {
 function downloadStatusCard(parte) {
   var listaId = parte === 'p2' ? 'status-16avos2-lista' : 'status-16avos-lista';
   var contId  = parte === 'p2' ? 'status-16avos2-contador' : 'status-16avos-contador';
-  var titulo  = parte === 'p2' ? '⚡ Status Apostas — 16 Avos Parte 2 (Jogos 77-88)' : '📋 Status Apostas — 16 Avos Parte 1 (Jogos 73-76)';
+  var titulo  = parte === 'p2' ? '⚡ 16 Avos Parte 2 — Aguardando apostas' : '📋 16 Avos Parte 1 — Aguardando apostas';
   var lista   = document.getElementById(listaId);
   var cont    = document.getElementById(contId);
   if (!lista || !lista.children.length) { alert('Aguarde o carregamento.'); return; }
+
+  // Filtra apenas quem ainda NÃO apostou (⏳)
+  var pendentes = Array.from(lista.children).filter(function(el) {
+    return el.textContent.indexOf('⏳') >= 0;
+  });
+
+  if (pendentes.length === 0) {
+    alert('✅ Todos já apostaram! Ninguém faltando.');
+    return;
+  }
+
   var hoje = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  var cor = parte === 'p2' ? '#1A6B3C' : '#003087';
+  var cor  = parte === 'p2' ? '#1A6B3C' : '#003087';
+  var contTexto = cont ? cont.textContent : '';
+
+  var pendentesHTML = pendentes.map(function(el) {
+    return el.outerHTML;
+  }).join('');
+
   var wrapper = document.createElement('div');
   wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;width:340px;';
   wrapper.innerHTML =
@@ -2341,17 +2358,19 @@ function downloadStatusCard(parte) {
       '<div style="font-family:Bebas Neue,sans-serif;font-size:24px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
       '<div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;">'+titulo+'</div>' +
     '</div>' +
-    '<div style="display:flex;flex-direction:column;gap:5px;">' + lista.innerHTML + '</div>' +
+    '<div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:10px;">⏳ Faltando apostar ('+pendentes.length+' participante'+(pendentes.length>1?'s':'')+')</div>' +
+    '<div style="display:flex;flex-direction:column;gap:5px;">' + pendentesHTML + '</div>' +
     '<div style="margin-top:14px;padding-top:10px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;">' +
-      '<span style="color:#888">✅ apostou · ⏳ aguardando</span>' +
-      '<span style="font-weight:700;color:'+cor+'">' + (cont ? cont.textContent : '') + '</span>' +
+      '<span style="color:#888">Progresso:</span>' +
+      '<span style="font-weight:700;color:'+cor+'">'+contTexto+'</span>' +
     '</div>' +
     '<div style="font-size:10px;color:#aaa;margin-top:8px;text-align:right;">'+hoje+'</div>';
+
   document.body.appendChild(wrapper);
   html2canvas(wrapper,{scale:2,backgroundColor:'#F4F3EF',useCORS:true,logging:false})
     .then(function(c){
       var l=document.createElement('a');
-      l.download='status-16avos-'+parte+'-'+new Date().toISOString().slice(0,10)+'.jpg';
+      l.download='faltando-apostar-'+parte+'-'+new Date().toISOString().slice(0,10)+'.jpg';
       l.href=c.toDataURL('image/jpeg',0.95); l.click();
       document.body.removeChild(wrapper);
     }).catch(function(){document.body.removeChild(wrapper);});
@@ -2448,7 +2467,53 @@ function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
       l.download='extrato-'+payload.usuario.split(' ')[0].toLowerCase()+'-'+payload.fase+'.jpg';
       l.href=c.toDataURL('image/jpeg',0.95); l.click();
       document.body.removeChild(container);
-      mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong><br><br>📄 Seu extrato foi baixado automaticamente.<br><br><span style="font-size:12px;color:#888">Guarde o arquivo como comprovante da sua aposta.</span>');
+      // Monta extrato textual para o popup
+      var linhasExt = '';
+      payload.palpites.forEach(function(p) {
+        var jg = JOGOS.find(function(x){ return x.n === p.n; });
+        var t1 = jg ? jg.t1 : 'Time 1', t2 = jg ? jg.t2 : 'Time 2';
+        var advStr = '';
+        if (!usaBonusSeparado && p.adv) {
+          advStr = '<span style="font-size:11px;background:#E8F5E9;color:#2E7D32;padding:1px 6px;border-radius:4px;margin-left:4px;">' +
+            (p.p1 === p.p2 ? 'Pêns' : 'Avança') + ': ' + p.adv + '</span>';
+        }
+        linhasExt += '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f0f0f0;">' +
+          '<span style="font-size:12px;color:#888;min-width:52px">Jogo ' + p.n + '</span>' +
+          '<span style="font-size:12px;font-weight:600;flex:1;text-align:center">' + t1 + '</span>' +
+          '<span style="font-size:14px;font-weight:800;color:#003087;margin:0 8px">' + p.p1 + '×' + p.p2 + '</span>' +
+          '<span style="font-size:12px;font-weight:600;flex:1;text-align:center">' + t2 + '</span>' +
+          advStr +
+        '</div>';
+      });
+
+      var bonusExt = '';
+      if (usaBonusSeparado && payload.palpitesBonus && payload.palpitesBonus.length > 0) {
+        bonusExt = '<div style="margin-top:10px;padding:8px;background:#FFF8E1;border-radius:6px;border-left:3px solid #F39C12;">' +
+          '<div style="font-size:11px;font-weight:700;color:#856404;margin-bottom:6px;">🌟 BÔNUS — Quem avança</div>';
+        payload.palpitesBonus.forEach(function(b) {
+          var jg = JOGOS.find(function(x){ return x.n === b.n; });
+          bonusExt += '<div style="font-size:12px;padding:2px 0;display:flex;justify-content:space-between;">' +
+            '<span style="color:#888">Jogo ' + b.n + '</span>' +
+            '<span style="font-weight:700;color:#856404">→ ' + (b.adv||'—') + '</span></div>';
+        });
+        bonusExt += '</div>';
+      }
+
+      var faseLabel = {'16avos-1':'16 Avos — Parte 1','16avos-2':'16 Avos — Parte 2',
+        'oitavas':'Oitavas','quartas':'Quartas','semis':'Semifinais'}[payload.fase] || payload.fase;
+
+      var popupHTML =
+        '<div style="text-align:center;margin-bottom:14px;">' +
+          '<div style="font-size:20px;margin-bottom:4px;">✅</div>' +
+          '<strong style="font-size:15px;">Palpites salvos!</strong><br>' +
+          '<span style="font-size:12px;color:#888">' + payload.usuario + ' · ' + faseLabel + '</span>' +
+        '</div>' +
+        '<div style="max-height:320px;overflow-y:auto;border:1px solid #eee;border-radius:8px;padding:10px;margin-bottom:12px;">' +
+          linhasExt + bonusExt +
+        '</div>' +
+        '<div style="font-size:11px;color:#888;text-align:center;">📄 Extrato JPEG baixado automaticamente</div>';
+
+      mostrarAlerta(popupHTML);
     }).catch(function(){
       document.body.removeChild(container);
       mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong>');
