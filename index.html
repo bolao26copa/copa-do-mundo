@@ -1317,28 +1317,33 @@ async function enviarPalpites() {
   if (!tudoPreenchido) { mostrarAlerta("❌ Por favor, preencha todos os placares e empates/pênaltis."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; return; }
   if (usaBonusSeparado && !bonusPreenchido) { mostrarAlerta("❌ Você ativou a Aposta Bônus Extra! Preencha TODOS os confrontos na seção amarela."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; return; }
 
-  try {
-     fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) }).catch(function(){}); // fire-and-forget
-     
-     let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*\n👤 *${usuarioAtualAposta}*\n🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' : '16 Avos (Parte 2)'}*\n\n`;
-     payload.palpites.forEach(p => {
-        let adv = p.adv === 1 ? ' (Pênaltis: Casa)' : (p.adv === 2 ? ' (Pênaltis: Fora)' : '');
-        txtComprovante += `Jogo ${p.n}: ${p.p1} x ${p.p2}${!usaBonusSeparado ? adv : ''}\n`;
+  // Monta comprovante textual
+  let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*\n👤 *${usuarioAtualAposta}*\n🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' : '16 Avos (Parte 2)'}*\n\n`;
+  payload.palpites.forEach(p => {
+     let adv = (!usaBonusSeparado && p.adv) ? ` (Avança: ${p.adv})` : '';
+     txtComprovante += `Jogo ${p.n}: ${p.p1} x ${p.p2}${adv}\n`;
+  });
+  if (usaBonusSeparado) {
+     txtComprovante += `\n*Avançam (Bônus Independente):*\n`;
+     payload.palpitesBonus.forEach(b => {
+        txtComprovante += `Jogo ${b.n}: ${b.adv || 'Erro'}\n`;
      });
-     if (usaBonusSeparado) {
-        txtComprovante += `\n*Avançam (Bônus Independente):*\n`;
-        payload.palpitesBonus.forEach(b => {
-           let jInfo = JOGOS.find(x => x.n === b.n);
-           txtComprovante += `Jogo ${b.n}: ${b.adv === 1 ? jInfo.t1 : (b.adv === 2 ? jInfo.t2 : 'Erro')}\n`;
-        });
-     }
+  }
 
-     setTimeout(() => {
-        btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
-        gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado);
-        showPage('apostas');
-     }, 200);
-  } catch(e) { mostrarAlerta("⚠️ Erro ao gravar. Verifique a sua internet e tente novamente."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; }
+  // Mostra extrato IMEDIATAMENTE — não espera o servidor
+  btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)';
+  gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado);
+  showPage('apostas');
+
+  // Envia ao servidor em background — sem bloquear UI
+  setTimeout(function() {
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    }).catch(function(e) { console.warn('Envio falhou:', e); });
+  }, 0);
 }
 
 /* */
@@ -2276,8 +2281,13 @@ function isEliminado(s) { return ELIMINADOS_GRUPOS.some(function(e){return e.toL
 
 // ── Status P1 e P2 ────────────────────────────────────────────────
 async function carregarStatus16avos() {
-  renderStatusCard(await fetchAPI('status16avos'), 'status-16avos-lista', 'status-16avos-contador', 73, 76);
-  renderStatusCard(await fetchAPI('status16avos2'), 'status-16avos2-lista', 'status-16avos2-contador', 77, 88);
+  // Load both in parallel
+  var results = await Promise.all([
+    fetchAPI('status16avos'),
+    fetchAPI('status16avos2')
+  ]);
+  renderStatusCard(results[0], 'status-16avos-lista',  'status-16avos-contador',  73, 76);
+  renderStatusCard(results[1], 'status-16avos2-lista', 'status-16avos2-contador', 77, 88);
 }
 
 function renderStatusCard(dados, listaId, contId, j1, j2) {
