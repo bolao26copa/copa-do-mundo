@@ -432,6 +432,53 @@ footer strong { color: #fff; font-weight: 600; }
           <button class="aposta-btn" style="background:var(--amarelo); color:var(--azul); margin-top:16px; max-width: 200px;" onclick="showPage('apostas')">Ir para Apostas →</button>
         </div>
 
+        <!-- Countdown Parte 2 -->
+        <div class="card" style="padding:20px; background:#1A6B3C; border:none; text-align:center; margin-bottom:16px;">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.5); margin-bottom:10px;">
+            ⚡ 16 Avos Parte 2 — Apostas encerram em
+          </div>
+          <div id="countdown-prazo2" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+            <div class="cd-bloco"><div class="cd-num" id="cd-prazo2-dias">--</div><div class="cd-label">dias</div></div><div class="cd-sep">:</div>
+            <div class="cd-bloco"><div class="cd-num" id="cd-prazo2-horas">--</div><div class="cd-label">horas</div></div><div class="cd-sep">:</div>
+            <div class="cd-bloco"><div class="cd-num" id="cd-prazo2-min">--</div><div class="cd-label">min</div></div><div class="cd-sep">:</div>
+            <div class="cd-bloco"><div class="cd-num" id="cd-prazo2-seg" style="font-size:28px; color:#90EE90;">--</div><div class="cd-label">seg</div></div>
+          </div>
+          <div style="margin-top:12px; font-size:12px; font-weight:500; color:rgba(255,255,255,0.6);">
+            16 Avos - Parte 2 (Jogos 77 a 88)
+          </div>
+          <button class="aposta-btn" style="background:#F39C12; color:#fff; margin-top:16px; max-width:220px;" onclick="abrirLogin('16avos-2')">⚡ Apostar Parte 2 →</button>
+        </div>
+
+        <!-- Status Parte 1 -->
+        <div class="card" id="card-status-16avos" style="padding:20px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:var(--azul);">📋 Status 16 Avos — Parte 1</div>
+            <button onclick="downloadStatusCard('p1')" title="Baixar" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
+          </div>
+          <div id="status-16avos-lista" style="display:flex; flex-direction:column; gap:5px;">
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
+            <span id="status-16avos-contador" style="font-weight:700;color:var(--azul)">—/27</span>
+          </div>
+        </div>
+
+        <!-- Status Parte 2 -->
+        <div class="card" id="card-status-16avos2" style="padding:20px; margin-bottom:16px; border-left:4px solid #1A6B3C;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:#1A6B3C;">⚡ Status 16 Avos — Parte 2</div>
+            <button onclick="downloadStatusCard('p2')" title="Baixar" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#1A6B3C;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
+          </div>
+          <div id="status-16avos2-lista" style="display:flex; flex-direction:column; gap:5px;">
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+          </div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
+            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
+            <span id="status-16avos2-contador" style="font-weight:700;color:#1A6B3C">—/27</span>
+          </div>
+        </div>
+
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
           <div class="section-title" style="margin-bottom:0">Classificação</div>
           <button onclick="downloadClassificacao()" title="Baixar como imagem"
@@ -491,27 +538,6 @@ footer strong { color: #fff; font-weight: 600; }
              <div style="text-align:center; padding:16px; color:var(--cinza-texto); font-size:13px;">⏳ Carregando...</div>
           </div>
         </div>
-
-        <!-- Card: Status apostas 16 avos parte 1 -->
-        <div class="card" id="card-status-16avos" style="padding:20px; margin-top:16px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:var(--azul);">
-              📋 Status 16 Avos — Parte 1
-            </div>
-            <button onclick="downloadStatusCard()" title="Baixar como imagem"
-              style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">
-              📷
-            </button>
-          </div>
-          <div id="status-16avos-lista" style="display:flex; flex-direction:column; gap:5px;">
-            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
-          </div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
-            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
-            <span id="status-16avos-contador" style="font-weight:700;color:var(--azul)">—/27</span>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -774,7 +800,7 @@ footer strong { color: #fff; font-weight: 600; }
     <div class="submenu-content" id="sub-bonus">
       <div style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid var(--cinza-borda); padding-bottom:0;">
         <button id="tab-fixos" onclick="showBonusInternalTab('fixos')" class="submenu-btn active" style="color:var(--azul); border-bottom-color:var(--azul);">🏆 Campeão / Artilheiro</button>
-        <button id="tab-classificados" onclick="showBonusInternalTab('classificados')" class="submenu-btn">🎯 Classificados da Fase de Grupos</button>
+        <button id="tab-classificados" onclick="showBonusInternalTab('classificados')" class="submenu-btn">🎯 Classificados</button>
       </div>
       <div id="bonus-fixos">
         <div class="card" style="overflow-x:auto;">
@@ -1031,18 +1057,18 @@ const JOGOS = [
   {n:74, d:"29/jun", h:"17h30", f:"16 avos",   g:"",  t1:"Alemanha",        t2:"Paraguai",           g1:null, g2:null},
   {n:75, d:"29/jun", h:"22h",   f:"16 avos",   g:"",  t1:"Holanda",         t2:"Marrocos",         g1:null, g2:null},
   {n:76, d:"29/jun", h:"14h",   f:"16 avos",   g:"",  t1:"Brasil",          t2:"Japão",            g1:null, g2:null},
-  {n:77, d:"30/jun", h:"18h",   f:"16 avos",   g:"",  t1:"1I",              t2:"3CDFGH",           g1:null, g2:null},
-  {n:78, d:"30/jun", h:"14h",   f:"16 avos",   g:"",  t1:"Costa do Marfim", t2:"2I",               g1:null, g2:null},
-  {n:79, d:"30/jun", h:"22h",   f:"16 avos",   g:"",  t1:"México",          t2:"3CEFHI",           g1:null, g2:null},
-  {n:80, d:"01/jul", h:"13h",   f:"16 avos",   g:"",  t1:"1L",              t2:"3EHIJK",           g1:null, g2:null},
+  {n:77, d:"30/jun", h:"18h",   f:"16 avos",   g:"",  t1:"França",          t2:"Suécia",           g1:null, g2:null},
+  {n:78, d:"30/jun", h:"14h",   f:"16 avos",   g:"",  t1:"Costa do Marfim", t2:"Noruega",               g1:null, g2:null},
+  {n:79, d:"30/jun", h:"22h",   f:"16 avos",   g:"",  t1:"México",          t2:"Equador",           g1:null, g2:null},
+  {n:80, d:"01/jul", h:"13h",   f:"16 avos",   g:"",  t1:"Inglaterra",      t2:"RD Congo",           g1:null, g2:null},
   {n:81, d:"01/jul", h:"21h",   f:"16 avos",   g:"",  t1:"Estados Unidos",  t2:"Bósnia-Herzegovina", g1:null, g2:null},
-  {n:82, d:"01/jul", h:"17h",   f:"16 avos",   g:"",  t1:"1G",              t2:"3AEHIJ",           g1:null, g2:null},
-  {n:83, d:"02/jul", h:"20h",   f:"16 avos",   g:"",  t1:"2K",              t2:"2L",               g1:null, g2:null},
-  {n:84, d:"02/jul", h:"16h",   f:"16 avos",   g:"",  t1:"1H",              t2:"2J",               g1:null, g2:null},
-  {n:85, d:"03/jul", h:"00h",   f:"16 avos",   g:"",  t1:"Suíça",           t2:"3EFGIJ",           g1:null, g2:null},
-  {n:86, d:"03/jul", h:"17h",   f:"16 avos",   g:"",  t1:"Argentina",       t2:"2H",               g1:null, g2:null},
-  {n:87, d:"03/jul", h:"22h30", f:"16 avos",   g:"",  t1:"1K",              t2:"3DEIJL",           g1:null, g2:null},
-  {n:88, d:"03/jul", h:"15h",   f:"16 avos",   g:"",  t1:"2D",              t2:"2G",               g1:null, g2:null},
+  {n:82, d:"01/jul", h:"17h",   f:"16 avos",   g:"",  t1:"Bélgica",         t2:"Senegal",           g1:null, g2:null},
+  {n:83, d:"02/jul", h:"20h",   f:"16 avos",   g:"",  t1:"Portugal",        t2:"Croácia",               g1:null, g2:null},
+  {n:84, d:"02/jul", h:"16h",   f:"16 avos",   g:"",  t1:"Espanha",         t2:"Áustria",               g1:null, g2:null},
+  {n:85, d:"03/jul", h:"00h",   f:"16 avos",   g:"",  t1:"Suíça",           t2:"Argélia",           g1:null, g2:null},
+  {n:86, d:"03/jul", h:"17h",   f:"16 avos",   g:"",  t1:"Argentina",       t2:"Cabo Verde",               g1:null, g2:null},
+  {n:87, d:"03/jul", h:"22h30", f:"16 avos",   g:"",  t1:"Colômbia",        t2:"Gana",           g1:null, g2:null},
+  {n:88, d:"03/jul", h:"15h",   f:"16 avos",   g:"",  t1:"Austrália",       t2:"Egito",               g1:null, g2:null},
   
   {n:89, d:"04/jul", h:"18h",   f:"Oitavas",   g:"",  t1:"Venc. J74",       t2:"Venc. J77",        g1:null, g2:null},
   {n:90, d:"04/jul", h:"14h",   f:"Oitavas",   g:"",  t1:"Venc. J73",       t2:"Venc. J75",        g1:null, g2:null},
@@ -1135,11 +1161,18 @@ async function abrirLogin(fase) {
 
   if (sel.options.length <= 1) {
      sel.innerHTML = '<option value="">Selecione o seu nome...</option>';
-     let humanos = _dadosPalpites ? _dadosPalpites.participantes.filter(p => !isIA(p.nome)) : [];
-     humanos.sort((a, b) => a.nome.localeCompare(b.nome));
-     humanos.forEach(p => {
+     // IAs também podem palpitar no mata-mata
+     let todos = _dadosPalpites ? _dadosPalpites.participantes.slice() : [];
+     todos.sort((a, b) => {
+       let aIA = isIA(a.nome), bIA = isIA(b.nome);
+       if (aIA !== bIA) return aIA ? 1 : -1; // IAs por último
+       return a.nome.localeCompare(b.nome);
+     });
+     todos.forEach(p => {
        let opt = document.createElement('option');
-       opt.value = p.nome; opt.textContent = p.nome; sel.appendChild(opt);
+       opt.value = p.nome;
+       opt.textContent = isIA(p.nome) ? p.nome + ' 🤖' : p.nome;
+       sel.appendChild(opt);
      });
   }
 }
@@ -2191,10 +2224,37 @@ setInterval(function() {
         }
     }
   }
-  atualizar(); setInterval(atualizar, 1000);
+  // Update P2 countdown card
+  function atualizarCdP2() {
+    var p2alvo = getGameDate('30/jun', '13h59');
+    var agora2 = new Date();
+    var diff2  = p2alvo - agora2;
+    var pad    = function(n) { return String(n).padStart(2,'0'); };
+    var d2 = document.getElementById('cd-prazo2-dias');
+    var h2 = document.getElementById('cd-prazo2-horas');
+    var m2 = document.getElementById('cd-prazo2-min');
+    var s2 = document.getElementById('cd-prazo2-seg');
+    if (!d2) return;
+    if (diff2 > 0) {
+      var dias  = Math.floor(diff2/(1000*60*60*24));
+      var horas = Math.floor((diff2%(1000*60*60*24))/(1000*60*60));
+      var min   = Math.floor((diff2%(1000*60*60))/(1000*60));
+      var seg   = Math.floor((diff2%(1000*60))/1000);
+      d2.textContent = pad(dias); h2.textContent = pad(horas);
+      m2.textContent = pad(min);  s2.textContent = pad(seg);
+    } else {
+      d2.textContent='00'; h2.textContent='00'; m2.textContent='00'; s2.textContent='00';
+    }
+  }
+  atualizarCdP2();
+
+  atualizar(); setInterval(atualizar, 1000); setInterval(atualizarCdP2, 1000);
 })();
 
-// ── Lista eliminados fase de grupos ──────────────────────────────
+// ================================================================
+// NOVOS: Status 16 Avos + Downloads + Extrato + Classificação
+// ================================================================
+
 var ELIMINADOS_GRUPOS = [
   'Tchéquia','Catar','Haiti','Turquia','Curaçao','Tunísia',
   'Nova Zelândia','Uruguai','Arábia Saudita','Iraque','Jordânia','Panamá'
@@ -2202,80 +2262,82 @@ var ELIMINADOS_GRUPOS = [
 var IAS_NOMES = ['Chat GPT','Claude AI','Google Gemini','Deepseek'];
 
 function normalizarSelecao(s) {
-  var sLower = s.toLowerCase();
-  if (sLower.includes('tcheca') || sLower.includes('czech')) return 'Tchéquia';
-  if (sLower.includes('bosnia') || sLower.includes('bósnia')) return 'Bósnia-Herz.';
-  if (sLower === 'usa' || sLower.includes('united states')) return 'Estados Unidos';
-  if (sLower.includes('korea')) return 'Coreia do Sul';
-  if (sLower === 'congo, rd' || sLower === 'congo rd') return 'RD Congo';
-  if (sLower.includes('curaçau') || sLower.includes('curacau') || sLower.includes('curaçao')) return 'Curaçao';
+  var sl = s.toLowerCase();
+  if (sl.includes('tcheca')||sl.includes('czech')) return 'Tchéquia';
+  if (sl.includes('bosnia')||sl.includes('bósnia')) return 'Bósnia-Herz.';
+  if (sl==='usa'||sl.includes('united states')) return 'Estados Unidos';
+  if (sl.includes('korea')) return 'Coreia do Sul';
+  if (sl==='congo, rd'||sl==='congo rd') return 'RD Congo';
+  if (sl.includes('curaçau')||sl.includes('curacau')||sl.includes('curaçao')) return 'Curaçao';
   return s;
 }
+function isEliminado(s) { return ELIMINADOS_GRUPOS.some(function(e){return e.toLowerCase()===s.toLowerCase();}); }
 
-function isEliminado(selecao) {
-  return ELIMINADOS_GRUPOS.some(function(e) { return e.toLowerCase() === selecao.toLowerCase(); });
+// ── Status P1 e P2 ────────────────────────────────────────────────
+async function carregarStatus16avos() {
+  renderStatusCard(await fetchAPI('status16avos'), 'status-16avos-lista', 'status-16avos-contador', 73, 76);
+  renderStatusCard(await fetchAPI('status16avos2'), 'status-16avos2-lista', 'status-16avos2-contador', 77, 88);
 }
 
-// ── Status apostas 16 avos parte 1 ───────────────────────────────
-async function carregarStatus16avos() {
-  var lista    = document.getElementById('status-16avos-lista');
-  var contador = document.getElementById('status-16avos-contador');
+function renderStatusCard(dados, listaId, contId, j1, j2) {
+  var lista = document.getElementById(listaId);
+  var cont  = document.getElementById(contId);
   if (!lista) return;
-  var dados = await fetchAPI('status16avos');
   if (!dados || !dados.status) {
     lista.innerHTML = '<div style="color:var(--cinza-texto);font-size:13px;text-align:center">Não foi possível carregar.</div>';
     return;
   }
   var prontos = 0;
   lista.innerHTML = dados.status.map(function(p) {
-    var ia       = IAS_NOMES.indexOf(p.nome) >= 0;
-    var nomeDisp = abrevNome(p.nome) + (ia ? ' 🤖' : '');
-    var emoji    = p.apostou ? '✅' : '⏳';
-    var bg       = p.apostou ? '#F1F8F4' : '#FAFAF7';
-    var fw       = p.apostou ? '600' : '400';
-    var cor      = p.apostou ? '#276749' : '#888';
+    var ia  = IAS_NOMES.indexOf(p.nome) >= 0;
+    var nm  = abrevNome(p.nome) + (ia ? ' 🤖' : '');
+    var em  = p.apostou ? '✅' : '⏳';
+    var bg  = p.apostou ? '#F1F8F4' : '#FAFAF7';
+    var fw  = p.apostou ? '600' : '400';
+    var cor = p.apostou ? '#276749' : '#888';
     if (p.apostou) prontos++;
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:' + bg + ';' + (ia ? 'border-left:3px solid #C5CAE9;' : '') + '">' +
-      '<span style="font-size:13px;font-weight:' + fw + ';color:' + cor + '">' + nomeDisp + '</span>' +
-      '<span style="font-size:16px">' + emoji + '</span>' +
-    '</div>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:'+bg+';'+(ia?'border-left:3px solid #C5CAE9;':'')+'">' +
+      '<span style="font-size:13px;font-weight:'+fw+';color:'+cor+'">'+nm+'</span>' +
+      '<span style="font-size:16px">'+em+'</span></div>';
   }).join('');
-  if (contador) contador.textContent = prontos + '/' + dados.total;
-  if (prontos < dados.total) setTimeout(carregarStatus16avos, 2 * 60 * 1000);
+  if (cont) cont.textContent = prontos + '/' + dados.total;
+  if (prontos < dados.total) setTimeout(carregarStatus16avos, 2*60*1000);
 }
 
-// ── Download status card como JPEG ───────────────────────────────
-function downloadStatusCard() {
-  var lista    = document.getElementById('status-16avos-lista');
-  var contador = document.getElementById('status-16avos-contador');
+// ── Download status card ──────────────────────────────────────────
+function downloadStatusCard(parte) {
+  var listaId = parte === 'p2' ? 'status-16avos2-lista' : 'status-16avos-lista';
+  var contId  = parte === 'p2' ? 'status-16avos2-contador' : 'status-16avos-contador';
+  var titulo  = parte === 'p2' ? '⚡ Status Apostas — 16 Avos Parte 2 (Jogos 77-88)' : '📋 Status Apostas — 16 Avos Parte 1 (Jogos 73-76)';
+  var lista   = document.getElementById(listaId);
+  var cont    = document.getElementById(contId);
   if (!lista || !lista.children.length) { alert('Aguarde o carregamento.'); return; }
-  var hoje = new Date().toLocaleDateString('pt-BR') + ' ' +
-    new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+  var hoje = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var cor = parte === 'p2' ? '#1A6B3C' : '#003087';
   var wrapper = document.createElement('div');
   wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;width:340px;';
   wrapper.innerHTML =
-    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
+    '<div style="background:'+cor+';padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
       '<div style="font-family:Bebas Neue,sans-serif;font-size:24px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-      '<div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;">📋 Status Apostas — 16 Avos Parte 1 (Jogos 73-76)</div>' +
+      '<div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;">'+titulo+'</div>' +
     '</div>' +
     '<div style="display:flex;flex-direction:column;gap:5px;">' + lista.innerHTML + '</div>' +
     '<div style="margin-top:14px;padding-top:10px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:11px;">' +
       '<span style="color:#888">✅ apostou · ⏳ aguardando</span>' +
-      '<span style="font-weight:700;color:#003087">' + (contador ? contador.textContent : '') + '</span>' +
+      '<span style="font-weight:700;color:'+cor+'">' + (cont ? cont.textContent : '') + '</span>' +
     '</div>' +
-    '<div style="font-size:10px;color:#aaa;margin-top:8px;text-align:right;">' + hoje + '</div>';
+    '<div style="font-size:10px;color:#aaa;margin-top:8px;text-align:right;">'+hoje+'</div>';
   document.body.appendChild(wrapper);
-  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
-    .then(function(canvas) {
-      var link = document.createElement('a');
-      link.download = 'status-16avos-' + new Date().toISOString().slice(0,10) + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.click();
+  html2canvas(wrapper,{scale:2,backgroundColor:'#F4F3EF',useCORS:true,logging:false})
+    .then(function(c){
+      var l=document.createElement('a');
+      l.download='status-16avos-'+parte+'-'+new Date().toISOString().slice(0,10)+'.jpg';
+      l.href=c.toDataURL('image/jpeg',0.95); l.click();
       document.body.removeChild(wrapper);
-    }).catch(function() { document.body.removeChild(wrapper); });
+    }).catch(function(){document.body.removeChild(wrapper);});
 }
 
-// ── Download classificação como JPEG ────────────────────────────
+// ── Download classificação ────────────────────────────────────────
 function downloadClassificacao() {
   var card = document.getElementById('card-classificacao');
   var btn  = document.querySelector('[onclick="downloadClassificacao()"]');
@@ -2283,166 +2345,68 @@ function downloadClassificacao() {
   if (btn) btn.style.display = 'none';
   var wrapper = document.createElement('div');
   wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:20px;font-family:DM Sans,sans-serif;';
-  var header = '<div style="text-align:center;margin-bottom:14px;"><div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#003087;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-    '<div style="font-size:12px;color:#6B6860;margin-top:2px;">🏆 Classificação · ' + new Date().toLocaleDateString("pt-BR") + '</div></div>';
   var clone = card.cloneNode(true);
-  clone.style.overflow = 'visible'; clone.style.marginBottom = '0';
-  wrapper.innerHTML = header;
+  clone.style.overflow='visible'; clone.style.marginBottom='0';
+  wrapper.innerHTML = '<div style="text-align:center;margin-bottom:14px;"><div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#003087;letter-spacing:2px;">BOLÃO COPA 2026</div><div style="font-size:12px;color:#6B6860;margin-top:2px;">🏆 Classificação · '+new Date().toLocaleDateString("pt-BR")+'</div></div>';
   wrapper.appendChild(clone);
   document.body.appendChild(wrapper);
-  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
-    .then(function(canvas) {
-      var link = document.createElement('a');
-      link.download = 'classificacao-bolao-' + new Date().toISOString().slice(0,10) + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.click();
+  html2canvas(wrapper,{scale:2,backgroundColor:'#F4F3EF',useCORS:true,logging:false})
+    .then(function(c){
+      var l=document.createElement('a');
+      l.download='classificacao-bolao-'+new Date().toISOString().slice(0,10)+'.jpg';
+      l.href=c.toDataURL('image/jpeg',0.95); l.click();
       document.body.removeChild(wrapper);
-      if (btn) btn.style.display = 'flex';
-    }).catch(function() { document.body.removeChild(wrapper); if (btn) btn.style.display = 'flex'; });
-}
-
-// ── Download Campeão/Artilheiro como JPEG ───────────────────────
-function downloadBonusFixos() {
-  if (!_dadosBonus || !_dadosBonus.bonus) { alert('Aguarde o carregamento.'); return; }
-  var rows = _dadosBonus.bonus.map(function(b) {
-    var ia = IAS_NOMES.indexOf(b.nome) >= 0;
-    return '<tr style="' + (ia ? 'background:#F0F4FF;' : '') + '">' +
-      '<td style="padding:8px 12px;font-size:13px;font-weight:600">' + (ia ? abrevNome(b.nome) + ' 🤖' : abrevNome(b.nome)) + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.campeao||'—') + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.vice||'—') + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.terceiro||'—') + '</td>' +
-      '<td style="padding:8px 12px;font-size:13px;text-align:center">' + (b.artilheiro||'—') + '</td>' +
-    '</tr>';
-  }).join('');
-  var wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;min-width:600px;';
-  wrapper.innerHTML =
-    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:16px;">' +
-      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🏆 Apostas Bônus — Campeão, Vice, 3º Lugar e Artilheiro</div>' +
-    '</div>' +
-    '<div style="background:#fff;border-radius:8px;overflow:hidden;">' +
-      '<table style="border-collapse:collapse;width:100%;">' +
-        '<thead><tr style="background:#003087;color:#fff;">' +
-          '<th style="padding:10px 12px;font-size:12px;text-align:left">PARTICIPANTE</th>' +
-          '<th style="padding:10px 12px;font-size:12px;text-align:center">🥇 CAMPEÃO</th>' +
-          '<th style="padding:10px 12px;font-size:12px;text-align:center">🥈 VICE</th>' +
-          '<th style="padding:10px 12px;font-size:12px;text-align:center">🥉 3º LUGAR</th>' +
-          '<th style="padding:10px 12px;font-size:12px;text-align:center">⚽ ARTILHEIRO</th>' +
-        '</tr></thead><tbody>' + rows + '</tbody>' +
-      '</table>' +
-    '</div>' +
-    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' + new Date().toLocaleDateString('pt-BR') + '</div>';
-  document.body.appendChild(wrapper);
-  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
-    .then(function(canvas) {
-      var link = document.createElement('a');
-      link.download = 'bonus-campeao-' + new Date().toISOString().slice(0,10) + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.click();
-      document.body.removeChild(wrapper);
-    }).catch(function() { document.body.removeChild(wrapper); });
-}
-
-// ── Download Classificados Bônus como JPEG ───────────────────────
-function downloadClassificadosBonus() {
-  if (!_dadosClassif || !_dadosClassif.classificados) { alert('Aguarde o carregamento.'); return; }
-  var sel    = document.getElementById('filtro-bonus-part');
-  var filtro = sel ? sel.value : 'todos';
-  var lista  = filtro === 'todos' ? _dadosClassif.classificados
-    : _dadosClassif.classificados.filter(function(p) { return p.nome === filtro; });
-  var maxLen = Math.max.apply(null, lista.map(function(p) { return p.classificados.length; }));
-  var heads  = '<tr style="background:#003087;color:#fff;"><th style="padding:8px 10px;font-size:11px">#</th>';
-  lista.forEach(function(p) {
-    var ia = IAS_NOMES.indexOf(p.nome) >= 0;
-    heads += '<th style="padding:8px 10px;font-size:11px;text-align:center">' + (ia ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome)) + '</th>';
-  });
-  heads += '</tr>';
-  var bodyRows = '';
-  for (var i = 0; i < maxLen; i++) {
-    bodyRows += '<tr style="' + (i%2===0 ? 'background:#fff;' : 'background:#FAFAF7;') + '">';
-    bodyRows += '<td style="padding:6px 10px;font-size:11px;color:#888;text-align:center">' + (i+1) + '</td>';
-    lista.forEach(function(p) {
-      var ia  = IAS_NOMES.indexOf(p.nome) >= 0;
-      var sel = normalizarSelecao(p.classificados[i] || '—');
-      var eli = sel !== '—' && isEliminado(sel);
-      var bg  = eli ? 'background:#FFEBEE;' : (ia ? 'background:#F0F4FF;' : '');
-      var txt = eli ? 'text-decoration:line-through;opacity:0.6;' : '';
-      bodyRows += '<td style="padding:6px 10px;font-size:11px;text-align:center;' + bg + '">' +
-        '<span style="' + txt + '">' + sel + (eli ? ' ❌' : '') + '</span></td>';
-    });
-    bodyRows += '</tr>';
-  }
-  var filtroLabel = filtro === 'todos' ? 'Todos' : abrevNome(filtro);
-  var wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:#F4F3EF;padding:24px;font-family:DM Sans,sans-serif;';
-  wrapper.innerHTML =
-    '<div style="background:#003087;padding:16px 20px;border-radius:8px;margin-bottom:12px;">' +
-      '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
-      '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">🎯 Classificados para os 16 Avos · ' + filtroLabel + '</div>' +
-    '</div>' +
-    '<div style="background:#FFEBEE;border-radius:6px;padding:7px 12px;margin-bottom:10px;font-size:11px;color:#C62828;">❌ Fundo vermelho = eliminado na fase de grupos</div>' +
-    '<div style="background:#fff;border-radius:8px;overflow:hidden;">' +
-      '<table style="border-collapse:collapse;width:100%;"><thead>' + heads + '</thead><tbody>' + bodyRows + '</tbody></table>' +
-    '</div>' +
-    '<div style="font-size:10px;color:#aaa;margin-top:10px;text-align:right;">' + new Date().toLocaleDateString('pt-BR') + '</div>';
-  document.body.appendChild(wrapper);
-  html2canvas(wrapper, {scale:2, backgroundColor:'#F4F3EF', useCORS:true, logging:false})
-    .then(function(canvas) {
-      var link = document.createElement('a');
-      link.download = 'classificados-bonus-' + filtro.split(' ')[0].toLowerCase() + '-' + new Date().toISOString().slice(0,10) + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.click();
-      document.body.removeChild(wrapper);
-    }).catch(function() { document.body.removeChild(wrapper); });
+      if(btn) btn.style.display='flex';
+    }).catch(function(){document.body.removeChild(wrapper);if(btn) btn.style.display='flex';});
 }
 
 // ── Extrato JPEG após aposta ──────────────────────────────────────
 function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
-  var faseLabel = payload.fase === '16avos-1' ? '16 Avos — Parte 1' :
-                  payload.fase === '16avos-2' ? '16 Avos — Parte 2' :
-                  payload.fase === 'oitavas'  ? 'Oitavas de Final' :
-                  payload.fase === 'quartas'  ? 'Quartas de Final' :
-                  payload.fase === 'semis'    ? 'Semifinais' : payload.fase;
+  var faseLabel = {
+    '16avos-1':'16 Avos — Parte 1','16avos-2':'16 Avos — Parte 2',
+    'oitavas':'Oitavas de Final','quartas':'Quartas de Final','semis':'Semifinais'
+  }[payload.fase] || payload.fase;
+
   var linhasPalpites = '';
   payload.palpites.forEach(function(p) {
-    var jogo = JOGOS.find(function(x) { return x.n === p.n; });
-    var t1 = jogo ? jogo.t1 : 'Time 1', t2 = jogo ? jogo.t2 : 'Time 2';
-    var advTxt = '';
+    var jogo = JOGOS.find(function(x){return x.n===p.n;});
+    var t1=jogo?jogo.t1:'Time 1', t2=jogo?jogo.t2:'Time 2';
+    var advTxt='';
     if (!usaBonusSeparado && p.adv) {
-      var isEmpate = p.p1 === p.p2;
-      advTxt = '<span style="font-size:10px;background:#E8F5E9;color:#2E7D32;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:600;">' +
-        (isEmpate ? 'Pêns' : 'Avança') + ': ' + p.adv + '</span>';
+      var label = p.p1===p.p2 ? 'Pêns' : 'Avança';
+      advTxt='<span style="font-size:10px;background:#E8F5E9;color:#2E7D32;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:600;">'+label+': '+p.adv+'</span>';
     }
-    linhasPalpites += '<tr><td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + p.n + '</td>' +
-      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t1 + '</td>' +
-      '<td style="padding:6px 10px;font-size:15px;font-weight:700;color:#003087;text-align:center">' + p.p1 + ' × ' + p.p2 + '</td>' +
-      '<td style="padding:6px 10px;font-size:13px;font-weight:600">' + t2 + '</td>' +
-      '<td style="padding:6px 10px;font-size:12px;text-align:center">' + advTxt + '</td></tr>';
+    linhasPalpites+='<tr><td style="padding:6px 10px;font-size:12px;color:#555">Jogo '+p.n+'</td>' +
+      '<td style="padding:6px 10px;font-size:13px;font-weight:600">'+t1+'</td>' +
+      '<td style="padding:6px 10px;font-size:15px;font-weight:700;color:#003087;text-align:center">'+p.p1+' × '+p.p2+'</td>' +
+      '<td style="padding:6px 10px;font-size:13px;font-weight:600">'+t2+'</td>' +
+      '<td style="padding:6px 10px;font-size:12px;text-align:center">'+advTxt+'</td></tr>';
   });
-  var linhasBonus = '';
-  if (usaBonusSeparado && payload.palpitesBonus && payload.palpitesBonus.length > 0) {
-    linhasBonus = '<tr><td colspan="5" style="padding:8px 10px;background:#FFF8E1;font-size:12px;font-weight:700;color:#856404;border-top:2px solid #FFE082">🌟 BÔNUS INDEPENDENTE — Quem avança</td></tr>';
-    payload.palpitesBonus.forEach(function(b) {
-      var jogo = JOGOS.find(function(x) { return x.n === b.n; });
-      linhasBonus += '<tr style="background:#FFFDE7"><td style="padding:6px 10px;font-size:12px;color:#555">Jogo ' + b.n + '</td>' +
-        '<td colspan="3" style="padding:6px 10px;font-size:13px;color:#003087">' + (jogo ? jogo.t1 + ' × ' + jogo.t2 : '') + '</td>' +
-        '<td style="padding:6px 10px;font-size:13px;font-weight:700;color:#856404;text-align:right">→ ' + (b.adv||'—') + '</td></tr>';
+
+  var linhasBonus='';
+  if (usaBonusSeparado && payload.palpitesBonus && payload.palpitesBonus.length>0) {
+    linhasBonus='<tr><td colspan="5" style="padding:8px 10px;background:#FFF8E1;font-size:12px;font-weight:700;color:#856404;border-top:2px solid #FFE082">🌟 BÔNUS INDEPENDENTE — Quem avança</td></tr>';
+    payload.palpitesBonus.forEach(function(b){
+      var jogo=JOGOS.find(function(x){return x.n===b.n;});
+      linhasBonus+='<tr style="background:#FFFDE7"><td style="padding:6px 10px;font-size:12px;color:#555">Jogo '+b.n+'</td>' +
+        '<td colspan="3" style="padding:6px 10px;font-size:13px;color:#003087">'+(jogo?jogo.t1+' × '+jogo.t2:'')+'</td>' +
+        '<td style="padding:6px 10px;font-size:13px;font-weight:700;color:#856404;text-align:right">→ '+(b.adv||'—')+'</td></tr>';
     });
   }
-  var dataFmt = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  var container = document.createElement('div');
-  container.style.cssText = 'position:fixed;left:-9999px;top:0;';
-  container.innerHTML = '<div style="background:#fff;padding:0;width:480px;font-family:DM Sans,sans-serif;border-radius:12px;overflow:hidden;">' +
+
+  var dataFmt=new Date().toLocaleDateString('pt-BR')+' às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var container=document.createElement('div');
+  container.style.cssText='position:fixed;left:-9999px;top:0;';
+  container.innerHTML='<div style="background:#fff;width:480px;font-family:DM Sans,sans-serif;border-radius:12px;overflow:hidden;">' +
     '<div style="background:#003087;padding:20px 24px 16px;">' +
       '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#fff;letter-spacing:2px;">BOLÃO COPA 2026</div>' +
       '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">Extrato de Aposta</div>' +
     '</div>' +
     '<div style="background:#F0F4FF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;">' +
       '<div><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Apostador</div>' +
-      '<div style="font-size:16px;font-weight:700;color:#003087">' + payload.usuario + '</div></div>' +
+      '<div style="font-size:16px;font-weight:700;color:#003087">'+payload.usuario+'</div></div>' +
       '<div style="text-align:right"><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Fase</div>' +
-      '<div style="font-size:14px;font-weight:700;color:#003087">' + faseLabel + '</div></div>' +
+      '<div style="font-size:14px;font-weight:700;color:#003087">'+faseLabel+'</div></div>' +
     '</div>' +
     '<table style="width:100%;border-collapse:collapse;">' +
       '<thead><tr style="background:#F4F3EF;">' +
@@ -2452,21 +2416,20 @@ function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
         '<th style="padding:8px 10px;font-size:11px;color:#888;text-align:left">FORA</th>' +
         '<th style="padding:8px 10px;font-size:11px;color:#888"></th>' +
       '</tr></thead>' +
-      '<tbody>' + linhasPalpites + linhasBonus + '</tbody>' +
+      '<tbody>'+linhasPalpites+linhasBonus+'</tbody>' +
     '</table>' +
     '<div style="padding:12px 24px;background:#F4F3EF;display:flex;justify-content:space-between;font-size:10px;color:#aaa;">' +
-      '<div>italopsilva-law.github.io/bolao-copa-2026</div><div>' + dataFmt + '</div>' +
+      '<div>italopsilva-law.github.io/bolao-copa-2026</div><div>'+dataFmt+'</div>' +
     '</div></div>';
   document.body.appendChild(container);
-  html2canvas(container.firstChild, {scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false})
-    .then(function(canvas) {
-      var link = document.createElement('a');
-      link.download = 'extrato-' + payload.usuario.split(' ')[0].toLowerCase() + '-' + payload.fase + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.95);
-      link.click();
+  html2canvas(container.firstChild,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false})
+    .then(function(c){
+      var l=document.createElement('a');
+      l.download='extrato-'+payload.usuario.split(' ')[0].toLowerCase()+'-'+payload.fase+'.jpg';
+      l.href=c.toDataURL('image/jpeg',0.95); l.click();
       document.body.removeChild(container);
       mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong><br><br>📄 Seu extrato foi baixado automaticamente.<br><br><span style="font-size:12px;color:#888">Guarde o arquivo como comprovante da sua aposta.</span>');
-    }).catch(function() {
+    }).catch(function(){
       document.body.removeChild(container);
       mostrarAlerta('✅ <strong>Palpites salvos com sucesso!</strong>');
     });
