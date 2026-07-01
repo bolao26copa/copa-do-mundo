@@ -2224,30 +2224,6 @@ setInterval(function() {
         }
     }
   }
-  // Update P2 countdown card
-  function atualizarCdP2() {
-    var p2alvo = getGameDate('30/jun', '13h59');
-    var agora2 = new Date();
-    var diff2  = p2alvo - agora2;
-    var pad    = function(n) { return String(n).padStart(2,'0'); };
-    var d2 = document.getElementById('cd-prazo2-dias');
-    var h2 = document.getElementById('cd-prazo2-horas');
-    var m2 = document.getElementById('cd-prazo2-min');
-    var s2 = document.getElementById('cd-prazo2-seg');
-    if (!d2) return;
-    if (diff2 > 0) {
-      var dias  = Math.floor(diff2/(1000*60*60*24));
-      var horas = Math.floor((diff2%(1000*60*60*24))/(1000*60*60));
-      var min   = Math.floor((diff2%(1000*60*60))/(1000*60));
-      var seg   = Math.floor((diff2%(1000*60))/1000);
-      d2.textContent = pad(dias); h2.textContent = pad(horas);
-      m2.textContent = pad(min);  s2.textContent = pad(seg);
-    } else {
-      d2.textContent='00'; h2.textContent='00'; m2.textContent='00'; s2.textContent='00';
-    }
-  }
-  atualizarCdP2();
-
   // Countdown Oitavas P1: encerra 04/jul 13h59 BRT
   function atualizarCdOitavas1() {
     var alvo = getGameDate('04/jul', '13h59');
@@ -2267,7 +2243,7 @@ setInterval(function() {
   }
   atualizarCdOitavas1();
 
-  atualizar(); setInterval(atualizar, 1000); setInterval(atualizarCdP2, 1000); setInterval(atualizarCdOitavas1, 1000);
+  atualizar(); setInterval(atualizar, 1000); setInterval(atualizarCdOitavas1, 1000);
 })();
 
 // ================================================================
@@ -2294,15 +2270,8 @@ function isEliminado(s) { return ELIMINADOS_GRUPOS.some(function(e){return e.toL
 
 // ── Status P1 e P2 ────────────────────────────────────────────────
 async function carregarStatus16avos() {
-  // Load all in parallel
-  var results = await Promise.all([
-    fetchAPI('status16avos'),
-    fetchAPI('status16avos2'),
-    fetchAPI('statusoitavas1')
-  ]);
-  renderStatusCard(results[0], 'status-16avos-lista',   'status-16avos-contador',   73, 76);
-  renderStatusCard(results[1], 'status-16avos2-lista',  'status-16avos2-contador',  77, 88);
-  renderStatusCard(results[2], 'status-oitavas1-lista', 'status-oitavas1-contador', 89, 92);
+  var dados = await fetchAPI('statusoitavas1');
+  renderStatusCard(dados, 'status-oitavas1-lista', 'status-oitavas1-contador', 89, 92);
 }
 
 function renderStatusCard(dados, listaId, contId, j1, j2) {
