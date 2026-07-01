@@ -2162,8 +2162,8 @@ setInterval(function() {
     const cdMin = document.getElementById('cd-prazo-min'), cdSeg = document.getElementById('cd-prazo-seg');
     
     if (prazoAlvo) {
-        document.getElementById('prazo-titulo').textContent = tituloPrazo;
-        document.getElementById('prazo-desc').textContent = descPrazo;
+        if(document.getElementById('prazo-titulo')) document.getElementById('prazo-titulo').textContent = tituloPrazo;
+        if(document.getElementById('prazo-desc')) document.getElementById('prazo-desc').textContent = descPrazo;
         var diff = prazoAlvo - agora;
         if (diff > 0) {
             var dias = Math.floor(diff / (1000 * 60 * 60 * 24)), horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -2176,8 +2176,8 @@ setInterval(function() {
             if(cdMin) cdMin.textContent = "00"; if(cdSeg) cdSeg.textContent = "00";
         }
     } else {
-        document.getElementById('prazo-titulo').textContent = "Prazos de Aposta Encerrados";
-        document.getElementById('prazo-desc').textContent = "Aguardando próxima fase";
+        if(document.getElementById('prazo-titulo')) document.getElementById('prazo-titulo').textContent = 'Prazos de Aposta Encerrados';
+        if(document.getElementById('prazo-desc')) document.getElementById('prazo-desc').textContent = 'Aguardando próxima fase';
         if(cdDias) cdDias.textContent = "--"; if(cdHoras) cdHoras.textContent = "--";
         if(cdMin) cdMin.textContent = "--"; if(cdSeg) cdSeg.textContent = "--";
     }
@@ -2270,8 +2270,15 @@ function isEliminado(s) { return ELIMINADOS_GRUPOS.some(function(e){return e.toL
 
 // ── Status P1 e P2 ────────────────────────────────────────────────
 async function carregarStatus16avos() {
-  var dados = await fetchAPI('statusoitavas1');
-  renderStatusCard(dados, 'status-oitavas1-lista', 'status-oitavas1-contador', 89, 92);
+  var lista = document.getElementById('status-oitavas1-lista');
+  try {
+    var dados = await fetchAPI('statusoitavas1');
+    console.log('[status oitavas1] resposta:', dados);
+    renderStatusCard(dados, 'status-oitavas1-lista', 'status-oitavas1-contador', 89, 92);
+  } catch(err) {
+    console.error('[status oitavas1] erro:', err);
+    if (lista) lista.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao carregar. Verifique o console.</div>';
+  }
 }
 
 function renderStatusCard(dados, listaId, contId, j1, j2) {
@@ -2283,7 +2290,7 @@ function renderStatusCard(dados, listaId, contId, j1, j2) {
     return;
   }
   var prontos = 0;
-  lista.innerHTML = dados.status.map(function(p) {
+  lista.innerHTML = dados.status.filter(function(p){ return p && p.nome; }).map(function(p) {
     var ia  = IAS_NOMES.indexOf(p.nome) >= 0;
     var nm  = abrevNome(p.nome) + (ia ? ' 🤖' : '');
     var em  = p.apostou ? '✅' : '⏳';
