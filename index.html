@@ -882,7 +882,8 @@ function isJogoProtegido(n) {
   const agora = new Date();
   if (n >= 73 && n <= 76) return agora < getGameDate('28/jun', '15h59');
   if (n >= 77 && n <= 88) return agora < getGameDate('30/jun', '13h59');
-  if (n >= 89 && n <= 96) return agora < getGameDate('04/jul', '14h00'); 
+  if (n >= 89 && n <= 92) return agora < getGameDate('04/jul', '13h59');
+  if (n >= 93 && n <= 96) return agora < getGameDate('06/jul', '14h59');
   if (n >= 97 && n <= 100) return agora < getGameDate('09/jul', '17h00'); 
   if (n >= 101 && n <= 102) return agora < getGameDate('14/jul', '16h00'); 
   if (n >= 103) return agora < getGameDate('18/jul', '18h00'); 
@@ -1829,7 +1830,7 @@ function renderPalpitesParticipante() {
     parts = nomesUnicos.map(nome => _dadosPalpites.participantes.find(p => p.nome === nome)).filter(p => p !== undefined);
   }
 
-  var jogosLib = JOGOS.filter(j => j.n <= 88); 
+  var jogosLib = JOGOS.filter(j => j.n <= 96); 
   if (valJogo !== 'todos') jogosLib = jogosLib.filter(j => j.n === parseInt(valJogo));
 
   var html = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:600px;"><thead><tr><th>Jogo</th><th>Partida</th><th style="text-align:center">Resultado</th>';
