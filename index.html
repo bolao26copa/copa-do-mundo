@@ -447,7 +447,7 @@ footer strong { color: #fff; font-weight: 600; }
                 <th>Participante</th>
                 <th>Pontos</th>
                 <th>Cravadas 🎯</th>
-                <th>Acertos ✅</th>
+                <th>Palpites ✅</th>
                 <th>Invertidos 🤡</th>
               </tr>
             </thead>
@@ -499,7 +499,7 @@ footer strong { color: #fff; font-weight: 600; }
             <button onclick="downloadStatusCard('oitavas2')" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#0E6251;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
           </div>
           <div id="status-oitavas2-lista" style="display:flex; flex-direction:column; gap:5px;">
-            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">📡 Conectando ao servidor ao vivo...</div>
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
           </div>
           <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
             <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
@@ -1378,7 +1378,6 @@ async function carregarJogosDoGoogleSheets() {
     // UI Updates
     renderUltimosResultados();
     renderProximosJogos();
-    carregarClassificacao();
     
     const pg = document.getElementById('page-jogos');
     if (pg && pg.classList.contains('active')) {
@@ -1451,65 +1450,38 @@ async function carregarArtilhariaDoGoogleSheets() {
 }
 
 async function carregarClassificacao() {
+  var dados = await fetchAPI('classificacao');
   var tbody = document.getElementById('tabela-classificacao');
-  
-  if (!_dadosPalpites) {
-    var dadosGrupos = await carregarDadosGrupos();
-    if (dadosGrupos) _dadosPalpites = { participantes: sortParticipants(dadosGrupos.participantes), jogos: dadosGrupos.jogos };
-  }
-  
-  if (!_dadosPalpites || !_dadosPalpites.participantes) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">⏳ Falha ao carregar palpites.</td></tr>';
+  if (!dados || !dados.participantes || dados.participantes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">⏳ Aguardando início da Copa...</td></tr>';
     return;
   }
-
-  var lista = [];
-  _dadosPalpites.participantes.forEach(function(p) {
-     var pts = 0, cravadas = 0, palpitesCorretos = 0, invertidos = 0;
-     if (p.palpites) {
-        p.palpites.forEach(function(palp) {
-           if (palp.p1 === null) return;
-           var jogoReal = JOGOS.find(function(x) { return x.n === palp.n; });
-           if (jogoReal && jogoReal.g1 !== null && jogoReal.g2 !== null) {
-              
-              var p_pts = window.calcularPontosPalpite(palp.p1, palp.p2, jogoReal.g1, jogoReal.g2);
-              pts += p_pts;
-              if (p_pts === 50) cravadas++;
-              
-              // Acerto de vencedor ou empate
-              var vPalp = palp.p1 > palp.p2 ? 1 : (palp.p1 < palp.p2 ? 2 : 0);
-              var vReal = jogoReal.g1 > jogoReal.g2 ? 1 : (jogoReal.g1 < jogoReal.g2 ? 2 : 0);
-              if (vPalp === vReal) palpitesCorretos++;
-              
-              var acertou = (palp.p1 === jogoReal.g1 && palp.p2 === jogoReal.g2);
-              var placarInvertido = !acertou && (palp.p1 === jogoReal.g2 && palp.p2 === jogoReal.g1 && jogoReal.g1 !== jogoReal.g2);
-              if (placarInvertido) invertidos++;
-           }
-        });
-     }
-     lista.push({ nome: p.nome, pts: pts, cravadas: cravadas, palpites: palpitesCorretos, invertidos: invertidos });
-  });
-
-  var humanos = lista.filter(function(p) { return !isIA(p.nome); });
-  var ias = lista.filter(function(p) { return isIA(p.nome); });
+  var dadosGrupos = await carregarDadosGrupos();
+  var mapaPalpites = {};
+  if (dadosGrupos && dadosGrupos.participantes) {
+    dadosGrupos.participantes.forEach(function(p) { mapaPalpites[p.nome] = p.palpites; });
+  }
+  
+  var humanos = dados.participantes.filter(p => !isIA(p.nome));
+  var ias = dados.participantes.filter(p => isIA(p.nome));
   
   humanos.sort(function(a, b) {
-     if (b.pts !== a.pts) return b.pts - a.pts;
-     if (b.cravadas !== a.cravadas) return b.cravadas - a.cravadas;
-     return b.palpites - a.palpites;
+     if (Number(b.pts) !== Number(a.pts)) return Number(b.pts) - Number(a.pts);
+     if (Number(b.cravadas) !== Number(a.cravadas)) return Number(b.cravadas) - Number(a.cravadas);
+     return Number(b.palpites) - Number(a.palpites);
   });
   
   var posReal = 1;
   for (var i = 0; i < humanos.length; i++) {
     if (i > 0) {
        var prev = humanos[i-1]; var curr = humanos[i];
-       if (curr.pts < prev.pts || curr.cravadas < prev.cravadas || curr.palpites < prev.palpites) {
+       if (Number(curr.pts) < Number(prev.pts) || Number(curr.cravadas) < Number(prev.cravadas) || Number(curr.palpites) < Number(prev.palpites)) {
            posReal = i + 1;
        }
     }
     humanos[i].posFormatada = posReal;
   }
-  ias.forEach(function(ia) { ia.posFormatada = '-'; });
+  ias.forEach(ia => ia.posFormatada = '-');
   var parts = humanos.concat(ias);
 
   tbody.innerHTML = parts.map(function(p) {
@@ -1518,12 +1490,32 @@ async function carregarClassificacao() {
     var nomeDisplay = isIA_part ? nomeBase + ' 🤖' : nomeBase;
     var rankDisplay = p.posFormatada !== '-' ? p.posFormatada + 'º' : '🤖';
     var posClass = p.posFormatada === 1 ? 'pos-1' : p.posFormatada === 2 ? 'pos-2' : p.posFormatada === 3 ? 'pos-3' : 'pos-other';
-    var invertidosExibicao = p.invertidos > 0 ? p.invertidos : '-';
+    var pontosExibicao = (String(p.pts).includes('#REF')) ? '0' : p.pts;
+    
+    var countInvertidos = 0;
+    var pPalpites = mapaPalpites[p.nome];
+    if (!pPalpites) {
+       let keyEncontrada = Object.keys(mapaPalpites).find(k => abrevNome(k) === nomeBase);
+       if (keyEncontrada) pPalpites = mapaPalpites[keyEncontrada];
+    }
+    if (pPalpites) {
+      JOGOS.forEach(function(j) {
+        if (j.g1 !== null && j.g2 !== null) {
+          var palp = pPalpites.find(x => x.n === j.n);
+          if (palp && palp.p1 !== null) {
+            var acertou = (palp.p1 === j.g1 && palp.p2 === j.g2);
+            var placarInvertido = !acertou && (palp.p1 === j.g2 && palp.p2 === j.g1 && j.g1 !== j.g2);
+            if (placarInvertido) countInvertidos++;
+          }
+        }
+      });
+    }
+    var invertidosExibicao = countInvertidos > 0 ? countInvertidos : '-';
 
     return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
       '<td><span class="pos-badge ' + posClass + '">' + rankDisplay + '</span></td>' +
       '<td class="participant-name">' + nomeDisplay + '</td>' +
-      '<td class="pts' + (p.posFormatada <= 3 && !isIA_part ? ' pts-destaque' : '') + '">' + p.pts + '</td>' +
+      '<td class="pts' + (p.posFormatada <= 3 && !isIA_part ? ' pts-destaque' : '') + '">' + pontosExibicao + '</td>' +
       '<td style="text-align:center">' + p.cravadas + '</td>' +
       '<td style="text-align:center">' + p.palpites + '</td>' +
       '<td style="text-align:center; color:#C0392B; font-weight:700;">' + invertidosExibicao + '</td></tr>';
@@ -2132,8 +2124,10 @@ function renderClassificadosParticipante() {
 }
 
 async function inicializarDados() {
+  // Tudo em paralelo — cada função é independente
   carregarArtilhariaDoGoogleSheets();
   carregarJogosDoGoogleSheets();
+  carregarClassificacao();
   carregarStatus16avos();
 }
 
@@ -2314,7 +2308,7 @@ async function carregarStatus16avos() {
     console.error('[status oitavas] erro:', err);
     ['status-oitavas2-lista'].forEach(function(id) {
       var el = document.getElementById(id);
-      if (el) el.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao buscar dados ao vivo. Atualize a página.</div>';
+      if (el) el.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao carregar.</div>';
     });
   }
 }
