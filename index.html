@@ -2131,8 +2131,10 @@ async function inicializarDados() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('stat-participantes').textContent = '…';
-  document.getElementById('stat-jogos-feitos').textContent = JOGOS.filter(j => j.g1 !== null).length;
+  var sp = document.getElementById('stat-participantes');
+  var sj = document.getElementById('stat-jogos-feitos');
+  if (sp) sp.textContent = '…';
+  if (sj) sj.textContent = JOGOS.filter(j => j.g1 !== null).length;
 });
 
 window.addEventListener('load', inicializarDados);
@@ -2144,6 +2146,7 @@ setInterval(function() {
 
 (function() {
   function atualizar() {
+   try {
     var agora = new Date();
     
     let prazoAlvo = null, tituloPrazo = "", descPrazo = "";
@@ -2225,6 +2228,7 @@ setInterval(function() {
             btn16Avos2.className = 'aposta-btn secondary'; btn16Avos2.textContent = 'Prazo encerrado'; btn16Avos2.disabled = true;
         }
     }
+   } catch(errCd) { console.warn("countdown:", errCd); }
   }
   // Countdown Oitavas P1: encerra 04/jul 13h59 BRT
   function atualizarCdOitavas1() {
@@ -2317,8 +2321,9 @@ function renderStatusCard(dados, listaId, contId, j1, j2) {
     return;
   }
   var prontos = 0;
+  var iasSafe = (typeof IAS_NOMES !== 'undefined' && IAS_NOMES) ? IAS_NOMES : ['Chat GPT','Claude AI','Google Gemini','Deepseek'];
   lista.innerHTML = dados.status.filter(function(p){ return p && p.nome; }).map(function(p) {
-    var ia  = IAS_NOMES.indexOf(p.nome) >= 0;
+    var ia  = iasSafe.indexOf(p.nome) >= 0;
     var nm  = abrevNome(p.nome) + (ia ? ' 🤖' : '');
     var em  = p.apostou ? '✅' : '⏳';
     var bg  = p.apostou ? '#F1F8F4' : '#FAFAF7';
