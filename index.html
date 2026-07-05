@@ -447,7 +447,7 @@ footer strong { color: #fff; font-weight: 600; }
                 <th>Participante</th>
                 <th>Pontos</th>
                 <th>Cravadas 🎯</th>
-                <th>Palpites ✅</th>
+                <th>Acertos ✅</th>
                 <th>Invertidos 🤡</th>
               </tr>
             </thead>
@@ -499,7 +499,7 @@ footer strong { color: #fff; font-weight: 600; }
             <button onclick="downloadStatusCard('oitavas2')" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#0E6251;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
           </div>
           <div id="status-oitavas2-lista" style="display:flex; flex-direction:column; gap:5px;">
-            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">📡 Conectando ao servidor ao vivo...</div>
           </div>
           <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
             <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
@@ -1465,23 +1465,29 @@ async function carregarClassificacao() {
 
   var lista = [];
   _dadosPalpites.participantes.forEach(function(p) {
-     var pts = 0, cravadas = 0, palpitesFeitos = 0, invertidos = 0;
+     var pts = 0, cravadas = 0, palpitesCorretos = 0, invertidos = 0;
      if (p.palpites) {
         p.palpites.forEach(function(palp) {
            if (palp.p1 === null) return;
            var jogoReal = JOGOS.find(function(x) { return x.n === palp.n; });
            if (jogoReal && jogoReal.g1 !== null && jogoReal.g2 !== null) {
-              palpitesFeitos++;
+              
               var p_pts = window.calcularPontosPalpite(palp.p1, palp.p2, jogoReal.g1, jogoReal.g2);
               pts += p_pts;
               if (p_pts === 50) cravadas++;
+              
+              // Acerto de vencedor ou empate
+              var vPalp = palp.p1 > palp.p2 ? 1 : (palp.p1 < palp.p2 ? 2 : 0);
+              var vReal = jogoReal.g1 > jogoReal.g2 ? 1 : (jogoReal.g1 < jogoReal.g2 ? 2 : 0);
+              if (vPalp === vReal) palpitesCorretos++;
+              
               var acertou = (palp.p1 === jogoReal.g1 && palp.p2 === jogoReal.g2);
               var placarInvertido = !acertou && (palp.p1 === jogoReal.g2 && palp.p2 === jogoReal.g1 && jogoReal.g1 !== jogoReal.g2);
               if (placarInvertido) invertidos++;
            }
         });
      }
-     lista.push({ nome: p.nome, pts: pts, cravadas: cravadas, palpites: palpitesFeitos, invertidos: invertidos });
+     lista.push({ nome: p.nome, pts: pts, cravadas: cravadas, palpites: palpitesCorretos, invertidos: invertidos });
   });
 
   var humanos = lista.filter(function(p) { return !isIA(p.nome); });
@@ -2308,7 +2314,7 @@ async function carregarStatus16avos() {
     console.error('[status oitavas] erro:', err);
     ['status-oitavas2-lista'].forEach(function(id) {
       var el = document.getElementById(id);
-      if (el) el.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao carregar.</div>';
+      if (el) el.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao buscar dados ao vivo. Atualize a página.</div>';
     });
   }
 }
