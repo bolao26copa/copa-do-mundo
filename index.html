@@ -1378,6 +1378,9 @@ async function carregarJogosDoGoogleSheets() {
     // UI Updates
     renderUltimosResultados();
     renderProximosJogos();
+    carregarClassificacao();
+    
+    const pg = document.getElementById('page-jogos');
     
     const pg = document.getElementById('page-jogos');
     if (pg && pg.classList.contains('active')) {
@@ -1450,78 +1453,87 @@ async function carregarArtilhariaDoGoogleSheets() {
 }
 
 async function carregarClassificacao() {
-  var dados = await fetchAPI('classificacao');
   var tbody = document.getElementById('tabela-classificacao');
-  if (!dados || !dados.participantes || dados.participantes.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">⏳ Aguardando início da Copa...</td></tr>';
+  
+  // 1. Garantir que os palpites estáticos estejam carregados do JSON rápido
+  if (!_dadosPalpites) {
+    var dadosGrupos = await carregarDadosGrupos();
+    if (dadosGrupos) _dadosPalpites = { participantes: sortParticipants(dadosGrupos.participantes), jogos: dadosGrupos.jogos };
+  }
+  
+  if (!_dadosPalpites || !_dadosPalpites.participantes) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--cinza-texto);font-size:14px;">⏳ Falha ao carregar palpites.</td></tr>';
     return;
   }
-  var dadosGrupos = await carregarDadosGrupos();
-  var mapaPalpites = {};
-  if (dadosGrupos && dadosGrupos.participantes) {
-    dadosGrupos.participantes.forEach(function(p) { mapaPalpites[p.nome] = p.palpites; });
-  }
+
+  // 2. Calcular tudo localmente (ultrarrápido, sem depender da lentidão do Google Sheets)
+  var lista = [];
+  _dadosPalpites.participantes.forEach(function(p) {
+     var pts = 0, cravadas = 0, palpitesFeitos = 0, invertidos = 0;
+     if (p.palpites) {
+        p.palpites.forEach(function(palp) {
+           if (palp.p1 === null) return;
+           var jogoReal = JOGOS.find(function(x) { return x.n === palp.n; });
+           // Só pontua se o jogo já tem resultado oficial
+           if (jogoReal && jogoReal.g1 !== null && jogoReal.g2 !== null) {
+              palpitesFeitos++;
+              var p_pts = window.calcularPontosPalpite(palp.p1, palp.p2, jogoReal.g1, jogoReal.g2);
+              pts += p_pts;
+              if (p_pts === 50) cravadas++;
+              
+              // Verifica se o placar foi invertido
+              var acertou = (palp.p1 === jogoReal.g1 && palp.p2 === jogoReal.g2);
+              var placarInvertido = !acertou && (palp.p1 === jogoReal.g2 && palp.p2 === jogoReal.g1 && jogoReal.g1 !== jogoReal.g2);
+              if (placarInvertido) invertidos++;
+           }
+        });
+     }
+     lista.push({ nome: p.nome, pts: pts, cravadas: cravadas, palpites: palpitesFeitos, invertidos: invertidos });
+  });
+
+  // Separar humanos e IAs
+  var humanos = lista.filter(function(p) { return !isIA(p.nome); });
+  var ias = lista.filter(function(p) { return isIA(p.nome); });
   
-  var humanos = dados.participantes.filter(p => !isIA(p.nome));
-  var ias = dados.participantes.filter(p => isIA(p.nome));
-  
+  // Ordenação principal: Pontos > Cravadas > Quantidade de palpites
   humanos.sort(function(a, b) {
-     if (Number(b.pts) !== Number(a.pts)) return Number(b.pts) - Number(a.pts);
-     if (Number(b.cravadas) !== Number(a.cravadas)) return Number(b.cravadas) - Number(a.cravadas);
-     return Number(b.palpites) - Number(a.palpites);
+     if (b.pts !== a.pts) return b.pts - a.pts;
+     if (b.cravadas !== a.cravadas) return b.cravadas - a.cravadas;
+     return b.palpites - a.palpites;
   });
   
+  // Aplicação da Posição Real (Empates ficam na mesma posição)
   var posReal = 1;
   for (var i = 0; i < humanos.length; i++) {
     if (i > 0) {
        var prev = humanos[i-1]; var curr = humanos[i];
-       if (Number(curr.pts) < Number(prev.pts) || Number(curr.cravadas) < Number(prev.cravadas) || Number(curr.palpites) < Number(prev.palpites)) {
+       if (curr.pts < prev.pts || curr.cravadas < prev.cravadas || curr.palpites < prev.palpites) {
            posReal = i + 1;
        }
     }
     humanos[i].posFormatada = posReal;
   }
-  ias.forEach(ia => ia.posFormatada = '-');
+  ias.forEach(function(ia) { ia.posFormatada = '-'; });
   var parts = humanos.concat(ias);
 
+  // Renderizar a tabela
   tbody.innerHTML = parts.map(function(p) {
     var isIA_part = isIA(p.nome);
     var nomeBase = abrevNome(p.nome);
     var nomeDisplay = isIA_part ? nomeBase + ' 🤖' : nomeBase;
     var rankDisplay = p.posFormatada !== '-' ? p.posFormatada + 'º' : '🤖';
     var posClass = p.posFormatada === 1 ? 'pos-1' : p.posFormatada === 2 ? 'pos-2' : p.posFormatada === 3 ? 'pos-3' : 'pos-other';
-    var pontosExibicao = (String(p.pts).includes('#REF')) ? '0' : p.pts;
-    
-    var countInvertidos = 0;
-    var pPalpites = mapaPalpites[p.nome];
-    if (!pPalpites) {
-       let keyEncontrada = Object.keys(mapaPalpites).find(k => abrevNome(k) === nomeBase);
-       if (keyEncontrada) pPalpites = mapaPalpites[keyEncontrada];
-    }
-    if (pPalpites) {
-      JOGOS.forEach(function(j) {
-        if (j.g1 !== null && j.g2 !== null) {
-          var palp = pPalpites.find(x => x.n === j.n);
-          if (palp && palp.p1 !== null) {
-            var acertou = (palp.p1 === j.g1 && palp.p2 === j.g2);
-            var placarInvertido = !acertou && (palp.p1 === j.g2 && palp.p2 === j.g1 && j.g1 !== j.g2);
-            if (placarInvertido) countInvertidos++;
-          }
-        }
-      });
-    }
-    var invertidosExibicao = countInvertidos > 0 ? countInvertidos : '-';
+    var invertidosExibicao = p.invertidos > 0 ? p.invertidos : '-';
 
     return '<tr' + (isIA_part ? ' style="background:#F0F4FF"' : '') + '>' +
       '<td><span class="pos-badge ' + posClass + '">' + rankDisplay + '</span></td>' +
       '<td class="participant-name">' + nomeDisplay + '</td>' +
-      '<td class="pts' + (p.posFormatada <= 3 && !isIA_part ? ' pts-destaque' : '') + '">' + pontosExibicao + '</td>' +
+      '<td class="pts' + (p.posFormatada <= 3 && !isIA_part ? ' pts-destaque' : '') + '">' + p.pts + '</td>' +
       '<td style="text-align:center">' + p.cravadas + '</td>' +
       '<td style="text-align:center">' + p.palpites + '</td>' +
       '<td style="text-align:center; color:#C0392B; font-weight:700;">' + invertidosExibicao + '</td></tr>';
   }).join('');
 }
-
 /* */
 function renderJogos(filtro) {
   const grid = document.getElementById('jogos-grid');
@@ -2124,10 +2136,9 @@ function renderClassificadosParticipante() {
 }
 
 async function inicializarDados() {
-  // Tudo em paralelo — cada função é independente
+  // O carregamento da classificação foi movido para dentro de carregarJogosDoGoogleSheets
   carregarArtilhariaDoGoogleSheets();
   carregarJogosDoGoogleSheets();
-  carregarClassificacao();
   carregarStatus16avos();
 }
 
