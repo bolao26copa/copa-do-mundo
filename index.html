@@ -903,7 +903,7 @@ const NOMES_ABREV = {
 };
 
 function abrevNome(n) { return NOMES_ABREV[n] || n; }
-function removerAcentos(str) { return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+function removerAcentos(str) { return str.normalize("NFD").replace(/[̀-ͯ]/g, ""); }
 
 function padronizarArtilheiro(nome) {
   if (!nome) return '—';
@@ -1304,17 +1304,25 @@ async function enviarPalpites() {
   if (usaBonusSeparado && !bonusPreenchido) { mostrarAlerta("❌ Você ativou a Aposta Bônus Extra! Preencha TODOS os confrontos na seção amarela."); btn.textContent = 'Salvar Meus Palpites'; btn.disabled = false; btn.style.background = 'var(--azul)'; return; }
 
   // Monta comprovante textual
-  let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*\n👤 *${usuarioAtualAposta}*\n🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' :
+  let txtComprovante = `⚽ *BOLÃO COPA 2026 - COMPROVANTE*
+👤 *${usuarioAtualAposta}*
+🏆 *Fase: ${faseAtualAposta === '16avos-1' ? '16 Avos (Parte 1)' :
                faseAtualAposta === '16avos-2' ? '16 Avos (Parte 2)' :
-               faseAtualAposta === 'oitavas-1' ? 'Oitavas (Parte 1)' : 'Oitavas (Parte 2)'}*\n\n`;
+               faseAtualAposta === 'oitavas-1' ? 'Oitavas (Parte 1)' : 'Oitavas (Parte 2)'}*
+
+`;
   payload.palpites.forEach(p => {
      let adv = (!usaBonusSeparado && p.adv) ? ` (Avança: ${p.adv})` : '';
-     txtComprovante += `Jogo ${p.n}: ${p.p1} x ${p.p2}${adv}\n`;
+     txtComprovante += `Jogo ${p.n}: ${p.p1} x ${p.p2}${adv}
+`;
   });
   if (usaBonusSeparado) {
-     txtComprovante += `\n*Avançam (Bônus Independente):*\n`;
+     txtComprovante += `
+*Avançam (Bônus Independente):*
+`;
      payload.palpitesBonus.forEach(b => {
-        txtComprovante += `Jogo ${b.n}: ${b.adv || 'Erro'}\n`;
+        txtComprovante += `Jogo ${b.n}: ${b.adv || 'Erro'}
+`;
      });
   }
 
@@ -1379,8 +1387,6 @@ async function carregarJogosDoGoogleSheets() {
     renderUltimosResultados();
     renderProximosJogos();
     carregarClassificacao();
-    
-    const pg = document.getElementById('page-jogos');
     
     const pg = document.getElementById('page-jogos');
     if (pg && pg.classList.contains('active')) {
@@ -1455,7 +1461,6 @@ async function carregarArtilhariaDoGoogleSheets() {
 async function carregarClassificacao() {
   var tbody = document.getElementById('tabela-classificacao');
   
-  // 1. Garantir que os palpites estáticos estejam carregados do JSON rápido
   if (!_dadosPalpites) {
     var dadosGrupos = await carregarDadosGrupos();
     if (dadosGrupos) _dadosPalpites = { participantes: sortParticipants(dadosGrupos.participantes), jogos: dadosGrupos.jogos };
@@ -1466,7 +1471,6 @@ async function carregarClassificacao() {
     return;
   }
 
-  // 2. Calcular tudo localmente (ultrarrápido, sem depender da lentidão do Google Sheets)
   var lista = [];
   _dadosPalpites.participantes.forEach(function(p) {
      var pts = 0, cravadas = 0, palpitesFeitos = 0, invertidos = 0;
@@ -1474,14 +1478,11 @@ async function carregarClassificacao() {
         p.palpites.forEach(function(palp) {
            if (palp.p1 === null) return;
            var jogoReal = JOGOS.find(function(x) { return x.n === palp.n; });
-           // Só pontua se o jogo já tem resultado oficial
            if (jogoReal && jogoReal.g1 !== null && jogoReal.g2 !== null) {
               palpitesFeitos++;
               var p_pts = window.calcularPontosPalpite(palp.p1, palp.p2, jogoReal.g1, jogoReal.g2);
               pts += p_pts;
               if (p_pts === 50) cravadas++;
-              
-              // Verifica se o placar foi invertido
               var acertou = (palp.p1 === jogoReal.g1 && palp.p2 === jogoReal.g2);
               var placarInvertido = !acertou && (palp.p1 === jogoReal.g2 && palp.p2 === jogoReal.g1 && jogoReal.g1 !== jogoReal.g2);
               if (placarInvertido) invertidos++;
@@ -1491,18 +1492,15 @@ async function carregarClassificacao() {
      lista.push({ nome: p.nome, pts: pts, cravadas: cravadas, palpites: palpitesFeitos, invertidos: invertidos });
   });
 
-  // Separar humanos e IAs
   var humanos = lista.filter(function(p) { return !isIA(p.nome); });
   var ias = lista.filter(function(p) { return isIA(p.nome); });
   
-  // Ordenação principal: Pontos > Cravadas > Quantidade de palpites
   humanos.sort(function(a, b) {
      if (b.pts !== a.pts) return b.pts - a.pts;
      if (b.cravadas !== a.cravadas) return b.cravadas - a.cravadas;
      return b.palpites - a.palpites;
   });
   
-  // Aplicação da Posição Real (Empates ficam na mesma posição)
   var posReal = 1;
   for (var i = 0; i < humanos.length; i++) {
     if (i > 0) {
@@ -1516,7 +1514,6 @@ async function carregarClassificacao() {
   ias.forEach(function(ia) { ia.posFormatada = '-'; });
   var parts = humanos.concat(ias);
 
-  // Renderizar a tabela
   tbody.innerHTML = parts.map(function(p) {
     var isIA_part = isIA(p.nome);
     var nomeBase = abrevNome(p.nome);
@@ -1534,6 +1531,7 @@ async function carregarClassificacao() {
       '<td style="text-align:center; color:#C0392B; font-weight:700;">' + invertidosExibicao + '</td></tr>';
   }).join('');
 }
+
 /* */
 function renderJogos(filtro) {
   const grid = document.getElementById('jogos-grid');
@@ -2136,7 +2134,6 @@ function renderClassificadosParticipante() {
 }
 
 async function inicializarDados() {
-  // O carregamento da classificação foi movido para dentro de carregarJogosDoGoogleSheets
   carregarArtilhariaDoGoogleSheets();
   carregarJogosDoGoogleSheets();
   carregarStatus16avos();
