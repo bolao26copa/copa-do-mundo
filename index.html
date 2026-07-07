@@ -416,19 +416,19 @@ footer strong { color: #fff; font-weight: 600; }
     <div style="display:grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; width:100%;">
       <div style="overflow: hidden; width: 100%;">
         
-        <!-- Countdown Oitavas Parte 2 -->
-        <div class="card" style="padding:20px; background:#0E6251; border:none; text-align:center; margin-bottom:16px;">
+        <!-- Countdown Quartas -->
+        <div class="card" style="padding:20px; background:#7B241C; border:none; text-align:center; margin-bottom:16px;">
           <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.5); margin-bottom:10px;">
-            🌊 Oitavas Parte 2 — Apostas encerram em
+            🔥 Quartas de Final — Apostas encerram em
           </div>
-          <div id="countdown-oitavas2" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-            <div class="cd-bloco"><div class="cd-num" id="cd-oitavas2-dias">--</div><div class="cd-label">dias</div></div><div class="cd-sep">:</div>
-            <div class="cd-bloco"><div class="cd-num" id="cd-oitavas2-horas">--</div><div class="cd-label">horas</div></div><div class="cd-sep">:</div>
-            <div class="cd-bloco"><div class="cd-num" id="cd-oitavas2-min">--</div><div class="cd-label">min</div></div><div class="cd-sep">:</div>
-            <div class="cd-bloco"><div class="cd-num" id="cd-oitavas2-seg" style="font-size:28px;color:#A3E4D7;">--</div><div class="cd-label">seg</div></div>
+          <div id="countdown-quartas" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+            <div class="cd-bloco"><div class="cd-num" id="cd-quartas-dias">--</div><div class="cd-label">dias</div></div><div class="cd-sep">:</div>
+            <div class="cd-bloco"><div class="cd-num" id="cd-quartas-horas">--</div><div class="cd-label">horas</div></div><div class="cd-sep">:</div>
+            <div class="cd-bloco"><div class="cd-num" id="cd-quartas-min">--</div><div class="cd-label">min</div></div><div class="cd-sep">:</div>
+            <div class="cd-bloco"><div class="cd-num" id="cd-quartas-seg" style="font-size:28px;color:#F5B7B1;">--</div><div class="cd-label">seg</div></div>
           </div>
-          <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.6);">Oitavas - Parte 2 (Jogos 93 a 96)</div>
-          <button class="aposta-btn" style="background:#148F77; color:#fff; margin-top:16px; max-width:220px;" onclick="abrirLogin('oitavas-2')">🌊 Apostar Oitavas P2 →</button>
+          <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.6);">Quartas de Final (Jogos 97 a 100)</div>
+          <button class="aposta-btn" style="background:#C0392B; color:#fff; margin-top:16px; max-width:220px;" onclick="abrirLogin('quartas')">🔥 Apostar Quartas →</button>
         </div>
 
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
@@ -492,18 +492,18 @@ footer strong { color: #fff; font-weight: 600; }
         </div>
 
 
-        <!-- Status Oitavas Parte 2 -->
-        <div class="card" id="card-status-oitavas2" style="padding:20px; margin-bottom:16px; border-left:4px solid #148F77;">
+        <!-- Status Quartas -->
+        <div class="card" id="card-status-quartas" style="padding:20px; margin-bottom:16px; border-left:4px solid #C0392B;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:#0E6251;">🌊 Status Oitavas — Parte 2</div>
-            <button onclick="downloadStatusCard('oitavas2')" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#0E6251;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:#7B241C;">🔥 Status Quartas de Final</div>
+            <button onclick="downloadStatusCard('quartas')" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#7B241C;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
           </div>
-          <div id="status-oitavas2-lista" style="display:flex; flex-direction:column; gap:5px;">
-            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">⏳ Carregando...</div>
+          <div id="status-quartas-lista" style="display:flex; flex-direction:column; gap:5px;">
+            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">📡 Conectando ao servidor ao vivo...</div>
           </div>
           <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
             <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
-            <span id="status-oitavas2-contador" style="font-weight:700;color:#0E6251">—/27</span>
+            <span id="status-quartas-contador" style="font-weight:700;color:#7B241C">—/27</span>
           </div>
         </div>
       </div>
@@ -586,22 +586,22 @@ footer strong { color: #fff; font-weight: 600; }
         <button class="aposta-btn secondary" disabled>Apostas encerradas</button>
       </div>
 
-      <div class="aposta-card" id="card-aposta-oitavas2" style="border-top:3px solid #148F77;">
-        <div class="aposta-icon" style="background:#E8F8F5">🌊</div>
-        <div class="aposta-status status-aberto">● Aberto</div>
+      <div class="aposta-card" id="card-aposta-oitavas2" style="border-top:3px solid #148F77; opacity:0.6;">
+        <div class="aposta-icon" style="background:#E8F8F5">🔒</div>
+        <div class="aposta-status status-em-breve">🔒 Encerrado</div>
         <h3>Oitavas — Parte 2</h3>
         <p>Últimos 4 jogos das oitavas (93 a 96).</p>
-        <p style="font-size:12px; font-weight:600; color:#148F77; margin-bottom:12px;">🗓 Encerra: 06/jul às 14:59</p>
-        <button id="btn-aposta-oitavas2" class="aposta-btn" onclick="abrirLogin('oitavas-2')">Fazer Palpites →</button>
+        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Encerrou: 06/jul às 14:59</p>
+        <button class="aposta-btn secondary" disabled>Apostas encerradas</button>
       </div>
 
-      <div class="aposta-card" style="opacity:0.6">
-        <div class="aposta-icon" style="background:#F3E8FF">🔒</div>
-        <div class="aposta-status status-em-breve">⏳ Em breve</div>
+      <div class="aposta-card" id="card-aposta-quartas" style="border-top:3px solid #C0392B;">
+        <div class="aposta-icon" style="background:#FDEDEC">🔥</div>
+        <div class="aposta-status status-aberto">● Aberto</div>
         <h3>Mata-Mata — Quartas</h3>
-        <p>4 jogos das quartas de final.</p>
-        <p style="font-size:12px; color:var(--cinza-texto); margin-bottom:12px;">🗓 Libera: 09/jul</p>
-        <button class="aposta-btn secondary" disabled>Disponível em 09/jul</button>
+        <p>4 jogos das quartas de final (97 a 100).</p>
+        <p style="font-size:12px; font-weight:600; color:#C0392B; margin-bottom:12px;">🗓 Encerra: 09/jul às 16:59</p>
+        <button id="btn-aposta-quartas" class="aposta-btn" onclick="abrirLogin('quartas')">Fazer Palpites →</button>
       </div>
 
       <div class="aposta-card" style="opacity:0.6">
@@ -884,6 +884,7 @@ function isJogoProtegido(n) {
   if (n >= 77 && n <= 88) return agora < getGameDate('30/jun', '13h59');
   if (n >= 89 && n <= 92) return agora < getGameDate('04/jul', '13h59');
   if (n >= 93 && n <= 96) return agora < getGameDate('06/jul', '14h59');
+  if (n >= 97 && n <= 100) return agora < getGameDate('09/jul', '16h59');
   if (n >= 97 && n <= 100) return agora < getGameDate('09/jul', '17h00'); 
   if (n >= 101 && n <= 102) return agora < getGameDate('14/jul', '16h00'); 
   if (n >= 103) return agora < getGameDate('18/jul', '18h00'); 
@@ -1056,10 +1057,10 @@ const JOGOS = [
   {n:94, d:"06/jul", h:"20h",   f:"Oitavas",   g:"",  t1:"Estados Unidos",  t2:"Bélgica",        g1:null, g2:null},
   {n:95, d:"07/jul", h:"13h",   f:"Oitavas",   g:"",  t1:"Argentina",       t2:"Egito",        g1:null, g2:null},
   {n:96, d:"07/jul", h:"17h",   f:"Oitavas",   g:"",  t1:"Suíça",           t2:"Colômbia",        g1:null, g2:null},
-  {n:97, d:"09/jul", h:"17h",   f:"Quartas",   g:"",  t1:"Venc. J89",       t2:"Venc. J90",        g1:null, g2:null},
-  {n:98, d:"10/jul", h:"16h",   f:"Quartas",   g:"",  t1:"Venc. J93",       t2:"Venc. J94",        g1:null, g2:null},
-  {n:99, d:"11/jul", h:"18h",   f:"Quartas",   g:"",  t1:"Venc. J91",       t2:"Venc. J92",        g1:null, g2:null},
-  {n:100,d:"11/jul", h:"21h",   f:"Quartas",   g:"",  t1:"Venc. J95",       t2:"Venc. J96",        g1:null, g2:null},
+  {n:97, d:"09/jul", h:"17h",   f:"Quartas",   g:"",  t1:"França",          t2:"Marrocos",        g1:null, g2:null},
+  {n:98, d:"10/jul", h:"16h",   f:"Quartas",   g:"",  t1:"Espanha",         t2:"Bélgica",        g1:null, g2:null},
+  {n:99, d:"11/jul", h:"18h",   f:"Quartas",   g:"",  t1:"Noruega",         t2:"Inglaterra",        g1:null, g2:null},
+  {n:100,d:"11/jul", h:"21h",   f:"Quartas",   g:"",  t1:"Argentina",       t2:"Suíça",        g1:null, g2:null},
   {n:101,d:"14/jul", h:"16h",   f:"Semifinal", g:"",  t1:"Venc. J97",       t2:"Venc. J98",        g1:null, g2:null},
   {n:102,d:"15/jul", h:"16h",   f:"Semifinal", g:"",  t1:"Venc. J99",       t2:"Venc. J100",       g1:null, g2:null},
   {n:103,d:"18/jul", h:"18h",   f:"3º Lugar",  g:"",  t1:"Perd. SF 101",    t2:"Perd. SF 102",     g1:null, g2:null},
@@ -1126,6 +1127,7 @@ async function abrirLogin(fase) {
   if (fase === '16avos-2' && agora >= getGameDate('30/jun', '13h59')) { mostrarAlerta("❌ O prazo para a Parte 2 dos 16 avos encerrou às 13:59 do dia 30/jun."); return; }
   if (fase === 'oitavas-1' && agora >= getGameDate('04/jul', '13h59')) { mostrarAlerta("❌ O prazo para as Oitavas Parte 1 encerrou às 13:59 do dia 04/jul."); return; }
   if (fase === 'oitavas-2' && agora >= getGameDate('06/jul', '14h59')) { mostrarAlerta("❌ O prazo para as Oitavas Parte 2 encerrou às 14:59 do dia 06/jul."); return; }
+  if (fase === 'quartas' && agora >= getGameDate('09/jul', '16h59')) { mostrarAlerta("❌ O prazo para as Quartas encerrou às 16:59 do dia 09/jul."); return; }
 
   faseAtualAposta = fase;
   let sel = document.getElementById('login-nome');
@@ -1184,6 +1186,7 @@ function abrirFormularioApostas(fase, nome) {
   else if (fase === '16avos-2')   { document.getElementById('form-titulo').textContent = '16 Avos — Parte 2';    range = [77, 88]; }
   else if (fase === 'oitavas-1')  { document.getElementById('form-titulo').textContent = 'Oitavas — Parte 1';    range = [89, 92]; }
   else if (fase === 'oitavas-2')  { document.getElementById('form-titulo').textContent = 'Oitavas — Parte 2';    range = [93, 96]; }
+  else if (fase === 'quartas')    { document.getElementById('form-titulo').textContent = 'Quartas de Final';      range = [97, 100]; }
 
   let htmlJogos = '', htmlBonus = '';
   let jogosFase = JOGOS.filter(j => j.n >= range[0] && j.n <= range[1]);
@@ -1261,7 +1264,8 @@ function toggleApostaBonus() {
 
   let range = faseAtualAposta === '16avos-1' ? [73, 76] :
                faseAtualAposta === '16avos-2' ? [77, 88] :
-               faseAtualAposta === 'oitavas-1' ? [89, 92] : [93, 96];
+               faseAtualAposta === 'oitavas-1' ? [89, 92] :
+               faseAtualAposta === 'oitavas-2' ? [93, 96] : [97, 100];
   for (let n = range[0]; n <= range[1]; n++) { if (document.getElementById(`g1-${n}`)) checkEmpate(n); }
 }
 
@@ -1277,7 +1281,8 @@ async function enviarPalpites() {
 
   let range = faseAtualAposta === '16avos-1' ? [73, 76] :
                faseAtualAposta === '16avos-2' ? [77, 88] :
-               faseAtualAposta === 'oitavas-1' ? [89, 92] : [93, 96];
+               faseAtualAposta === 'oitavas-1' ? [89, 92] :
+               faseAtualAposta === 'oitavas-2' ? [93, 96] : [97, 100];
   let tudoPreenchido = true, bonusPreenchido = true;
 
   for (let n = range[0]; n <= range[1]; n++) {
@@ -1802,8 +1807,12 @@ async function carregarPalpites() {
       let label = isIA(p.nome) ? abrevNome(p.nome) + ' 🤖' : abrevNome(p.nome);
       sel1.appendChild(new Option(label, p.nome)); sel2.appendChild(new Option(label, p.nome)); sel3.appendChild(new Option(label, p.nome));
     });
-    JOGOS.filter(j => j.n <= 88).forEach(function(j) {
-      selJogo.appendChild(new Option('Jogo ' + j.n + ' · ' + j.t1 + ' × ' + j.t2, j.n));
+    JOGOS.filter(j => j.n <= 100).forEach(function(j) {
+      var bloqueado = isJogoProtegido(j.n);
+      var label = 'Jogo ' + j.n + ' · ' + j.t1 + ' × ' + j.t2 + (bloqueado ? ' 🔒' : '');
+      var opt = new Option(label, j.n);
+      if (bloqueado) opt.disabled = true;
+      selJogo.appendChild(opt);
     });
   }
   renderPalpitesParticipante(); renderDesempenhoPorDia(); 
@@ -1830,7 +1839,7 @@ function renderPalpitesParticipante() {
     parts = nomesUnicos.map(nome => _dadosPalpites.participantes.find(p => p.nome === nome)).filter(p => p !== undefined);
   }
 
-  var jogosLib = JOGOS.filter(j => j.n <= 96); 
+  var jogosLib = JOGOS.filter(j => j.n <= 100); 
   if (valJogo !== 'todos') jogosLib = jogosLib.filter(j => j.n === parseInt(valJogo));
 
   var html = '<div style="overflow-x:auto;"><table class="rank-table" style="min-width:600px;"><thead><tr><th>Jogo</th><th>Partida</th><th style="text-align:center">Resultado</th>';
@@ -1981,7 +1990,7 @@ async function renderEstatisticas() {
   });
 
   let htmlJogos = '';
-  JOGOS.filter(j => j.n <= 88).forEach(j => {
+  JOGOS.filter(j => j.n <= 100).forEach(j => {
     let js = jogosStats[j.n];
     if (!js || js.total === 0) return; 
     let pT1 = Math.round((js.t1 / js.total) * 100), pEmp = Math.round((js.emp / js.total) * 100), pT2 = Math.round((js.t2 / js.total) * 100);
@@ -2229,6 +2238,16 @@ setInterval(function() {
             btn16Avos2.className = 'aposta-btn secondary'; btn16Avos2.textContent = 'Prazo encerrado'; btn16Avos2.disabled = true;
         }
     }
+       const btnQt = document.getElementById('btn-aposta-quartas');
+    const cardQt = document.getElementById('card-aposta-quartas');
+    if (btnQt && cardQt && !btnQt.disabled && agora >= getGameDate('09/jul', '16h59')) {
+        cardQt.style.opacity = '0.6';
+        cardQt.querySelector('.aposta-status').className = 'aposta-status status-fechado';
+        cardQt.querySelector('.aposta-status').textContent = '● Encerrado';
+        btnQt.className = 'aposta-btn secondary';
+        btnQt.textContent = 'Prazo encerrado';
+        btnQt.disabled = true;
+    }
    } catch(errCd) { console.warn("countdown:", errCd); }
   }
   // Countdown Oitavas P1: encerra 04/jul 13h59 BRT
@@ -2250,15 +2269,15 @@ setInterval(function() {
   }
   atualizarCdOitavas1();
 
-  // Countdown Oitavas P2: encerra 06/jul 14h59 BRT
+  // Countdown Quartas: encerra 09/jul 16h59 BRT
   function atualizarCdOitavas2() {
-    var alvo = getGameDate('06/jul', '14h59');
+    var alvo = getGameDate('09/jul', '16h59');
     var agora = new Date(), diff = alvo - agora;
     var pad = function(n){ return String(n).padStart(2,'0'); };
-    var d=document.getElementById('cd-oitavas2-dias'),
-        h=document.getElementById('cd-oitavas2-horas'),
-        m=document.getElementById('cd-oitavas2-min'),
-        s=document.getElementById('cd-oitavas2-seg');
+    var d=document.getElementById('cd-quartas-dias'),
+        h=document.getElementById('cd-quartas-horas'),
+        m=document.getElementById('cd-quartas-min'),
+        s=document.getElementById('cd-quartas-seg');
     if (!d) return;
     if (diff > 0) {
       d.textContent=pad(Math.floor(diff/(1000*60*60*24)));
@@ -2297,19 +2316,17 @@ function isEliminado(s) { return ELIMINADOS_GRUPOS.some(function(e){return e.toL
 // ── Status P1 e P2 ────────────────────────────────────────────────
 async function carregarStatus16avos() {
   try {
-    var dados = await fetchAPI('statusoitavas');
-    console.log('[status oitavas]', dados);
-    if (dados && dados.p2) {
-      renderStatusCard({ total: dados.total, status: dados.p2.status }, 'status-oitavas2-lista', 'status-oitavas2-contador', 93, 96);
+    var dados = await fetchAPI('statusquartas');
+    console.log('[status quartas]', dados);
+    if (dados && dados.status) {
+      renderStatusCard(dados, 'status-quartas-lista', 'status-quartas-contador', 97, 100);
     } else {
       throw new Error('resposta inválida');
     }
   } catch(err) {
-    console.error('[status oitavas] erro:', err);
-    ['status-oitavas2-lista'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao carregar.</div>';
-    });
+    console.error('[status quartas] erro:', err);
+    var el = document.getElementById('status-quartas-lista');
+    if (el) el.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao carregar.</div>';
   }
 }
 
@@ -2343,13 +2360,16 @@ function renderStatusCard(dados, listaId, contId, j1, j2) {
 function downloadStatusCard(parte) {
   var listaId = parte === 'p2' ? 'status-16avos2-lista' :
                parte === 'oitavas1' ? 'status-oitavas1-lista' :
-               parte === 'oitavas2' ? 'status-oitavas2-lista' : 'status-16avos-lista';
+               parte === 'oitavas2' ? 'status-oitavas2-lista' :
+               parte === 'quartas' ? 'status-quartas-lista' : 'status-16avos-lista';
   var contId  = parte === 'p2' ? 'status-16avos2-contador' :
                parte === 'oitavas1' ? 'status-oitavas1-contador' :
-               parte === 'oitavas2' ? 'status-oitavas2-contador' : 'status-16avos-contador';
+               parte === 'oitavas2' ? 'status-oitavas2-contador' :
+               parte === 'quartas' ? 'status-quartas-contador' : 'status-16avos-contador';
   var titulo  = parte === 'p2' ? '⚡ 16 Avos Parte 2 — Aguardando apostas' :
                 parte === 'oitavas1' ? '🔮 Oitavas Parte 1 — Aguardando apostas' :
                 parte === 'oitavas2' ? '🌊 Oitavas Parte 2 — Aguardando apostas' :
+                parte === 'quartas' ? '🔥 Quartas de Final — Aguardando apostas' :
                 '📋 16 Avos Parte 1 — Aguardando apostas';
   var lista   = document.getElementById(listaId);
   var cont    = document.getElementById(contId);
@@ -2366,7 +2386,7 @@ function downloadStatusCard(parte) {
   }
 
   var hoje = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  var cor  = parte === 'p2' ? '#1A6B3C' : parte === 'oitavas1' ? '#6C3483' : parte === 'oitavas2' ? '#0E6251' : '#003087';
+  var cor  = parte === 'p2' ? '#1A6B3C' : parte === 'oitavas1' ? '#6C3483' : parte === 'oitavas2' ? '#0E6251' : parte === 'quartas' ? '#7B241C' : '#003087';
   var contTexto = cont ? cont.textContent : '';
 
   var pendentesHTML = pendentes.map(function(el) {
@@ -2481,7 +2501,7 @@ function gerarExtratoJPEG(payload, txtComprovante, usaBonusSeparado) {
       '<tbody>'+linhasPalpites+linhasBonus+'</tbody>' +
     '</table>' +
     '<div style="padding:12px 24px;background:#F4F3EF;display:flex;justify-content:space-between;font-size:10px;color:#aaa;">' +
-      '<div>italopsilva-law.github.io/bolao-copa-2026</div><div>'+dataFmt+'</div>' +
+      '<div>bolao26copa.github.io/copa-do-mundo</div><div>'+dataFmt+'</div>' +
     '</div></div>';
   document.body.appendChild(container);
   html2canvas(container.firstChild,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false})
