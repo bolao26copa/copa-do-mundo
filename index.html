@@ -467,8 +467,12 @@ footer strong { color: #fff; font-weight: 600; }
         </div>
 
         <div id="card-cenarios-wrap" style="display:none; margin-bottom:24px;">
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
             <div class="section-title" style="font-size:24px; margin-bottom:0">Cenários da Reta Final 🎲</div>
+            <button onclick="downloadCenarios()" title="Baixar cenários como imagem"
+              style="display:flex;align-items:center;gap:5px;padding:6px 14px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
+              📷 Baixar cenários
+            </button>
           </div>
           <p class="section-sub">Quem ainda pode terminar em 1º, 2º ou 3º considerando o que está em jogo na final: placar de <strong>Argentina × Espanha</strong>, bônus de campeão (200), vice (100) e artilheiro (100 — só Messi ou Mbappé, e o Mbappé já encerrou).</p>
           <div class="card" id="card-cenarios" style="padding:20px;">
@@ -1592,105 +1596,185 @@ async function renderCenarios(participantesComPts, bonusMap) {
   if (!card) return;
 
   var terceiroDecidido = !!RESULTADO_FINAL.terceiro;
+  if (!terceiroDecidido) { if(wrap) wrap.style.display='none'; return; }
+  if (wrap) wrap.style.display = 'block';
+  card.innerHTML = '<div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Simulando cenários…</div>';
+
+  // Dados: classificação (base) + bônus travado + palpites
+  var participantes = participantesComPts, bMap = bonusMap;
+  if (!participantes || !bMap) {
+    try {
+      var dcl = await fetchAPI('classificacao');
+      bMap = await computarBonusTotais();
+      if (dcl && dcl.participantes) {
+        dcl.participantes.forEach(function(p){
+          var b = bMap[p.nome] ? bMap[p.nome].total : 0;
+          p.ptsBase = (String(p.pts).includes('#REF')) ? 0 : (Number(p.pts)||0);
+          p.ptsBonus = b; p.pts = p.ptsBase + b;
+        });
+        participantes = dcl.participantes;
+      }
+    } catch(e) { console.error('cenarios fetch:', e); }
+  }
+  if (!participantes) { card.innerHTML = '<div style="color:#C0392B;text-align:center;padding:20px;">Não foi possível carregar a classificação.</div>'; return; }
+
   var jFinal = JOGOS.find(function(j){ return j.n === 104; });
   var finalDefinida = jFinal && jFinal.g1 !== null && jFinal.g2 !== null;
 
-  // Mostra o card enquanto o 3º está decidido e a final ainda não saiu
-  if (!terceiroDecidido || finalDefinida) { if(wrap) wrap.style.display='none'; return; }
-  if (wrap) wrap.style.display = 'block';
-  card.innerHTML = '<div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Calculando cenários…</div>';
-
   var dg = await carregarDadosGrupos();
   if (!dg) { card.innerHTML = '<div style="color:#C0392B;text-align:center;padding:20px;">Não foi possível carregar os dados.</div>'; return; }
-
-  var mapaFixos = {};
-  (dg.bonus||[]).forEach(function(p){ mapaFixos[p.nome] = p; });
-  var mapaPalp = {};
-  (dg.participantes||[]).forEach(function(p){ mapaPalp[p.nome] = p.palpites||[]; });
+  var mapaFixos = {}; (dg.bonus||[]).forEach(function(p){ mapaFixos[p.nome] = p; });
+  var mapaPalp = {}; (dg.participantes||[]).forEach(function(p){ mapaPalp[p.nome] = p.palpites||[]; });
 
   function norm(s){ return (s||'').toString().trim().toLowerCase(); }
 
-  // Finalistas reais: só Argentina e Espanha podem dar campeão/vice
-  var FINALISTAS = ['argentina','espanha'];
-  // Artilheiro: só Messi ou Mbappé ainda possíveis
-  var ARTILHEIROS = ['messi','mbappé','mbappe'];
+  // Base "congelada" de cada participante = pontos atuais SEM o que ainda está em jogo na final.
+  // p.ptsBase já é placar; p.ptsBonus já inclui grupos..semis + 3º lugar (tudo travado).
+  // O que ainda varia: placar da final (J104), bônus campeão(200)/vice(100), artilheiro(100).
+  var humanos = participantes.filter(function(p){ return !isIA(p.nome); });
 
-  var linhas = participantesComPts.filter(function(p){ return !isIA(p.nome); }).map(function(p){
-    var base = p.ptsBase || 0;
-    var bonusAtual = (bonusMap[p.nome] ? bonusMap[p.nome].total : 0); // já inclui o 3º lugar (Inglaterra)
-    var travado = base + bonusAtual;
-
+  var jogadores = humanos.map(function(p){
     var fx = mapaFixos[p.nome] || {};
-    var apVice = norm(fx.vice);
-    var apCampeao = norm(fx.campeao);
-    var apArtilheiro = norm(padronizarArtilheiro(fx.artilheiro||''));
-
-    // Só vale se a aposta é um dos DOIS finalistas reais
-    var viceViavel = FINALISTAS.indexOf(apVice) >= 0;
-    var campeaoViavel = FINALISTAS.indexOf(apCampeao) >= 0;
-    var artilheiroViavel = ARTILHEIROS.indexOf(apArtilheiro) >= 0;
-
-    // Placar da final (J104): até 50
     var palpFinal = (mapaPalp[p.nome]||[]).find(function(x){ return x.n === 104; });
-    var temFinal = palpFinal && palpFinal.p1 !== null && palpFinal.p1 !== undefined;
-    var maxFinal = temFinal ? 50 : 0;
-
-    // Campeão e vice são de times DIFERENTES (Argentina campeão → Espanha vice, ou vice-versa).
-    // Um participante pode teoricamente cravar os dois (ex: campeão Argentina, vice Espanha).
-    // Mas se apostou o MESMO time para campeão e vice, só um pode acontecer.
-    var ganhoBonus = 0;
-    if (campeaoViavel && viceViavel && apCampeao === apVice) {
-      ganhoBonus += 200; // mesmo time: fica só o de maior valor (campeão)
-    } else {
-      if (campeaoViavel) ganhoBonus += 200;
-      if (viceViavel) ganhoBonus += 100;
-    }
-    if (artilheiroViavel) ganhoBonus += 100;
-
-    var maximo = travado + maxFinal + ganhoBonus;
     return {
-      nome: p.nome, travado: travado, maximo: maximo,
-      itens: { campeaoViavel: campeaoViavel, viceViavel: viceViavel, artilheiroViavel: artilheiroViavel, temFinal: temFinal,
-               apCampeao: fx.campeao||'—', apVice: fx.vice||'—', apArtilheiro: fx.artilheiro||'—',
-               palpFinal: temFinal ? (palpFinal.p1+'×'+palpFinal.p2) : null }
+      nome: p.nome,
+      base: (p.ptsBase||0) + (p.ptsBonus||0),   // tudo que já está garantido
+      palpF1: palpFinal ? palpFinal.p1 : null,   // palpite gols Argentina (t1)
+      palpF2: palpFinal ? palpFinal.p2 : null,   // palpite gols Espanha (t2)
+      apCampeao: norm(fx.campeao),
+      apVice: norm(fx.vice),
+      apArtilheiro: norm(padronizarArtilheiro(fx.artilheiro||''))
     };
   });
 
-  linhas.sort(function(a,b){ return b.travado - a.travado; });
-
-  // Pode alcançar a posição k (1=campeão, 2=top2, 3=top3) se menos de k participantes
-  // têm piso garantido MAIOR que o seu teto.
-  function podeAlcancar(l, k) {
-    var superam = 0;
-    linhas.forEach(function(o){
-      if (o.nome === l.nome) return;
-      if (o.travado > l.maximo) superam++;
-    });
-    return superam < k;
+  // Pontos de placar (mesma regra do bolão)
+  function placarPts(pg1,pg2,rg1,rg2){
+    if (pg1===null||pg2===null||pg1===undefined||pg2===undefined) return 0;
+    if (pg1===rg1 && pg2===rg2) return 50;
+    var pd=pg1-pg2, rd=rg1-rg2, pv=Math.sign(pd), rv=Math.sign(rd);
+    if (pv===rv){ if(pv===0) return 25; if(pg1===rg1||pg2===rg2) return 30; if(pd===rd) return 25; return 20; }
+    if (pg1===rg2 && pg2===rg1 && rg1!==rg2) return -5;
+    if (pg1===rg1||pg2===rg2) return 10;
+    return 0;
   }
 
-  var chance1 = linhas.filter(function(l){ return podeAlcancar(l,1); });
-  var chance2 = linhas.filter(function(l){ return podeAlcancar(l,2); });
-  var chance3 = linhas.filter(function(l){ return podeAlcancar(l,3); });
+  // Ganho FUTURO de um jogador em um cenário (placar real da final, campeão, artilheiro)
+  function ganhoCenario(jg, rg1, rg2, campeao, artilheiro){
+    var g = placarPts(jg.palpF1, jg.palpF2, rg1, rg2);
+    // campeão/vice: campeao ∈ {'argentina','espanha'}; vice = o outro
+    var vice = (campeao === 'argentina') ? 'espanha' : 'argentina';
+    if (jg.apCampeao === campeao) g += 200;
+    if (jg.apVice === vice) g += 100;
+    // artilheiro: 'messi' | 'mbappe' | 'outro'
+    if (artilheiro !== 'outro') {
+      var apArt = jg.apArtilheiro;
+      var bateu = (artilheiro==='messi' && apArt==='messi') ||
+                  (artilheiro==='mbappe' && (apArt==='mbappé'||apArt==='mbappe'));
+      if (bateu) g += 100;
+    }
+    return g;
+  }
 
-  function bloco(titulo, cor, lista, emoji) {
+  // ── ENUMERAÇÃO DE CENÁRIOS ──
+  // Placares 0..5 x 0..5; empate → 2 subcasos de pênaltis (ARG ou ESP campeão).
+  // Artilheiro: Messi, Mbappé ou Outro (nenhum outro palpite pode acertar além desses dois).
+  var artOpcoes = ['messi','mbappe','outro'];
+  var posSets = {}; // nome → Set de posições possíveis
+  humanos.forEach(function(p){ posSets[p.nome] = {}; });
+
+  function avaliarCenario(rg1, rg2, campeao, artilheiro){
+    // pontuação final de cada jogador neste cenário
+    var pontos = jogadores.map(function(jg){
+      return { nome: jg.nome, total: jg.base + ganhoCenario(jg, rg1, rg2, campeao, artilheiro) };
+    });
+    pontos.sort(function(a,b){ return b.total - a.total; });
+    // posição com empates: mesma pontuação = mesma posição
+    var pos = 1;
+    for (var i=0;i<pontos.length;i++){
+      if (i>0 && pontos[i].total < pontos[i-1].total) pos = i+1;
+      posSets[pontos[i].nome][pos] = true;
+    }
+  }
+
+  if (finalDefinida) {
+    // Final já ocorreu: cenário único real
+    var campeaoReal = jFinal.g1 > jFinal.g2 ? 'argentina' : jFinal.g2 > jFinal.g1 ? 'espanha' : (norm(RESULTADO_FINAL.campeao)||'argentina');
+    var artReal = norm(RESULTADO_FINAL.artilheiro);
+    var artCen = (artReal==='messi')?'messi':((artReal==='mbappé'||artReal==='mbappe')?'mbappe':'outro');
+    avaliarCenario(jFinal.g1, jFinal.g2, campeaoReal, artCen);
+  } else {
+    for (var a=0;a<=5;a++){
+      for (var b=0;b<=5;b++){
+        for (var ai=0; ai<artOpcoes.length; ai++){
+          var art = artOpcoes[ai];
+          if (a>b) avaliarCenario(a,b,'argentina',art);
+          else if (b>a) avaliarCenario(a,b,'espanha',art);
+          else { avaliarCenario(a,b,'argentina',art); avaliarCenario(a,b,'espanha',art); }
+        }
+      }
+    }
+  }
+
+  // Piso garantido (pior caso) e teto (melhor caso) reais, a partir dos cenários
+  function faixaJogador(nome){
+    var jg = jogadores.find(function(x){ return x.nome===nome; });
+    var min = Infinity, max = -Infinity;
+    function testar(rg1,rg2,campeao,art){
+      var t = jg.base + ganhoCenario(jg,rg1,rg2,campeao,art);
+      if (t<min) min=t; if (t>max) max=t;
+    }
+    if (finalDefinida){
+      var cr = jFinal.g1>jFinal.g2?'argentina':jFinal.g2>jFinal.g1?'espanha':(norm(RESULTADO_FINAL.campeao)||'argentina');
+      var ar = norm(RESULTADO_FINAL.artilheiro);
+      var ac = (ar==='messi')?'messi':((ar==='mbappé'||ar==='mbappe')?'mbappe':'outro');
+      testar(jFinal.g1,jFinal.g2,cr,ac);
+    } else {
+      for (var a=0;a<=5;a++) for (var b=0;b<=5;b++) for (var k=0;k<artOpcoes.length;k++){
+        if (a>b) testar(a,b,'argentina',artOpcoes[k]);
+        else if (b>a) testar(a,b,'espanha',artOpcoes[k]);
+        else { testar(a,b,'argentina',artOpcoes[k]); testar(a,b,'espanha',artOpcoes[k]); }
+      }
+    }
+    return {min:min, max:max};
+  }
+
+  // Monta listas: quem PODE terminar em 1º, em 2º (ou melhor), em 3º (ou melhor)
+  function podePos(nome, k){
+    var s = posSets[nome] || {};
+    for (var pp=1; pp<=k; pp++){ if (s[pp]) return true; }
+    return false;
+  }
+  var ordenados = jogadores.slice().sort(function(a,b){ return faixaJogador(b.nome).min - faixaJogador(a.nome).min; });
+
+  var chance1 = ordenados.filter(function(j){ return podePos(j.nome,1); });
+  var chance2 = ordenados.filter(function(j){ return podePos(j.nome,2); });
+  var chance3 = ordenados.filter(function(j){ return podePos(j.nome,3); });
+
+  function descricaoEmJogo(jg){
+    if (finalDefinida) return 'final encerrada';
+    var e = [];
+    if (jg.palpF1!==null) e.push('placar '+jg.palpF1+'×'+jg.palpF2);
+    var vice = jg.apCampeao==='argentina'?'espanha':'argentina';
+    if (jg.apCampeao==='argentina'||jg.apCampeao==='espanha') e.push('campeão '+cap(jg.apCampeao)+' +200');
+    if (jg.apVice==='argentina'||jg.apVice==='espanha') e.push('vice '+cap(jg.apVice)+' +100');
+    if (jg.apArtilheiro==='messi'||jg.apArtilheiro==='mbappé'||jg.apArtilheiro==='mbappe') e.push('artilheiro '+cap(jg.apArtilheiro)+' +100');
+    return e.length ? e.join(' · ') : 'nada mais em jogo';
+  }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+  function bloco(titulo, cor, lista, emoji){
     var h = '<div style="margin-bottom:18px;">' +
       '<div style="font-family:Bebas Neue,sans-serif;font-size:20px;letter-spacing:1px;color:'+cor+';margin-bottom:8px;">'+emoji+' '+titulo+' <span style="font-size:13px;color:var(--cinza-texto);font-family:DM Sans;">('+lista.length+')</span></div>';
-    if (lista.length === 0) { h += '<div style="color:var(--cinza-texto);font-size:13px;">Ninguém tem mais chance.</div></div>'; return h; }
+    if (lista.length===0){ h += '<div style="color:var(--cinza-texto);font-size:13px;">Ninguém tem mais chance.</div></div>'; return h; }
     h += '<div style="display:flex;flex-direction:column;gap:6px;">';
-    lista.forEach(function(l){
-      var emJogo = [];
-      if (l.itens.temFinal) emJogo.push('placar final ('+l.itens.palpFinal+')');
-      if (l.itens.campeaoViavel) emJogo.push('campeão: '+l.itens.apCampeao+' +200');
-      if (l.itens.viceViavel) emJogo.push('vice: '+l.itens.apVice+' +100');
-      if (l.itens.artilheiroViavel) emJogo.push('artilheiro: '+padronizarArtilheiro(l.itens.apArtilheiro)+' +100');
-      var emJogoTxt = emJogo.length ? emJogo.join(' · ') : 'nada mais em jogo (posição já travada)';
+    lista.forEach(function(jg){
+      var f = faixaJogador(jg.nome);
       h += '<div style="padding:10px 12px;background:#FAFAF7;border-radius:8px;">' +
              '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">' +
-               '<span style="font-weight:700;font-size:14px;">'+abrevNome(l.nome)+'</span>' +
-               '<span style="font-family:DM Mono,monospace;font-size:12px;"><span style="color:var(--verde-escuro);font-weight:700;">piso '+l.travado+'</span> · <span style="color:var(--cinza-texto);">teto '+l.maximo+'</span></span>' +
+               '<span style="font-weight:700;font-size:14px;">'+abrevNome(jg.nome)+'</span>' +
+               '<span style="font-family:DM Mono,monospace;font-size:12px;"><span style="color:var(--verde-escuro);font-weight:700;">mín '+f.min+'</span> · <span style="color:var(--cinza-texto);">máx '+f.max+'</span></span>' +
              '</div>' +
-             '<div style="font-size:11px;color:var(--cinza-texto);line-height:1.4;">🎯 em jogo: '+emJogoTxt+'</div>' +
+             '<div style="font-size:11px;color:var(--cinza-texto);line-height:1.4;">🎯 '+descricaoEmJogo(jg)+'</div>' +
            '</div>';
     });
     h += '</div></div>';
@@ -1698,13 +1782,17 @@ async function renderCenarios(participantesComPts, bonusMap) {
   }
 
   var out = '';
-  out += '<div style="font-size:12px;color:var(--cinza-texto);background:#E8EEFF;border-left:3px solid var(--azul);padding:10px 14px;border-radius:8px;margin-bottom:16px;">' +
-         '<strong>Piso</strong> = pontos já garantidos (inclui o bônus de 3º lugar da Inglaterra). <strong>Teto</strong> = máximo possível acertando tudo que resta na final. ' +
-         'Só entram como bônus de campeão/vice as apostas em <strong>Argentina</strong> ou <strong>Espanha</strong>, e como artilheiro apenas <strong>Messi</strong> ou <strong>Mbappé</strong>.</div>';
-  out += bloco('Chance de ser CAMPEÃO do bolão', 'var(--amarelo-escuro)', chance1, '🥇');
-  out += bloco('Chance de terminar no TOP 2', '#7f7f7f', chance2, '🥈');
-  out += bloco('Chance de terminar no TOP 3', '#CD7F32', chance3, '🥉');
-
+  if (finalDefinida){
+    out += '<div style="font-size:12px;color:#276749;background:#E8F8F0;border-left:3px solid var(--verde);padding:10px 14px;border-radius:8px;margin-bottom:16px;"><strong>Final encerrada.</strong> Classificação definitiva.</div>';
+  } else {
+    out += '<div style="font-size:12px;color:var(--cinza-texto);background:#E8EEFF;border-left:3px solid var(--azul);padding:10px 14px;border-radius:8px;margin-bottom:16px;">' +
+           'Simulação de <strong>todos os desfechos possíveis</strong> da final Argentina × Espanha (placar, campeão, vice) e do artilheiro (Messi, Mbappé ou outro). ' +
+           'Como os pontos em jogo são <strong>compartilhados</strong>, quem está atrás só aparece numa posição se existir algum resultado real que o coloque lá — apostas idênticas mantêm as distâncias. ' +
+           '<strong>mín/máx</strong> = pior e melhor pontuação final possível de cada um.</div>';
+  }
+  out += bloco('Ainda pode ser CAMPEÃO', 'var(--amarelo-escuro)', chance1, '🥇');
+  out += bloco('Ainda pode terminar no TOP 2', '#7f7f7f', chance2, '🥈');
+  out += bloco('Ainda pode terminar no TOP 3', '#CD7F32', chance3, '🥉');
   card.innerHTML = out;
 }
 
@@ -2565,6 +2653,8 @@ async function inicializarDados() {
   carregarJogosDoGoogleSheets();
   carregarClassificacao();
   carregarStatus16avos();
+  // Cenários da reta final: chamada independente (não depende da classificação)
+  setTimeout(function(){ renderCenarios().catch(function(e){ console.error('cenarios init:', e); }); }, 1500);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2877,6 +2967,29 @@ function downloadClassificacao() {
     .then(function(c){
       var l=document.createElement('a');
       l.download='classificacao-bolao-'+new Date().toISOString().slice(0,10)+'.jpg';
+      l.href=c.toDataURL('image/jpeg',0.95); l.click();
+      document.body.removeChild(wrapper);
+      if(btn) btn.style.display='flex';
+    }).catch(function(){document.body.removeChild(wrapper);if(btn) btn.style.display='flex';});
+}
+
+function downloadCenarios() {
+  var card = document.getElementById('card-cenarios');
+  var btn  = document.querySelector('[onclick="downloadCenarios()"]');
+  if (!card) return;
+  if (btn) btn.style.display = 'none';
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;width:640px;background:#F4F3EF;padding:20px;font-family:DM Sans,sans-serif;';
+  var clone = card.cloneNode(true);
+  clone.style.overflow='visible'; clone.style.marginBottom='0';
+  wrapper.innerHTML = '<div style="text-align:center;margin-bottom:14px;"><div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#003087;letter-spacing:2px;">BOLÃO COPA 2026</div><div style="font-size:12px;color:#6B6860;margin-top:2px;">🎲 Cenários da Reta Final · '+new Date().toLocaleDateString("pt-BR")+'</div></div>';
+  wrapper.appendChild(clone);
+  wrapper.innerHTML += '<div style="text-align:center;margin-top:12px;font-size:11px;color:#6B6860;">bolao26copa.github.io/copa-do-mundo</div>';
+  document.body.appendChild(wrapper);
+  html2canvas(wrapper,{scale:2,backgroundColor:'#F4F3EF',useCORS:true,logging:false})
+    .then(function(c){
+      var l=document.createElement('a');
+      l.download='cenarios-bolao-'+new Date().toISOString().slice(0,10)+'.jpg';
       l.href=c.toDataURL('image/jpeg',0.95); l.click();
       document.body.removeChild(wrapper);
       if(btn) btn.style.display='flex';
