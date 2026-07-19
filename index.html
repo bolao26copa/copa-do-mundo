@@ -1669,4 +1669,4 @@ async function renderCenarios(participantesComPts, bonusMap) {
   var dg = await carregarDadosGrupos();
   if (!dg) { card.innerHTML = '<div style="color:#C0392B;text-align:center;padding:20px;">Não foi possível carregar os dados.</div>'; return; }
   var mapaFixos = {}; (dg.bonus||[]).forEach(function(p){ mapaFixos[p.nome] = p; });
-  var mapaPalp = {}; (dg.participantes||[]).
+  var mapaPalp = {}; (dg.participantes||[]). 
