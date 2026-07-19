@@ -416,20 +416,7 @@ footer strong { color: #fff; font-weight: 600; }
     <div style="display:grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; width:100%;">
       <div style="overflow: hidden; width: 100%;">
         
-        <!-- Countdown Final -->
-        <div class="card" style="padding:20px; background:#003087; border:none; text-align:center; margin-bottom:16px;">
-          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.5); margin-bottom:10px;">
-            🏆 Final + 3º Lugar — Apostas encerram em
-          </div>
-          <div id="countdown-final" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-            <div class="cd-bloco"><div class="cd-num" id="cd-final-dias">--</div><div class="cd-label">dias</div></div><div class="cd-sep">:</div>
-            <div class="cd-bloco"><div class="cd-num" id="cd-final-horas">--</div><div class="cd-label">horas</div></div><div class="cd-sep">:</div>
-            <div class="cd-bloco"><div class="cd-num" id="cd-final-min">--</div><div class="cd-label">min</div></div><div class="cd-sep">:</div>
-            <div class="cd-bloco"><div class="cd-num" id="cd-final-seg" style="font-size:28px;color:var(--amarelo);">--</div><div class="cd-label">seg</div></div>
-          </div>
-          <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.6);">3º Lugar (J103) e Grande Final (J104)</div>
-          <button class="aposta-btn" style="background:var(--amarelo); color:var(--azul); margin-top:16px; max-width:220px; font-weight:800;" onclick="abrirLogin('final')">🏆 Apostar Final →</button>
-        </div>
+        
 
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
           <div class="section-title" style="margin-bottom:0">Classificação</div>
@@ -479,6 +466,16 @@ footer strong { color: #fff; font-weight: 600; }
           </table>
         </div>
 
+        <div id="card-cenarios-wrap" style="display:none; margin-bottom:24px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+            <div class="section-title" style="font-size:24px; margin-bottom:0">Cenários da Reta Final 🎲</div>
+          </div>
+          <p class="section-sub">Quem ainda pode terminar em 1º, 2º ou 3º considerando o que está em jogo na final: placar de <strong>Argentina × Espanha</strong>, bônus de campeão (200), vice (100) e artilheiro (100 — só Messi ou Mbappé, e o Mbappé já encerrou).</p>
+          <div class="card" id="card-cenarios" style="padding:20px;">
+            <div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Calculando cenários…</div>
+          </div>
+        </div>
+
         <div class="section-title" style="font-size: 24px;">Últimos Resultados</div>
         <div class="card" style="padding:0; overflow:hidden;" id="ultimos-resultados-lista">
            <div style="text-align:center; padding:24px; color:var(--cinza-texto); font-size:13px;">⏳ Carregando jogos...</div>
@@ -507,20 +504,7 @@ footer strong { color: #fff; font-weight: 600; }
         </div>
 
 
-        <!-- Status Final -->
-        <div class="card" id="card-status-final" style="padding:20px; margin-bottom:16px; border-left:4px solid var(--amarelo);">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:1.5px; color:var(--azul);">🏆 Status Final + 3º Lugar</div>
-            <button onclick="downloadStatusCard('final')" style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--azul);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">📷</button>
-          </div>
-          <div id="status-final-lista" style="display:flex; flex-direction:column; gap:5px;">
-            <div style="text-align:center;padding:16px;color:var(--cinza-texto);font-size:13px;">📡 Conectando ao servidor ao vivo...</div>
-          </div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cinza-borda);display:flex;justify-content:space-between;font-size:12px;">
-            <span style="color:var(--cinza-texto)">✅ apostou · ⏳ aguardando</span>
-            <span id="status-final-contador" style="font-weight:700;color:var(--azul)">—/27</span>
-          </div>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -1532,6 +1516,8 @@ async function carregarClassificacao() {
   });
   // Renderiza a tabela de bônus da home
   renderTabelaBonus(bonusMap, dados.participantes);
+  // Renderiza o simulador de cenários da reta final
+  try { await renderCenarios(dados.participantes, bonusMap); } catch(e){ console.error('cenarios:', e); }
 
   var humanos = dados.participantes.filter(p => !isIA(p.nome));
   var ias = dados.participantes.filter(p => isIA(p.nome));
@@ -1591,6 +1577,135 @@ async function carregarClassificacao() {
       '<td style="text-align:center">' + p.palpites + '</td>' +
       '<td style="text-align:center; color:#C0392B; font-weight:700;">' + invertidosExibicao + '</td></tr>';
   }).join('');
+}
+
+function _pontosFinalPossiveis(palpiteFinal) {
+  // Máximo de pontos de PLACAR que o palpite da final pode render (cenário perfeito = cravada = 50)
+  // Mínimo = 0 (pode zerar). Retorna {min:0, max:50 se apostou, senão 0}
+  if (!palpiteFinal || palpiteFinal.p1 === null || palpiteFinal.p1 === undefined) return {min:0, max:0};
+  return {min:0, max:50};
+}
+
+async function renderCenarios(participantesComPts, bonusMap) {
+  var wrap = document.getElementById('card-cenarios-wrap');
+  var card = document.getElementById('card-cenarios');
+  if (!card) return;
+
+  var terceiroDecidido = !!RESULTADO_FINAL.terceiro;
+  var jFinal = JOGOS.find(function(j){ return j.n === 104; });
+  var finalDefinida = jFinal && jFinal.g1 !== null && jFinal.g2 !== null;
+
+  // Mostra o card enquanto o 3º está decidido e a final ainda não saiu
+  if (!terceiroDecidido || finalDefinida) { if(wrap) wrap.style.display='none'; return; }
+  if (wrap) wrap.style.display = 'block';
+  card.innerHTML = '<div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Calculando cenários…</div>';
+
+  var dg = await carregarDadosGrupos();
+  if (!dg) { card.innerHTML = '<div style="color:#C0392B;text-align:center;padding:20px;">Não foi possível carregar os dados.</div>'; return; }
+
+  var mapaFixos = {};
+  (dg.bonus||[]).forEach(function(p){ mapaFixos[p.nome] = p; });
+  var mapaPalp = {};
+  (dg.participantes||[]).forEach(function(p){ mapaPalp[p.nome] = p.palpites||[]; });
+
+  function norm(s){ return (s||'').toString().trim().toLowerCase(); }
+
+  // Finalistas reais: só Argentina e Espanha podem dar campeão/vice
+  var FINALISTAS = ['argentina','espanha'];
+  // Artilheiro: só Messi ou Mbappé ainda possíveis
+  var ARTILHEIROS = ['messi','mbappé','mbappe'];
+
+  var linhas = participantesComPts.filter(function(p){ return !isIA(p.nome); }).map(function(p){
+    var base = p.ptsBase || 0;
+    var bonusAtual = (bonusMap[p.nome] ? bonusMap[p.nome].total : 0); // já inclui o 3º lugar (Inglaterra)
+    var travado = base + bonusAtual;
+
+    var fx = mapaFixos[p.nome] || {};
+    var apVice = norm(fx.vice);
+    var apCampeao = norm(fx.campeao);
+    var apArtilheiro = norm(padronizarArtilheiro(fx.artilheiro||''));
+
+    // Só vale se a aposta é um dos DOIS finalistas reais
+    var viceViavel = FINALISTAS.indexOf(apVice) >= 0;
+    var campeaoViavel = FINALISTAS.indexOf(apCampeao) >= 0;
+    var artilheiroViavel = ARTILHEIROS.indexOf(apArtilheiro) >= 0;
+
+    // Placar da final (J104): até 50
+    var palpFinal = (mapaPalp[p.nome]||[]).find(function(x){ return x.n === 104; });
+    var temFinal = palpFinal && palpFinal.p1 !== null && palpFinal.p1 !== undefined;
+    var maxFinal = temFinal ? 50 : 0;
+
+    // Campeão e vice são de times DIFERENTES (Argentina campeão → Espanha vice, ou vice-versa).
+    // Um participante pode teoricamente cravar os dois (ex: campeão Argentina, vice Espanha).
+    // Mas se apostou o MESMO time para campeão e vice, só um pode acontecer.
+    var ganhoBonus = 0;
+    if (campeaoViavel && viceViavel && apCampeao === apVice) {
+      ganhoBonus += 200; // mesmo time: fica só o de maior valor (campeão)
+    } else {
+      if (campeaoViavel) ganhoBonus += 200;
+      if (viceViavel) ganhoBonus += 100;
+    }
+    if (artilheiroViavel) ganhoBonus += 100;
+
+    var maximo = travado + maxFinal + ganhoBonus;
+    return {
+      nome: p.nome, travado: travado, maximo: maximo,
+      itens: { campeaoViavel: campeaoViavel, viceViavel: viceViavel, artilheiroViavel: artilheiroViavel, temFinal: temFinal,
+               apCampeao: fx.campeao||'—', apVice: fx.vice||'—', apArtilheiro: fx.artilheiro||'—',
+               palpFinal: temFinal ? (palpFinal.p1+'×'+palpFinal.p2) : null }
+    };
+  });
+
+  linhas.sort(function(a,b){ return b.travado - a.travado; });
+
+  // Pode alcançar a posição k (1=campeão, 2=top2, 3=top3) se menos de k participantes
+  // têm piso garantido MAIOR que o seu teto.
+  function podeAlcancar(l, k) {
+    var superam = 0;
+    linhas.forEach(function(o){
+      if (o.nome === l.nome) return;
+      if (o.travado > l.maximo) superam++;
+    });
+    return superam < k;
+  }
+
+  var chance1 = linhas.filter(function(l){ return podeAlcancar(l,1); });
+  var chance2 = linhas.filter(function(l){ return podeAlcancar(l,2); });
+  var chance3 = linhas.filter(function(l){ return podeAlcancar(l,3); });
+
+  function bloco(titulo, cor, lista, emoji) {
+    var h = '<div style="margin-bottom:18px;">' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:20px;letter-spacing:1px;color:'+cor+';margin-bottom:8px;">'+emoji+' '+titulo+' <span style="font-size:13px;color:var(--cinza-texto);font-family:DM Sans;">('+lista.length+')</span></div>';
+    if (lista.length === 0) { h += '<div style="color:var(--cinza-texto);font-size:13px;">Ninguém tem mais chance.</div></div>'; return h; }
+    h += '<div style="display:flex;flex-direction:column;gap:6px;">';
+    lista.forEach(function(l){
+      var emJogo = [];
+      if (l.itens.temFinal) emJogo.push('placar final ('+l.itens.palpFinal+')');
+      if (l.itens.campeaoViavel) emJogo.push('campeão: '+l.itens.apCampeao+' +200');
+      if (l.itens.viceViavel) emJogo.push('vice: '+l.itens.apVice+' +100');
+      if (l.itens.artilheiroViavel) emJogo.push('artilheiro: '+padronizarArtilheiro(l.itens.apArtilheiro)+' +100');
+      var emJogoTxt = emJogo.length ? emJogo.join(' · ') : 'nada mais em jogo (posição já travada)';
+      h += '<div style="padding:10px 12px;background:#FAFAF7;border-radius:8px;">' +
+             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">' +
+               '<span style="font-weight:700;font-size:14px;">'+abrevNome(l.nome)+'</span>' +
+               '<span style="font-family:DM Mono,monospace;font-size:12px;"><span style="color:var(--verde-escuro);font-weight:700;">piso '+l.travado+'</span> · <span style="color:var(--cinza-texto);">teto '+l.maximo+'</span></span>' +
+             '</div>' +
+             '<div style="font-size:11px;color:var(--cinza-texto);line-height:1.4;">🎯 em jogo: '+emJogoTxt+'</div>' +
+           '</div>';
+    });
+    h += '</div></div>';
+    return h;
+  }
+
+  var out = '';
+  out += '<div style="font-size:12px;color:var(--cinza-texto);background:#E8EEFF;border-left:3px solid var(--azul);padding:10px 14px;border-radius:8px;margin-bottom:16px;">' +
+         '<strong>Piso</strong> = pontos já garantidos (inclui o bônus de 3º lugar da Inglaterra). <strong>Teto</strong> = máximo possível acertando tudo que resta na final. ' +
+         'Só entram como bônus de campeão/vice as apostas em <strong>Argentina</strong> ou <strong>Espanha</strong>, e como artilheiro apenas <strong>Messi</strong> ou <strong>Mbappé</strong>.</div>';
+  out += bloco('Chance de ser CAMPEÃO do bolão', 'var(--amarelo-escuro)', chance1, '🥇');
+  out += bloco('Chance de terminar no TOP 2', '#7f7f7f', chance2, '🥈');
+  out += bloco('Chance de terminar no TOP 3', '#CD7F32', chance3, '🥉');
+
+  card.innerHTML = out;
 }
 
 function renderTabelaBonus(bonusMap, participantes) {
@@ -2087,7 +2202,7 @@ function _avancouDoJogo(n, proxIni, proxFim) {
 }
 
 // Resultados finais (preencher quando a Copa terminar)
-var RESULTADO_FINAL = { campeao:null, vice:null, terceiro:null, artilheiro:null };
+var RESULTADO_FINAL = { campeao:null, vice:null, terceiro:"Inglaterra", artilheiro:null };
 
 // Calcula os pontos de bônus de cada participante.
 // Retorna { nome: {total, detalhes:[{fase,pts}]} }
@@ -2601,16 +2716,16 @@ setInterval(function() {
   }
   atualizarCdOitavas1();
 
-  // Countdown Final + 3º: encerra 18/jul 17h59 BRT
+  // Countdown Final removido da home — função inerte
   function atualizarCdOitavas2() {
+    var d=document.getElementById('cd-final-dias');
+    if (!d) return;
     var alvo = getGameDate('18/jul', '17h59');
     var agora = new Date(), diff = alvo - agora;
     var pad = function(n){ return String(n).padStart(2,'0'); };
-    var d=document.getElementById('cd-final-dias'),
-        h=document.getElementById('cd-final-horas'),
+    var h=document.getElementById('cd-final-horas'),
         m=document.getElementById('cd-final-min'),
         s=document.getElementById('cd-final-seg');
-    if (!d) return;
     if (diff > 0) {
       d.textContent=pad(Math.floor(diff/(1000*60*60*24)));
       h.textContent=pad(Math.floor((diff%(1000*60*60*24))/(1000*60*60)));
@@ -2647,19 +2762,8 @@ function isEliminado(s) { return ELIMINADOS_GRUPOS.some(function(e){return e.toL
 
 // ── Status P1 e P2 ────────────────────────────────────────────────
 async function carregarStatus16avos() {
-  try {
-    var dados = await fetchAPI('statusfinal');
-    console.log('[status final]', dados);
-    if (dados && dados.status) {
-      renderStatusCard(dados, 'status-final-lista', 'status-final-contador', 103, 104);
-    } else {
-      throw new Error('resposta inválida');
-    }
-  } catch(err) {
-    console.error('[status final] erro:', err);
-    var el = document.getElementById('status-final-lista');
-    if (el) el.innerHTML = '<div style="color:#C0392B;font-size:12px;text-align:center">Erro ao carregar.</div>';
-  }
+  // Cards de status/countdown removidos da home — nada a carregar aqui.
+  return;
 }
 
 function renderStatusCard(dados, listaId, contId, j1, j2) {
