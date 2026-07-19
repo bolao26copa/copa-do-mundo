@@ -1635,19 +1635,17 @@ function _pontosFinalPossiveis(palpiteFinal) {
   return {min:0, max:50};
 }
 
-async function renderMatriz(participantesComPts, bonusMap) {
-  var wrap = document.getElementById('card-matriz-wrap');
-  var card = document.getElementById('card-matriz');
+async function renderCenarios(participantesComPts, bonusMap) {
+  var wrap = document.getElementById('card-cenarios-wrap');
+  var card = document.getElementById('card-cenarios');
   if (!card) return;
 
   var terceiroDecidido = !!RESULTADO_FINAL.terceiro;
-  var jFinal = JOGOS.find(function(j){ return j.n === 104; });
-  var finalDefinida = jFinal && jFinal.g1 !== null && jFinal.g2 !== null;
-  // Só faz sentido antes da final: depois, o campeão é único
-  if (!terceiroDecidido || finalDefinida) { if(wrap) wrap.style.display='none'; return; }
+  if (!terceiroDecidido) { if(wrap) wrap.style.display='none'; return; }
   if (wrap) wrap.style.display = 'block';
-  card.innerHTML = '<div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Montando matriz…</div>';
+  card.innerHTML = '<div style="text-align:center;padding:24px;color:var(--cinza-texto);">⏳ Simulando cenários…</div>';
 
+  // Dados: classificação (base) + bônus travado + palpites
   var participantes = participantesComPts, bMap = bonusMap;
   if (!participantes || !bMap) {
     try {
@@ -1661,11 +1659,14 @@ async function renderMatriz(participantesComPts, bonusMap) {
         });
         participantes = dcl.participantes;
       }
-    } catch(e) { console.error('matriz fetch:', e); }
+    } catch(e) { console.error('cenarios fetch:', e); }
   }
   if (!participantes) { card.innerHTML = '<div style="color:#C0392B;text-align:center;padding:20px;">Não foi possível carregar a classificação.</div>'; return; }
+
+  var jFinal = JOGOS.find(function(j){ return j.n === 104; });
+  var finalDefinida = jFinal && jFinal.g1 !== null && jFinal.g2 !== null;
 
   var dg = await carregarDadosGrupos();
   if (!dg) { card.innerHTML = '<div style="color:#C0392B;text-align:center;padding:20px;">Não foi possível carregar os dados.</div>'; return; }
   var mapaFixos = {}; (dg.bonus||[]).forEach(function(p){ mapaFixos[p.nome] = p; });
-  var mapaPalp = {}; (dg.participante
+  var mapaPalp = {}; (dg.participantes||[]).
